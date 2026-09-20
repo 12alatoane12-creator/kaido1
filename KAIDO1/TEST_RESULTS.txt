@@ -1,0 +1,27 @@
+KAIDO Vercel repair - local verification
+
+✔ Public content is initialized with all 39 original videos (6.878511ms)
+✔ Missing storage or admin configuration returns actionable errors (0.871962ms)
+✔ Both accounts need password and tool code; pending session cannot write (6.83607ms)
+✔ Unauthenticated, cross-origin, missing CSRF, and invalid writes are rejected (5.653612ms)
+✔ Saved changes survive a new backend instance; duplicate inserts do not duplicate IDs (10.842828ms)
+✔ Deleting every entry preserves an empty array across subsequent reads and cold starts (8.043239ms)
+✔ Logout, expiry, and changing secrets invalidate sessions (6.316366ms)
+✔ Login and verification attempts are rate limited (5.38573ms)
+✔ Only expected HTTP methods are accepted; no unexpected action dispatch (0.393762ms)
+✔ YouTube URL validation accepts watch, short links, shorts, embed and live (1.271373ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 370.802265
+
+KAIDO frontend and five API functions are ready.
+
+Frontend: both inline JavaScript blocks passed node --check.
+Browser UI smoke test: NOT RUN; Chromium executable unavailable.
+Redis: mocked REST tests, no live Upstash account or Lua integration run.
+Live Vercel deployment: NOT performed; requires owner configuration and deployment.
