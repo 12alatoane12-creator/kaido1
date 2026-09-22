@@ -291,7 +291,6 @@ const PACKED = {
 
 const frame = document.getElementById('app');
 const boot = document.getElementById('boot');
-let currentUrl = null;
 let loadSequence=0;
 let currentPage = null;
 const musicTransition = document.getElementById('musicTransition');
@@ -692,20 +691,22 @@ async function loadPage(page, anchor='', historyMode='none') {
     const html = await mgCachedHtml(page);
     if (switching) await new Promise(resolve => setTimeout(resolve, 360));
     if(sequence!==loadSequence)return;
-    const blob = new Blob([html], {type:'text/html;charset=utf-8'});
-    const nextUrl = URL.createObjectURL(blob);
-    const oldUrl = currentUrl;
-    currentUrl = nextUrl;
     currentPage = page;
 
     frame.onload = () => {
       boot.classList.add('hide');
       setTimeout(() => { try{ frame.contentWindow.postMessage({type:'KIDO_ASSIST_CONTEXT_PING'}, '*'); }catch(_){ } }, 160);
       if (switching) setTimeout(endMusicTransition, 260);
-      if (oldUrl) setTimeout(() => URL.revokeObjectURL(oldUrl), 1200);
+      if (anchor) {
+        try { frame.contentDocument.getElementById(anchor)?.scrollIntoView(); } catch (_) {}
+      }
       frame.onload = null;
     };
-    frame.src = nextUrl + (anchor ? '#' + encodeURIComponent(anchor) : '');
+    // srcdoc inherits the HTTPS embedding page's referrer instead of a blob URL.
+    frame.referrerPolicy = 'strict-origin-when-cross-origin';
+    frame.removeAttribute('src');
+    frame.srcdoc = html.replace(/<head([^>]*)>/i,
+      '<head$1><meta name="referrer" content="strict-origin-when-cross-origin">');
 
     const hash = stateToHash(page, anchor);
     const state = {page, anchor};
