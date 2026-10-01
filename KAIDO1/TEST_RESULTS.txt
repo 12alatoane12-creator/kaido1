@@ -1,27 +1,35 @@
-KAIDO Vercel repair - local verification
+KAIDO × NOVA — Motion update verification
+Date: 2026-10-02 (Asia/Baghdad)
 
-✔ Public content is initialized with all 39 original videos (6.878511ms)
-✔ Missing storage or admin configuration returns actionable errors (0.871962ms)
-✔ Both accounts need password and tool code; pending session cannot write (6.83607ms)
-✔ Unauthenticated, cross-origin, missing CSRF, and invalid writes are rejected (5.653612ms)
-✔ Saved changes survive a new backend instance; duplicate inserts do not duplicate IDs (10.842828ms)
-✔ Deleting every entry preserves an empty array across subsequent reads and cold starts (8.043239ms)
-✔ Logout, expiry, and changing secrets invalidate sessions (6.316366ms)
-✔ Login and verification attempts are rate limited (5.38573ms)
-✔ Only expected HTTP methods are accepted; no unexpected action dispatch (0.393762ms)
-✔ YouTube URL validation accepts watch, short links, shorts, embed and live (1.271373ms)
-ℹ tests 10
-ℹ suites 0
-ℹ pass 10
-ℹ fail 0
-ℹ cancelled 0
-ℹ skipped 0
-ℹ todo 0
-ℹ duration_ms 370.802265
+PASS — npm run build
+Both entry points contain the shared motion styles and controllers.
+The five existing API entry points and seed content are present.
 
-KAIDO frontend and five API functions are ready.
+PASS — npm test
+17 tests passed, 0 failed.
+10 existing backend tests cover authentication, two-step verification,
+sessions, rate limits, permitted requests, stored content and YouTube URLs.
+7 loader state tests cover DOM readiness, outdated/duplicate ready messages,
+superseded timers, stale entrance callbacks and retry after a failure.
 
-Frontend: both inline JavaScript blocks passed node --check.
-Browser UI smoke test: NOT RUN; Chromium executable unavailable.
-Redis: mocked REST tests, no live Upstash account or Lua integration run.
-Live Vercel deployment: NOT performed; requires owner configuration and deployment.
+PASS — JavaScript syntax checks
+40 embedded scripts parsed successfully across both entry points and the
+actual frame documents produced by mgInjectBridge, including motion policy,
+shared motion controller and assistant bridge.
+
+PASS — Repeat-build check
+Running motion synchronization again does not change already generated HTML.
+
+PASS — Preservation check
+Embedded images and YouTube links in both artist pages match the attachment.
+API handlers, backend, seed data, package.json and vercel.json are unchanged.
+All 39 original seed videos remain in the project.
+
+LIMITATIONS
+Browser layout and live interaction QA could not be completed in this session:
+the local browser executable was unavailable, and the remote browser could not
+access the local preview URL (ERR_BLOCKED_BY_CLIENT).
+Responsive rules and reduced-motion behavior were inspected in source.
+The DOM state tests are not browser geometry or animation-performance tests.
+The backend tests use the project's in-memory Redis REST double, not a live
+Upstash connection. No deployment or external service configuration was changed.

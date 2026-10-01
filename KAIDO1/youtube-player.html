@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="referrer" content="strict-origin-when-cross-origin"><title>مشغل الفيديو</title>
+<style>html,body{margin:0;width:100%;height:100%;background:#000;color:#fff}iframe{width:100%;height:100%;border:0;display:block}</style></head><body>
+<script>
+const id=new URLSearchParams(location.search).get('v')||'';
+if(/^[A-Za-z0-9_-]{11}$/.test(id)){
+ const player=document.createElement('iframe');
+ player.title='YouTube video player';
+ player.allow='autoplay; encrypted-media; picture-in-picture; fullscreen';
+ player.allowFullscreen=true;
+ player.referrerPolicy='strict-origin-when-cross-origin';
+ const url=new URL('https://www.youtube.com/embed/'+id);
+ url.searchParams.set('autoplay','1');url.searchParams.set('rel','0');
+ url.searchParams.set('origin',location.origin);
+ player.src=url.href;document.body.appendChild(player);
+}else{document.body.textContent='رابط الفيديو غير صالح';}
+</script></body></html>

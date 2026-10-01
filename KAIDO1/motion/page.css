@@ -1,0 +1,118 @@
+/* Shared motion language for both artists. No external runtime is required. */
+:root {
+  --kn-ease: cubic-bezier(.22, 1, .36, 1);
+  --kn-accent: #bb9dff;
+  --kn-light: 167, 129, 255;
+}
+html[data-motion-artist="nova"] { --kn-accent: #9dd9ff; --kn-light: 111, 196, 255; }
+html { scroll-padding-top: 108px; }
+section[id] { scroll-margin-top: 108px; }
+
+/* Content stays visible when the enhancement cannot initialize. */
+.reveal, .reveal.in, .nova-reveal, .nova-reveal.in { opacity: 1; transform: none; }
+html.kn-motion-ready [data-kn-motion] {
+  translate: var(--kn-magnetic-x, 0px) calc(var(--kn-enter-y, 0px) + var(--kn-parallax-y, 0px) + var(--kn-magnetic-y, 0px));
+}
+html.kn-motion-ready [data-kn-reveal], html.kn-motion-ready [data-kn-hero] {
+  --kn-enter-y: 0px;
+  opacity: 1;
+  transition: opacity .66s var(--kn-ease) var(--kn-delay, 0ms), translate .8s var(--kn-ease) var(--kn-delay, 0ms);
+}
+html.kn-motion-ready [data-kn-reveal="pending"] { --kn-enter-y: 24px; opacity: 0; }
+html.kn-motion-ready [data-kn-hero] { --kn-enter-y: 20px; opacity: 0; }
+html.kn-motion-ready.kn-page-entered [data-kn-hero] { --kn-enter-y: 0px; opacity: 1; }
+
+/* Tilt, reveal and parallax have separate properties so they compose. */
+html.kn-motion-ready [data-kn-surface] {
+  position: relative;
+  transform: perspective(1100px) translate3d(0, var(--kn-lift, 0px), 0) rotateX(var(--kn-rx, 0deg)) rotateY(var(--kn-ry, 0deg));
+  transition: transform .55s var(--kn-ease), border-color .28s ease, box-shadow .35s ease,
+    opacity .66s var(--kn-ease) var(--kn-delay, 0ms), translate .8s var(--kn-ease) var(--kn-delay, 0ms);
+}
+html.kn-motion-ready #triple444 .crew-card[data-kn-surface] {
+  transform: perspective(1100px) translate3d(0, var(--kn-lift, 0px), 0) rotateX(var(--kn-rx, 0deg)) rotateY(var(--kn-ry, 0deg));
+}
+html.kn-motion-ready [data-kn-surface].kn-pointer-active { transition-duration: .14s, .28s, .35s, .66s, .8s; }
+.kn-surface-light {
+  position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: 5;
+  background: radial-gradient(340px circle at var(--kn-pointer-x, 50%) var(--kn-pointer-y, 50%), rgba(var(--kn-light), .19), transparent 72%);
+  opacity: 0; transition: opacity .3s ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  html.kn-motion-ready [data-kn-surface]:hover { --kn-lift: -5px; border-color: rgba(var(--kn-light), .48); }
+  [data-kn-surface]:hover > .kn-surface-light { opacity: 1; }
+  .card:hover .thumb img, .nova-media-card:hover .nova-media-thumb img { transform: scale(1.055); }
+  .card:hover .play-btn, .nova-media-card:hover .nova-media-play { transform: scale(1.1); }
+  [data-kn-control]:hover { border-color: rgba(var(--kn-light), .58); }
+}
+.thumb img, .nova-media-thumb img { transition: transform .65s var(--kn-ease); }
+.play-btn, .nova-media-play { transition: transform .35s var(--kn-ease), box-shadow .3s ease; }
+html.kn-motion-ready .hero-emblem, html.kn-motion-ready .nova-core { animation: none; }
+.hero-emblem img { transform: translateZ(16px); }
+.photo-frame img {
+  transform: scale(1.085) translate3d(0, var(--kn-photo-y, 0px), 0);
+  transition: transform .18s linear;
+}
+html.kn-motion-ready #hero::before { animation: none; transform: translate3d(0, var(--kn-halo-y, 0px), 0) scale(1.06); }
+html.kn-motion-ready #novaDynamicBg { transform: translate3d(0, var(--kn-bg-y, 0px), 0) scale(1.07); }
+
+/* Feedback works for pointer, touch and keyboard input. */
+[data-kn-control] { position: relative; isolation: isolate; overflow: hidden; min-height: 44px; }
+html.kn-motion-ready [data-kn-control] {
+  transition: transform .22s var(--kn-ease), translate .24s var(--kn-ease), border-color .24s ease, background .24s ease, box-shadow .24s ease,
+    opacity .66s var(--kn-ease) var(--kn-delay, 0ms);
+}
+html.kn-motion-ready [data-kn-control]:active { transform: scale(.97); }
+a:focus-visible, button:focus-visible, [role="button"]:focus-visible, input:focus-visible, textarea:focus-visible {
+  outline: 2px solid var(--kn-accent); outline-offset: 5px;
+}
+.kn-ripple {
+  position: absolute; left: var(--kn-ripple-x); top: var(--kn-ripple-y); width: var(--kn-ripple-size); height: var(--kn-ripple-size);
+  margin: calc(var(--kn-ripple-size) / -2); border-radius: 50%; background: rgba(var(--kn-light), .24);
+  pointer-events: none; z-index: -1; animation: knRipple .62s var(--kn-ease) forwards;
+}
+@keyframes knRipple { from { transform: scale(0); opacity: .8; } to { transform: scale(1); opacity: 0; } }
+.modal-inner, .nova-library-window, .experience-shell {
+  transform: translateY(16px) scale(.985); transition: transform .42s var(--kn-ease);
+}
+.modal.open .modal-inner, .nova-library-modal.open .nova-library-window, .experience-menu.open .experience-shell {
+  transform: translateY(0) scale(1);
+}
+.studio-panel.active, .experience-panel.active { animation: knPanelIn .35s var(--kn-ease) both; }
+@keyframes knPanelIn { from { opacity: 0; translate: 0 8px; } to { opacity: 1; translate: 0 0; } }
+.nova-media-card[hidden], .card[hidden] { display: none !important; }
+.nova-hero h1 span { line-height: 1.8; letter-spacing: 0; font-size: clamp(16px, 1.35vw, 20px); }
+
+/* Keep the established layouts usable on narrow phones. */
+@media (max-width: 760px) {
+  html { scroll-padding-top: 100px; }
+  section[id] { scroll-margin-top: 100px; }
+  header.nav { padding: 12px 20px; gap: 8px; }
+  .nova-nav { height: auto; min-height: 80px; padding-block: 12px; gap: 10px; }
+  .nova-nav-actions { min-width: 0; justify-content: flex-end; }
+  .nova-nav-actions > button, .nova-back { font-size: 12px; padding: 10px 12px; }
+  .nova-machine { min-width: 0; }
+  .nova-orbit.o3 { width: min(108vw, 470px); height: min(108vw, 470px); }
+  .hero-kicker { letter-spacing: 1.8px; }
+  [data-kn-reveal="pending"] { --kn-enter-y: 16px; }
+  .kn-surface-light { display: none; }
+}
+@media (hover: none), (pointer: coarse) {
+  body, a, button, .btn, .burger { cursor: auto; }
+  html.kn-motion-ready [data-kn-surface], html.kn-motion-ready #triple444 .crew-card[data-kn-surface] { transform: none; }
+  html.kn-motion-ready [data-kn-motion] { --kn-magnetic-x: 0px !important; --kn-magnetic-y: 0px !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html, body, * { scroll-behavior: auto !important; }
+  *, *::before, *::after { animation: none !important; transition-duration: 0s !important; transition-delay: 0s !important; }
+  html.kn-motion-ready [data-kn-motion], html.kn-motion-ready [data-kn-surface], html.kn-motion-ready #triple444 .crew-card[data-kn-surface] { translate: none !important; transform: none !important; opacity: 1 !important; }
+  .reveal, .nova-reveal { opacity: 1 !important; transform: none !important; }
+  .cursor-dot, .cursor-ring, #magic-canvas, #spotlight { display: none !important; }
+  body, a, button, .btn, .burger { cursor: auto !important; }
+  .kn-surface-light, .kn-ripple { display: none !important; }
+  .photo-frame img { transform: none; }
+  .nova-asset-blue { opacity: 1 !important; }
+  .nova-asset-gold, .nova-asset-shine { opacity: 0 !important; }
+  .nova-logo-stage.is-gold .nova-asset-blue { opacity: 0 !important; }
+  .nova-logo-stage.is-gold .nova-asset-gold { opacity: 1 !important; }
+}

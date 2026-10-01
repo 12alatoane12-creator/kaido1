@@ -1,0 +1,51 @@
+/* A real loading state, followed by a quiet crossfade into the artist page. */
+#boot {
+  --kn-loader-color: #c3a8ff;
+  --kn-loader-rgb: 163, 115, 255;
+  z-index: 92; color: #f4f1ff; padding: 24px; box-sizing: border-box;
+  background: radial-gradient(ellipse at 50% 46%, rgba(80, 43, 135, .2), transparent 52%), #090711;
+  opacity: 1; visibility: visible;
+  transition: opacity .48s cubic-bezier(.22, 1, .36, 1), visibility 0s;
+}
+#boot[data-artist="nova"] {
+  --kn-loader-color: #9edbff; --kn-loader-rgb: 111, 190, 255;
+  background: radial-gradient(ellipse at 50% 46%, rgba(34, 86, 136, .22), transparent 52%), #070a10;
+}
+#boot.hide { opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .48s cubic-bezier(.22, 1, .36, 1), visibility 0s .48s; }
+#boot [hidden] { display: none !important; }
+#boot span { opacity: 1; }
+.kn-loader-content { text-align: center; width: min(320px, 100%); }
+.kn-loader-brand { display: flex; align-items: center; justify-content: center; gap: 12px; direction: ltr; margin-bottom: 35px; font: 800 clamp(23px, 4vw, 32px)/1.4 Arial, sans-serif; letter-spacing: 4px; }
+.kn-loader-brand i { width: 5px; height: 5px; border: 1px solid var(--kn-loader-color); transform: rotate(45deg); opacity: .8; }
+.kn-loader-brand .kn-current { color: var(--kn-loader-color); }
+.kn-loader-brand .kn-other { color: #756f86; }
+.kn-loader-wave { display: flex; align-items: center; justify-content: center; gap: 5px; height: 42px; margin: 0 auto 28px; }
+.kn-loader-wave i { display: block; width: 3px; height: var(--kn-bar-height, 24px); border-radius: 99px; background: var(--kn-loader-color); transform-origin: center; animation: knLoaderWave 1.15s ease-in-out var(--kn-bar-delay, 0s) infinite; }
+.kn-loader-wave i:nth-child(2n) { opacity: .55; }
+@keyframes knLoaderWave { 0%, 100% { transform: scaleY(.35); opacity: .4; } 45% { transform: scaleY(1); opacity: 1; } }
+.kn-loader-status { font: 500 14px/1.8 Tahoma, Arial, sans-serif; color: #b2abbf; margin: 0; }
+.kn-loader-retry { margin-top: 18px; min-height: 44px; padding: 10px 22px; color: #f4f1ff; background: rgba(var(--kn-loader-rgb), .12); border: 1px solid rgba(var(--kn-loader-rgb), .4); border-radius: 999px; cursor: pointer; font: 600 14px Tahoma, Arial, sans-serif; }
+.kn-loader-retry:hover { background: rgba(var(--kn-loader-rgb), .22); }
+.kn-loader-retry:focus-visible { outline: 2px solid var(--kn-loader-color); outline-offset: 4px; }
+#boot.failed .kn-loader-wave { display: none; }
+#boot.failed .kn-loader-status { color: #f0cbd4; }
+#app { opacity: 0; transition: opacity .4s cubic-bezier(.22, 1, .36, 1); }
+#app.kn-live { opacity: 1; }
+body.kn-loading #musicTransition { visibility: hidden !important; opacity: 0 !important; }
+
+/* Keep utility surfaces consistent with the same interaction rhythm. */
+#adminDialog[open] { animation: knDialogIn .32s cubic-bezier(.22, 1, .36, 1) both; }
+@keyframes knDialogIn { from { opacity: 0; translate: 0 14px; } to { opacity: 1; translate: 0 0; } }
+#adminDialog button { min-height: 44px; transition: transform .18s ease, border-color .22s ease, background .22s ease; }
+#adminDialog button:hover { border-color: #a8d5ff; background: #1b2940; }
+#adminDialog button:active { transform: scale(.97); }
+#adminDialog button:focus-visible, #adminDialog input:focus-visible, #mgLauncher:focus-visible, .mg-icon-btn:focus-visible { outline: 2px solid #a8d5ff; outline-offset: 4px; }
+#mgLauncher { transition: transform .3s cubic-bezier(.22, 1, .36, 1), opacity .25s ease, border-color .25s ease; }
+#mgLauncher:active { transform: scale(.97); }
+#mgChat .mg-icon-btn { transition: background .18s ease, transform .18s ease; }
+#mgChat .mg-icon-btn:active { transform: scale(.93); }
+@media (prefers-reduced-motion: reduce) {
+  #boot, #app, #mgChat, #mgLauncher, #musicGuide *, #adminDialog, #adminDialog * { transition: none !important; animation: none !important; }
+  .kn-loader-wave i { animation: none; transform: scaleY(.7); }
+  #musicTransition { display: none; }
+}
