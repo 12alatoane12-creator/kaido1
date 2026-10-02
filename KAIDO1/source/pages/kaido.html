@@ -1386,23 +1386,14 @@ if(spyTargets.length){
 })();
 </script>
 
-<script id="interactive-guide-scroll-bridge">
-(function(){
-  addEventListener('message', function(e){
-    const d = e.data || {};
-    if(d.type !== 'KIDO_ASSIST_NAV' || !d.anchor) return;
-    const el = document.getElementById(d.anchor);
-    if(!el) return;
-    try{ el.scrollIntoView({behavior:window.knCanAnimate()?'smooth':'auto', block:'start'}); }
-    catch(_){ el.scrollIntoView(); }
-    try{ history.replaceState(null, '', '#' + encodeURIComponent(d.anchor)); }catch(_){}
-    try{
-      if(window.knCanAnimate())el.animate([
-        {filter:'brightness(1)'},
-        {filter:'brightness(1.16) drop-shadow(0 0 14px rgba(133,202,255,.16))'},
-        {filter:'brightness(1)'}
-      ], {duration:1050, easing:'ease-out'});
-    }catch(_){}
+<script id="kn-page-navigation">
+(()=>{
+  addEventListener('message',event=>{
+    const data=event.data||{};
+    if(event.source!==parent||data.type!=='KN_SCROLL_TO'||Number(data.navigation)!==Number(document.documentElement.dataset.motionNavigation)||typeof data.anchor!=='string')return;
+    const target=document.getElementById(data.anchor);if(!target)return;
+    target.scrollIntoView({behavior:window.knCanAnimate()?'smooth':'auto',block:'start'});
+    try{history.replaceState(null,'','#'+encodeURIComponent(data.anchor))}catch(_){}
   });
 })();
 </script>

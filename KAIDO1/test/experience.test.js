@@ -19,9 +19,9 @@ test('the built self-contained entries meet the transfer budget and retain all c
 });
 test('a stalled hosted content request falls back to embedded catalogue data in both entry points',async()=>{
  for(const {name,html} of entries()){
-  let configuredTimeout;const source=extractFunction(html,'mgCachedHtml');
-  const context={mgHtmlCache:new Map(),PACKED:{kaido:'seed'},location:{protocol:'https:'},unpackHtml:async()=>'<body>embedded catalogue</body>',mgInjectBridge:s=>s,AbortSignal:{timeout:ms=>{configuredTimeout=ms;return AbortSignal.timeout(5)}},fetch:(_url,options)=>new Promise((_resolve,reject)=>{options?.signal?.addEventListener('abort',()=>reject(Error('timeout')),{once:true})})};
-  vm.createContext(context);vm.runInContext(source+'; globalThis.result=mgCachedHtml("kaido");',context);
+  let configuredTimeout;const source=extractFunction(html,'cachedPageHtml');
+  const context={knHtmlCache:new Map(),PACKED:{kaido:'seed'},location:{protocol:'https:'},unpackHtml:async()=>'<body>embedded catalogue</body>',preparePageHtml:s=>s,AbortSignal:{timeout:ms=>{configuredTimeout=ms;return AbortSignal.timeout(5)}},fetch:(_url,options)=>new Promise((_resolve,reject)=>{options?.signal?.addEventListener('abort',()=>reject(Error('timeout')),{once:true})})};
+  vm.createContext(context);vm.runInContext(source+'; globalThis.result=cachedPageHtml("kaido");',context);
   const result=await Promise.race([context.result,new Promise(r=>setTimeout(()=>r('STALLED'),100))]);assert.equal(result,'<body>embedded catalogue</body>',name+' never returns embedded content');assert.ok(configuredTimeout>0&&configuredTimeout<=6000);
  }
 });

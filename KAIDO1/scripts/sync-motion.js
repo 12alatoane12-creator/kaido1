@@ -18,33 +18,7 @@ for(const [template,destination] of [['source/shell-local.html','index.html'],['
   shell=shell.replace('__KN_PAGE_KAIDO__',packed.kaido).replace('__KN_PAGE_NOVA__',packed.nova);
   shell=shell.replace(/<div id="boot">[\s\S]*?<\/div>/,loaderMarkup);
   shell=shell.replace(/<\/head>/i,'<style id="kn-shell-style">'+read('motion/shell.css')+'</style>'+inlineScript(read('motion/loader.js'))+'</head>');
-  shell=shell.replace(/const musicTransition = document.getElementById\('musicTransition'\);/m,match=>match+'\n'+read('motion/shell.js'));
-  // User motion preference also governs the existing assistant rig.
-  shell=shell.replace(/mgReduced\.matches/g,'knGuideReduced()');
-  shell=shell.replace("const mgReduced = matchMedia('(prefers-reduced-motion: reduce)');","const mgReduced = matchMedia('(prefers-reduced-motion: reduce)');\nfunction knGuideReduced(){return mgReduced.matches||document.body.classList.contains('kn-motion-off');}");
-  shell=shell.replace(/(function mgMotionFrame\(now\)\{[\s\S]*?)(\n mgMotionWake\(\);\n\})/,(all,prefix)=>prefix+'\n if(!knGuideReduced())mgMotionWake();\n}');
-  const fetchStart=shell.indexOf('async function mgCachedHtml('),fetchEnd=shell.indexOf('\nasync function unpackHtml',fetchStart);
-  if(fetchStart<0||fetchEnd<0)throw Error('Content loader not found');
-  const fetchFunction=`async function mgCachedHtml(page){
- if(!mgHtmlCache.has(page))mgHtmlCache.set(page,unpackHtml(PACKED[page]).then(async html=>{
-   if(location.protocol!=='file:')try{
-     const r=await fetch('/api/content',{cache:'no-store',signal:AbortSignal.timeout(6000)});
-     if(r.ok){const data=await r.json();const names={kaido:{songs:'songs',dass:'dass',ads:'ads'},nova:{tracks:'NOVA_TRACKS',visuals:'NOVA_VISUALS',audio:'NOVA_AUDIO_ENGINEERING'}};
-       for(const [key,name] of Object.entries(names[page]))if(Array.isArray(data[page]?.[key]))html=html.replace(new RegExp('const '+name+'\\\\s*=\\\\s*\\\\[[\\\\s\\\\S]*?\\\\];'),'const '+name+'='+JSON.stringify(data[page][key]).replace(/</g,'\\\\u003c')+';');
-     }
-   }catch(_){}
-   return mgInjectBridge(html,page);
- }).catch(error=>{mgHtmlCache.delete(page);throw error}));
- return mgHtmlCache.get(page);
-}`;
-  shell=shell.slice(0,fetchStart)+fetchFunction+shell.slice(fetchEnd);
-  shell=shell.replace("  const switching = beginMusicTransition(page);\n  boot.classList.remove('hide');","  const switching = false;\n  knLoader.begin(page,sequence);");
-  shell=shell.replace('    const html = await mgCachedHtml(page);','    const html = (await mgCachedHtml(page)).replace(/__KN_NAV_ID__/g,String(sequence));');
-  shell=shell.replace('    if (switching) await new Promise(resolve => setTimeout(resolve, 360));','');
-  shell=shell.replace("      boot.classList.add('hide');","      if(sequence!==loadSequence)return;");
-  shell=shell.replace('    boot.textContent=String(err.message||err);','    knLoader.fail(page,sequence,err);');
-  // A blob/srcdoc page needs an explicit base for the existing YouTube player.
-  shell=shell.replace("function mgInjectBridge(html,page){return html.replace(/<\\/body>/i,MG_BRIDGE_SCRIPT.replace('__KIDO_PAGE__',JSON.stringify(page))+'</body>')}","function mgInjectBridge(html,page){const base=new URL('./',location.href).href;html=html.replace(/<head([^>]*)>/i,'<head$1><base href=\"'+base+'\">');return html.replace(/<\\/body>/i,MG_BRIDGE_SCRIPT.replace('__KIDO_PAGE__',JSON.stringify(page))+'</body>')}");
+  shell=shell.replace('__KN_SHELL_RUNTIME__',()=>read('motion/shell.js'));
   fs.writeFileSync(path.join(root,destination),shell);
   console.log(destination+': '+Buffer.byteLength(shell)+' bytes');
 }

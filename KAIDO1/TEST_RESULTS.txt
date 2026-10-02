@@ -1,21 +1,22 @@
-KAIDO × NOVA — final motion refinement verification, 2026-10-02
+KAIDO × NOVA — character and chat removal verification, 2026-10-02
 
 Build: PASS; deterministic repeated build produces identical bytes.
-Tests: PASS — 49 tests, 0 failures, 0 cancelled, 0 skipped.
-Frontend: PASS — 40 actual inline scripts parsed, including bridge-injected child pages; four live-content replacement checks pass.
+Tests: PASS — 54 tests, 0 failures, 0 cancelled, 0 skipped.
+Frontend: PASS — 36 actual inline scripts parsed, including the real prepared child pages; four live-content replacement checks pass.
 
-Removal: both actual entry shells and unpacked artist pages contain no WhatsApp service, number, UI controls, helper or assistant reference. Remaining original social/music platforms are preserved.
+Removal: both delivered shells and decoded artist pages contain no virtual-character/chat UI or runtime, composer, launcher, poses, voice recognition/synthesis, guide context/pointer tracking or assistant bridge/messages. All six character WebPs are removed from the manifest and package. WhatsApp service/number/UI/helpers remain absent. All nine site artworks and original social/music platforms are preserved.
+Shell/navigation: both actual generated main scripts are executed in VM using the real gzip decoder and real loader, with the unavailable DOM/frame boundary simulated. Initial deep links, frame readiness/entrance, current-frame artist routes, stale request completion, stale onload callbacks, motion preference messages and scoped section scrolling pass. These checks do not replace real browser rendering.
 Geometry: all three meshes are finite, bounded, seam-safe and have identical topology; morph output is reused; rapid retargeting starts at the displayed shape; static selection settles immediately.
 Actual renderer VM checks: entrance gating, single paced RAF, bounded pixel density, no per-frame layout read, finite draw coordinates, offscreen/hidden/user-policy stop, static mode controls, keyboard/class palette changes and observer cleanup pass. These checks simulate only the unavailable Canvas/DOM boundary and do not measure real-device GPU frame time.
 Journey: actual progress on long/short/overscrolled pages, current section selection, local fragment handling under the outer base, reduced-motion scroll, and modified/cross-artist click behavior pass.
 Catalogue: 39 seeded entries preserved; changed/empty launcher counts and empty archive state pass. Stalled content falls back to embedded catalogue data. Published YouTube player is present.
 Loader/accessibility/backend: previous stale-readiness, retry, metadata queue, focus/inert, authentication, persistence, rate limit, origin and validation checks pass.
 
-Fresh independent code review completed. Both important findings (fragment navigation and stale archive-launcher counts), plus the keyboard palette mismatch, were reproduced failing and fixed passing. No unresolved material review finding.
-All 11 backend/config/environment/player files are byte-identical to the prior verified package. Artwork assets are byte-identical to the prior optimized package.
-Unique image bytes: 1,140,044 (original: 8,862,810).
-Root entry bytes: 2,177,408.
-Hosted entry bytes: 2,177,551 (original: 12,768,324; 82.9% smaller).
+The preceding motion review findings (fragment navigation and stale archive-launcher counts), plus the keyboard palette mismatch, remain covered by passing regression tests. Fresh independent code review of the removal completed with no material finding. Reviewer independently checked the source and generated shells, decoded pages, admin preservation, five new removal/navigation tests, 36 inline script parses, and four API catalogue transformations.
+All 11 backend/config/environment/player files and the nine remaining artwork assets are byte-identical to the prior verified package. Artist page changes are limited to the scoped section navigation listener.
+Unique image bytes: 844,534 (before removal: 1,140,044).
+Root entry bytes: 1,701,446 (before removal: 2,177,408).
+Hosted entry bytes: 1,701,705 (before removal: 2,177,551; original: 12,768,324).
 
 LIMITATION: local visual browser preview is restricted in this environment. Final layout, glyph clipping, curtain timing and real-device smoothness were not visually certified. No live deployment, database connection or administration mutation was performed. Normal browser inspection instructions are included in README_AR.md.
 
