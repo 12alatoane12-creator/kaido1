@@ -532,10 +532,10 @@ html.kn-custom-scroll::-webkit-scrollbar,html.kn-custom-scroll body::-webkit-scr
   </nav>
 
   <main>
-    <section class="nova-hero nova-shell">
+    <section class="nova-hero nova-shell" id="nova-hero">
       <div class="nova-hero-copy nova-reveal in">
         <div class="nova-overline">NOVA / SOUND / VISION</div>
-        <h1>NOVA<span class="kn-hero-period">.</span> <span class="kn-hero-subtitle">نوفا — مهندس الصوت الخاص بالإعلانات</span></h1>
+        <h1 aria-label="NOVA — نوفا، مهندس الصوت الخاص بالإعلانات"><span class="kn-title-line" aria-hidden="true"><span class="kn-letter-mask"><span class="kn-letter" style="--kn-letter-delay:0ms">N</span></span><span class="kn-letter-mask"><span class="kn-letter" style="--kn-letter-delay:55ms">O</span></span><span class="kn-letter-mask"><span class="kn-letter" style="--kn-letter-delay:110ms">V</span></span><span class="kn-letter-mask"><span class="kn-letter" style="--kn-letter-delay:165ms">A</span></span><span class="kn-hero-period">.</span></span><span class="kn-hero-subtitle">نوفا — مهندس الصوت الخاص بالإعلانات</span></h1>
         <p>شخص ما حصر نفسه بقالب واحد. نوفا يتعامل ويا الصوت كمساحة مفتوحة: يسمع الفنان، يفهم إحساسه، ويقرأ أذن المستمع بنفس الوقت. وكل فترة يثبت إن عنده قابلية يطلع بشي جديد، مختلف، ومغاير للعمل اللي قبله.</p>
         <div class="nova-hero-meta"><span>MIX / MASTER</span><span>VOCAL DIRECTION</span><span>MUSIC</span><span>AFTER EFFECTS</span><span>VISUAL IDENTITY</span></div>
         <div class="nova-hero-actions">
@@ -546,7 +546,7 @@ html.kn-custom-scroll::-webkit-scrollbar,html.kn-custom-scroll body::-webkit-scr
       <div class="kn-hero-visual nova-machine" id="novaMachine">
       <div class="kn-signal-stage" data-scene-artist="nova">
         <div class="kn-stage-top"><span>NOVA / SOUND & VISION</span><span class="kn-signal-dot"><i></i> LIVE FORM</span></div>
-        <div class="kn-stage-floor" aria-hidden="true"></div><canvas class="kn-scene-canvas" aria-hidden="true"></canvas>
+        <span class="kn-stage-cross c1" aria-hidden="true"></span><span class="kn-stage-cross c2" aria-hidden="true"></span><span class="kn-stage-orbit" aria-hidden="true"></span><span class="kn-stage-orbit o2" aria-hidden="true"></span><span class="kn-stage-side" aria-hidden="true">FORM / FREQUENCY / FEELING</span><div class="kn-stage-floor" aria-hidden="true"></div><canvas class="kn-scene-canvas" aria-hidden="true"></canvas>
         <div class="nova-logo-stage" id="novaLogoStage" role="button" tabindex="0" aria-label="شعار NOVA — اضغط للتبديل بين الجليدي والذهبي">
             <span class="nova-logo-asset" aria-hidden="true">
   <i class="nova-asset-blue"></i>
@@ -558,9 +558,9 @@ html.kn-custom-scroll::-webkit-scrollbar,html.kn-custom-scroll body::-webkit-scr
             <i class="nova-logo-spark s1"></i><i class="nova-logo-spark s2"></i>
             <i class="nova-logo-spark s3"></i><i class="nova-logo-spark s4"></i>
           </div>
-        <div class="kn-stage-bottom"><span>SOUND → MOTION</span><span>MIX / MASTER / CREATE</span></div>
+        <div class="kn-stage-bottom"><span class="kn-form-readout" role="status">01 / KNOT</span><span class="kn-form-meter" aria-hidden="true"><i style="--bar:3px"></i><i style="--bar:6px"></i><i style="--bar:10px"></i><i style="--bar:16px"></i><i style="--bar:9px"></i><i style="--bar:4px"></i><i style="--bar:12px"></i><i style="--bar:18px"></i><i style="--bar:11px"></i><i style="--bar:5px"></i><i style="--bar:8px"></i><i style="--bar:14px"></i><i style="--bar:7px"></i><i style="--bar:3px"></i></span></div>
       </div>
-      <div class="kn-stage-controls"><div class="kn-scene-switch" role="group" aria-label="شكل المشهد"><button type="button" data-scene-mode="orbit" aria-pressed="true">مدار</button><button type="button" data-scene-mode="wave" aria-pressed="false">موجة</button></div><button type="button" class="kn-motion-toggle" aria-pressed="true"><span class="kn-motion-icon" aria-hidden="true">◉</span><span class="kn-motion-label">الحركة مفعّلة</span></button></div>
+      <div class="kn-stage-controls"><div class="kn-scene-switch" role="group" aria-label="شكل المشهد"><button type="button" data-scene-mode="knot" aria-pressed="true">عقدة</button><button type="button" data-scene-mode="orbit" aria-pressed="false">مدار</button><button type="button" data-scene-mode="wave" aria-pressed="false">موجة</button></div><button type="button" class="kn-motion-toggle" aria-pressed="true"><span class="kn-motion-icon" aria-hidden="true">◉</span><span class="kn-motion-label">الحركة مفعّلة</span></button></div>
     </div>
     </section>
 
@@ -619,7 +619,7 @@ html.kn-custom-scroll::-webkit-scrollbar,html.kn-custom-scroll body::-webkit-scr
         <button class="nova-library-launch nova-reveal" type="button" data-library-open="visuals" aria-label="فتح قائمة أعمال الفيديو و After Effects">
           <span class="nova-library-launch-icon" aria-hidden="true">▶</span>
           <span class="nova-library-launch-copy">
-            <small>VISUAL ARCHIVE / 15 WORKS</small>
+            <small>VISUAL ARCHIVE / <span data-library-count>…</span></small>
             <strong>ادخل إلى قائمة أعمال الفيديو</strong>
             <em>بحث ذكي بالاسم، الكلمة، أو النتائج المشابهة</em>
           </span>
@@ -637,7 +637,7 @@ html.kn-custom-scroll::-webkit-scrollbar,html.kn-custom-scroll body::-webkit-scr
         <button class="nova-library-launch nova-reveal" type="button" data-library-open="audio" aria-label="فتح قائمة أعمال الهندسة الصوتية">
           <span class="nova-library-launch-icon audio" aria-hidden="true">◉</span>
           <span class="nova-library-launch-copy">
-            <small>AUDIO ENGINEERING / 06 WORKS</small>
+            <small>AUDIO ENGINEERING / <span data-library-count>…</span></small>
             <strong>ادخل إلى قائمة الهندسة الصوتية</strong>
             <em>بحث فوري مع إظهار النتائج الأقرب والمشابهة</em>
           </span>
@@ -685,7 +685,7 @@ html.kn-custom-scroll::-webkit-scrollbar,html.kn-custom-scroll body::-webkit-scr
       <button id="novaLibraryClear" type="button">مسح</button>
     </div>
     <div class="nova-library-meta">
-      <span id="novaLibraryCount">0 عمل</span>
+      <span id="novaLibraryCount" role="status" aria-live="polite">0 عمل</span>
       <span>البحث يدعم الكلمات القريبة والمتشابهة</span>
     </div>
     <div class="nova-media-grid nova-library-grid" id="novaLibraryGrid"></div>
@@ -825,6 +825,14 @@ const NOVA_LIBRARIES={
     fallback:'NOVA — Audio Engineering'
   }
 };
+function novaSyncLauncherCounts(){
+  document.querySelectorAll('[data-library-open]').forEach(button=>{
+    const library=NOVA_LIBRARIES[button.dataset.libraryOpen],label=button.querySelector('[data-library-count]');
+    if(library&&label){const count=library.ids.length;label.textContent=String(count).padStart(2,'0')+(count===1?' WORK':' WORKS');}
+  });
+}
+novaSyncLauncherCounts();
+
 
 function novaApplyLibrarySearch(){
   const q=novaLibrarySearch.value;

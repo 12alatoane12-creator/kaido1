@@ -1,3 +1,5 @@
+> Historical first-upgrade plan. Current plan: [motion-refinement](superpowers/plans/2026-10-02-motion-refinement.md).
+
 # KAIDO interrupted-upgrade recovery — Implementation Plan
 
 > **For agentic workers:** Use superpowers:executing-plans to implement task by task.

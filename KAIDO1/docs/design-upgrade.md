@@ -1,3 +1,5 @@
+> Historical first-upgrade specification. Current direction: [design-next.md](design-next.md). The user subsequently removed the contact service; current output and README describe that change.
+
 # KAIDO × NOVA — recovery design
 
 The user asked to finish the interrupted upgrade and deliver the edited KAIDO1 archive. The available attachment is the original; the edited working files disappeared. Rebuild the agreed upgrade from that attachment rather than claim the missing archive was recovered.

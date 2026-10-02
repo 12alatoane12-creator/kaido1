@@ -474,16 +474,6 @@
   footer.foot .brand-mini{ display:flex; align-items:center; gap:10px; }
   footer.foot .brand-mini img{ width:24px; height:24px; }
 
-  .wa-float{
-    position:fixed; bottom:26px; left:26px; z-index:55;
-    width:60px; height:60px; border-radius:50%;
-    background:linear-gradient(135deg,#25d366,#128c4a);
-    display:flex; align-items:center; justify-content:center;
-    box-shadow:0 12px 30px -8px rgba(37,211,102,.65);
-    cursor:none; animation:wa-pulse 3s ease-in-out infinite;
-  }
-  .wa-float svg{ width:28px; height:28px; fill:#fff; }
-  @keyframes wa-pulse{ 0%,100%{ box-shadow:0 12px 30px -8px rgba(37,211,102,.65);} 50%{ box-shadow:0 12px 40px -4px rgba(37,211,102,.9);} }
 
   @media(max-width:620px){
     section{ padding:80px 0; }
@@ -889,7 +879,7 @@ html.kn-custom-scroll::-webkit-scrollbar,html.kn-custom-scroll body::-webkit-scr
         <button class="experience-tab active" type="button" data-experience-tab="start"><span>01</span><b>ابدأ من هنا</b><small>واجهة الموقع</small></button>
         <button class="experience-tab" type="button" data-experience-tab="music"><span>02</span><b>الموسيقى</b><small>الأغاني والدسات</small></button>
         <button class="experience-tab" type="button" data-experience-tab="work"><span>03</span><b>الشغل</b><small>الإعلانات والتعاون</small></button>
-        <button class="experience-tab" type="button" data-experience-tab="connect"><span>04</span><b>تواصل</b><small>المنصات والواتساب</small></button>
+        <button class="experience-tab" type="button" data-experience-tab="connect"><span>04</span><b>تواصل</b><small>الحسابات والمنصات</small></button>
       </aside>
 
       <div class="experience-panels">
@@ -930,7 +920,7 @@ html.kn-custom-scroll::-webkit-scrollbar,html.kn-custom-scroll body::-webkit-scr
         <section class="experience-panel" data-experience-panel="connect">
           <div class="panel-index">  CONNECT</div>
           <h2>خلك <span class="glow-text">على تواصل</span></h2>
-          <p>كل روابط KAIDO موجودة بآخر الصفحة، والواتساب موجود باي وقت تحتاجني بي .</p>
+          <p>كل حسابات KAIDO موجودة بآخر الصفحة. للتعاون الفني والإعلانات، احچي وياي على إنستغرام.</p>
           <a href="#contact" class="menu-primary-cta" data-menu-jump> كل طرق التواصل <span>↗</span></a>
           <div class="menu-status"><i></i><span> جاهز للتواصل</span></div>
         </section>
@@ -943,25 +933,25 @@ html.kn-custom-scroll::-webkit-scrollbar,html.kn-custom-scroll body::-webkit-scr
 <section id="hero"><div class="wrap kn-hero-grid"><div class="kn-hero-copy">
     
     <div class="hero-kicker reveal in"><span>IRAQ</span><i></i><span>ARTIST / PRODUCER</span></div>
-    <h1 class="hero-word glow-text" >KAIDO<span class="kn-hero-period">.</span></h1>
+    <h1 class="hero-word glow-text" aria-label="KAIDO"><span class="kn-title-line" aria-hidden="true"><span class="kn-letter-mask"><span class="kn-letter" style="--kn-letter-delay:0ms">K</span></span><span class="kn-letter-mask"><span class="kn-letter" style="--kn-letter-delay:55ms">A</span></span><span class="kn-letter-mask"><span class="kn-letter" style="--kn-letter-delay:110ms">I</span></span><span class="kn-letter-mask"><span class="kn-letter" style="--kn-letter-delay:165ms">D</span></span><span class="kn-letter-mask"><span class="kn-letter" style="--kn-letter-delay:220ms">O</span></span><span class="kn-hero-period">.</span></span></h1>
     <div class="hero-signature">KAIDO SOUND UNIVERSE</div>
     <p class="hero-tag">صوت يطلع من داخل الموجة... كل تراك أسويه لازم يحجي شي، ولازم يوصل. هذا موقعي، وهذا شغلي.. تفضل اتفرج.</p>
     <div class="hero-meta reveal in">
       <span><i></i> MUSIC</span><span><i></i> PRODUCTION</span><span><i></i> ADS</span>
     </div>
     <div class="hero-cta">
-      <a href="#songs" class="btn gold">اسمع  الاغاني مالتي</a>
+      <a href="#songs" class="btn gold">اسمع الشغل <span class="kn-button-arrow" aria-hidden="true">↙</span></a>
       <a href="#contact" class="btn ghost">تواصل وياي</a>
-    </div><div class="kn-hero-index"><span>01 / MUSIC · PRODUCTION · ENERGY</span><span>↓ انزل جوة لضل صافن</span></div></div><div class="kn-hero-visual" >
+    </div><div class="kn-hero-index"><span>01 / MUSIC · PRODUCTION · ENERGY</span><span>↓ انزل واكتشف الشغل</span></div></div><div class="kn-hero-visual" >
       <div class="kn-signal-stage" data-scene-artist="kaido">
         <div class="kn-stage-top"><span>KAIDO / SOUND UNIVERSE</span><span class="kn-signal-dot"><i></i> LIVE FORM</span></div>
-        <div class="kn-stage-floor" aria-hidden="true"></div><canvas class="kn-scene-canvas" aria-hidden="true"></canvas>
+        <span class="kn-stage-cross c1" aria-hidden="true"></span><span class="kn-stage-cross c2" aria-hidden="true"></span><span class="kn-stage-orbit" aria-hidden="true"></span><span class="kn-stage-orbit o2" aria-hidden="true"></span><span class="kn-stage-side" aria-hidden="true">FORM / FREQUENCY / FEELING</span><div class="kn-stage-floor" aria-hidden="true"></div><canvas class="kn-scene-canvas" aria-hidden="true"></canvas>
         <div class="hero-emblem kn-stage-logo">
       <img src="__KN_MEDIA:f6a938b75ee9__" alt="KIDO logo">
     </div>
-        <div class="kn-stage-bottom"><span>SOUND → MOTION</span><span>33.3152° N · 44.3661° E</span></div>
+        <div class="kn-stage-bottom"><span class="kn-form-readout" role="status">01 / KNOT</span><span class="kn-form-meter" aria-hidden="true"><i style="--bar:3px"></i><i style="--bar:6px"></i><i style="--bar:10px"></i><i style="--bar:16px"></i><i style="--bar:9px"></i><i style="--bar:4px"></i><i style="--bar:12px"></i><i style="--bar:18px"></i><i style="--bar:11px"></i><i style="--bar:5px"></i><i style="--bar:8px"></i><i style="--bar:14px"></i><i style="--bar:7px"></i><i style="--bar:3px"></i></span></div>
       </div>
-      <div class="kn-stage-controls"><div class="kn-scene-switch" role="group" aria-label="شكل المشهد"><button type="button" data-scene-mode="orbit" aria-pressed="true">مدار</button><button type="button" data-scene-mode="wave" aria-pressed="false">موجة</button></div><button type="button" class="kn-motion-toggle" aria-pressed="true"><span class="kn-motion-icon" aria-hidden="true">◉</span><span class="kn-motion-label">الحركة مفعّلة</span></button></div>
+      <div class="kn-stage-controls"><div class="kn-scene-switch" role="group" aria-label="شكل المشهد"><button type="button" data-scene-mode="knot" aria-pressed="true">عقدة</button><button type="button" data-scene-mode="orbit" aria-pressed="false">مدار</button><button type="button" data-scene-mode="wave" aria-pressed="false">موجة</button></div><button type="button" class="kn-motion-toggle" aria-pressed="true"><span class="kn-motion-icon" aria-hidden="true">◉</span><span class="kn-motion-label">الحركة مفعّلة</span></button></div>
     </div></div></section>
 
 <!-- ABOUT -->
@@ -969,7 +959,7 @@ html.kn-custom-scroll::-webkit-scrollbar,html.kn-custom-scroll body::-webkit-scr
   <div class="wrap">
     <div class="grid">
       <div class="photo-frame reveal">
-        <img src="__KN_MEDIA:096288c7a784__" alt="كايدو">
+        <img src="__KN_MEDIA:096288c7a784__" alt="كايدو" loading="lazy"><div class="kn-photo-caption" aria-hidden="true"><span>KAIDO / THE ARTIST</span><span>من العراق، لكل مكان</span></div>
       </div>
       <div class="reveal">
         <div class="eyebrow-line"><i></i><span> تعال اسولفلك منو اني  </span></div>
@@ -1029,14 +1019,14 @@ html.kn-custom-scroll::-webkit-scrollbar,html.kn-custom-scroll body::-webkit-scr
           <div class="process-line">
             <div><b>01</b><span>اختار نوع الشغل</span><small>أغنية، تعاون، أو إعلان</small></div>
             <div><b>02</b><span>شوف النماذج</span><small>اعرف الجو والمستوى قبل التواصل</small></div>
-            <div><b>03</b><span>احچي بالتفاصيل</span><small>الواتساب متاح دائمًا بالموقع</small></div>
+            <div><b>03</b><span>احچي بالتفاصيل</span><small>راسلني على إنستغرام بالتفاصيل</small></div>
           </div>
         </div>
 
         <div class="studio-panel" data-studio-panel="identity">
           <div class="studio-copy">
             <span class="studio-number">03</span>
-            <h3>هوية داكنة، بنفسجية، وصوتها واضح</h3>
+            <h3>هوية بالصوت… وبكل تفصيل</h3>
             <p>اتحدى واحد مدللك مثل الدلال اللي اني مسويه اللك بهذا الموقع عمي شعبالك ليش هوة الفن بس بالاغاني</p>
           </div>
           <div class="identity-orbit" aria-hidden="true">
@@ -1129,12 +1119,9 @@ html.kn-custom-scroll::-webkit-scrollbar,html.kn-custom-scroll body::-webkit-scr
     <div class="ads-cta reveal">
       <div>
         <h3>تريد إعلان بنفس المستوى؟</h3>
-        <p>تواصل وياي مباشرة عالواتساب ونحدد كل التفاصيل، السعر والمدة ونوع الشغل.</p>
+        <p>راسلني على إنستغرام ونرتّب الفكرة، نوع الشغل، السعر والمدة.</p>
       </div>
-      <a class="btn gold" id="waAdsBtn" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2a10 10 0 00-8.5 15.3L2 22l4.8-1.5A10 10 0 1012 2zm5.8 14.2c-.2.7-1.4 1.3-2 1.4-.5.1-1.1.1-1.8-.1-.4-.1-1-.3-1.7-.6-3-1.3-5-4.3-5.1-4.5-.1-.2-1.2-1.6-1.2-3 0-1.4.7-2.1 1-2.4.3-.3.6-.3.8-.3h.6c.2 0 .4 0 .6.5.2.5.8 1.9.8 2 .1.2.1.4 0 .6-.1.2-.2.3-.3.5-.2.2-.3.3-.5.5-.2.2-.4.4-.2.7.2.3.9 1.5 2 2.4 1.3 1.2 2.4 1.6 2.8 1.7.3.1.5.1.7-.1.2-.2.8-.9 1-1.2.2-.3.4-.2.7-.1.3.1 1.7.8 2 1 .3.1.5.2.6.3.1.2.1.9-.1 1.6z"/></svg>
-        واتساب
-      </a>
+      <a class="btn gold" href="https://www.instagram.com/ki_do11?stkn=MTZ1cTZtOHpwOWYzZQ==" target="_blank" rel="noopener">احچي وياي على إنستغرام <span aria-hidden="true">↗</span></a>
     </div>
   </div>
 </section>
@@ -1142,90 +1129,15 @@ html.kn-custom-scroll::-webkit-scrollbar,html.kn-custom-scroll body::-webkit-scr
 <!-- CONTACT / FOOTER -->
 <section id="contact">
   <div class="wrap">
-    <div class="contact-box reveal">
-
-      <div class="contact-music-bg" aria-hidden="true">
-        <div class="cm-vinyl v1"></div>
-        <div class="cm-vinyl v2"></div>
-        <span class="cm-note" style="--x:7%;--y:18%;--s:24px;--c:#47dfff;--d:-1.2s;--dur:4.7s;--r:-16deg;--dx:14px">♪</span>
-        <span class="cm-note soft" style="--x:14%;--y:61%;--s:32px;--c:#ff5fbf;--d:-.4s;--dur:5.2s;--r:10deg;--dx:-12px">♫</span>
-        <span class="cm-note" style="--x:22%;--y:28%;--s:22px;--c:#ffc85a;--d:-2.1s;--dur:4.1s;--r:18deg;--dx:10px">♬</span>
-        <span class="cm-note" style="--x:29%;--y:74%;--s:27px;--c:#8f75ff;--d:-1.6s;--dur:5.5s;--r:-8deg;--dx:-16px">♩</span>
-        <span class="cm-note soft" style="--x:36%;--y:14%;--s:20px;--c:#53f2b5;--d:-.9s;--dur:4.4s;--r:12deg;--dx:12px">♪</span>
-        <span class="cm-note big" style="--x:43%;--y:56%;--s:34px;--c:#67a8ff;--d:-2.5s;--dur:5.8s;--r:-14deg;--dx:15px">♫</span>
-        <span class="cm-note" style="--x:51%;--y:20%;--s:24px;--c:#ff7f73;--d:-1.1s;--dur:4.8s;--r:9deg;--dx:-10px">♬</span>
-        <span class="cm-note soft" style="--x:58%;--y:69%;--s:20px;--c:#ffd55e;--d:-3.0s;--dur:5.1s;--r:-10deg;--dx:15px">♩</span>
-        <span class="cm-note" style="--x:66%;--y:13%;--s:29px;--c:#b879ff;--d:-.7s;--dur:4.5s;--r:16deg;--dx:-14px">♫</span>
-        <span class="cm-note" style="--x:73%;--y:49%;--s:22px;--c:#4ce2ff;--d:-2.2s;--dur:5.4s;--r:-18deg;--dx:11px">♪</span>
-        <span class="cm-note soft" style="--x:81%;--y:72%;--s:32px;--c:#ff65b6;--d:-1.4s;--dur:4.9s;--r:8deg;--dx:-13px">♬</span>
-        <span class="cm-note" style="--x:89%;--y:27%;--s:23px;--c:#70f0b0;--d:-2.8s;--dur:5.7s;--r:14deg;--dx:12px">♩</span>
-        <span class="cm-note" style="--x:95%;--y:55%;--s:27px;--c:#ffc95c;--d:-.2s;--dur:4.3s;--r:-10deg;--dx:-15px">♪</span>
-        <span class="cm-note big" style="--x:4%;--y:79%;--s:39px;--c:#9c78ff;--d:-3.3s;--dur:6.2s;--r:12deg;--dx:17px">♫</span>
-        <span class="cm-note soft" style="--x:18%;--y:8%;--s:18px;--c:#ff6e9f;--d:-1.9s;--dur:4.6s;--r:-15deg;--dx:12px">♬</span>
-        <span class="cm-note" style="--x:26%;--y:45%;--s:18px;--c:#51d6ff;--d:-.6s;--dur:5.0s;--r:10deg;--dx:-11px">♩</span>
-        <span class="cm-note soft" style="--x:34%;--y:88%;--s:24px;--c:#ffa95c;--d:-2.4s;--dur:5.6s;--r:-12deg;--dx:14px">♫</span>
-        <span class="cm-note" style="--x:47%;--y:82%;--s:18px;--c:#66f0cf;--d:-1.0s;--dur:4.2s;--r:18deg;--dx:-10px">♪</span>
-        <span class="cm-note soft" style="--x:57%;--y:39%;--s:28px;--c:#fa6fe2;--d:-3.1s;--dur:5.9s;--r:-7deg;--dx:16px">♬</span>
-        <span class="cm-note" style="--x:69%;--y:87%;--s:22px;--c:#5ec7ff;--d:-1.7s;--dur:4.7s;--r:13deg;--dx:-14px">♩</span>
-        <span class="cm-note soft" style="--x:77%;--y:7%;--s:20px;--c:#ffe06e;--d:-.8s;--dur:5.3s;--r:-16deg;--dx:12px">♪</span>
-        <span class="cm-note" style="--x:86%;--y:46%;--s:28px;--c:#886dff;--d:-2.7s;--dur:4.8s;--r:11deg;--dx:-15px">♫</span>
-        <span class="cm-note soft" style="--x:92%;--y:84%;--s:20px;--c:#ff657e;--d:-1.3s;--dur:5.5s;--r:-9deg;--dx:13px">♬</span>
-        <span class="cm-note" style="--x:11%;--y:39%;--s:16px;--c:#6bf4ff;--d:-3.4s;--dur:5.8s;--r:7deg;--dx:-10px">♩</span>
-        <span class="cm-note soft" style="--x:40%;--y:34%;--s:17px;--c:#f5a85f;--d:-2.0s;--dur:4.6s;--r:-12deg;--dx:10px">♪</span>
-        <span class="cm-note soft" style="--x:62%;--y:90%;--s:21px;--c:#69e6b8;--d:-.5s;--dur:5.1s;--r:16deg;--dx:-12px">♫</span>
-        <span class="cm-note" style="--x:84%;--y:16%;--s:18px;--c:#ff86d3;--d:-2.3s;--dur:4.4s;--r:-10deg;--dx:11px">♬</span>
-        <span class="cm-note soft" style="--x:97%;--y:12%;--s:17px;--c:#5fafff;--d:-1.5s;--dur:5.7s;--r:12deg;--dx:-10px">♩</span>
-        <span class="cm-ring" style="--x:11%;--y:22%;--c:#4ce2ff;--d:-1s;--dur:5.8s"></span>
-        <span class="cm-ring" style="--x:88%;--y:31%;--c:#ff63ba;--d:-2.7s;--dur:6.4s"></span>
-        <span class="cm-ring" style="--x:24%;--y:78%;--c:#ffd262;--d:-4.1s;--dur:7s"></span>
-        <span class="cm-ring" style="--x:73%;--y:67%;--c:#8e79ff;--d:-.5s;--dur:6.1s"></span>
-        <span class="cm-ring" style="--x:52%;--y:13%;--c:#56efbd;--d:-3.2s;--dur:7.3s"></span>
-        <i class="cm-orb" style="--x:8%;--y:49%;--c:#4de7ff;--d:-1.3s;--dur:4.8s"></i>
-        <i class="cm-orb" style="--x:17%;--y:16%;--c:#ff74cb;--d:-.4s;--dur:5.6s"></i>
-        <i class="cm-orb" style="--x:31%;--y:62%;--c:#ffd35f;--d:-2.7s;--dur:6.1s"></i>
-        <i class="cm-orb" style="--x:45%;--y:9%;--c:#7b7cff;--d:-1.8s;--dur:4.9s"></i>
-        <i class="cm-orb" style="--x:57%;--y:78%;--c:#57eab9;--d:-.7s;--dur:5.3s"></i>
-        <i class="cm-orb" style="--x:68%;--y:32%;--c:#ff766e;--d:-3.2s;--dur:6.5s"></i>
-        <i class="cm-orb" style="--x:79%;--y:13%;--c:#6bdcff;--d:-2.2s;--dur:5.8s"></i>
-        <i class="cm-orb" style="--x:91%;--y:61%;--c:#b779ff;--d:-1.1s;--dur:4.7s"></i>
-        <i class="cm-orb" style="--x:23%;--y:89%;--c:#ff5dbb;--d:-4.1s;--dur:6.8s"></i>
-        <i class="cm-orb" style="--x:38%;--y:37%;--c:#6bf2d2;--d:-.2s;--dur:5.1s"></i>
-        <i class="cm-orb" style="--x:63%;--y:55%;--c:#ffd46c;--d:-2.9s;--dur:6.0s"></i>
-        <i class="cm-orb" style="--x:83%;--y:84%;--c:#52cfff;--d:-1.6s;--dur:5.5s"></i>
-        <div class="cm-eq">
-          <i style="--t:1.2s;--d:-.2s"></i>
-          <i style="--t:1.6s;--d:-.9s"></i>
-          <i style="--t:.9s;--d:-.4s"></i>
-          <i style="--t:1.4s;--d:-1.1s"></i>
-          <i style="--t:1.1s;--d:-.3s"></i>
-          <i style="--t:1.7s;--d:-1.3s"></i>
-          <i style="--t:1.0s;--d:-.7s"></i>
-          <i style="--t:1.5s;--d:-.1s"></i>
-          <i style="--t:1.25s;--d:-.8s"></i>
-          <i style="--t:.95s;--d:-.5s"></i>
-          <i style="--t:1.55s;--d:-1.0s"></i>
-          <i style="--t:1.05s;--d:-.25s"></i>
-          <i style="--t:1.8s;--d:-1.4s"></i>
-          <i style="--t:1.15s;--d:-.65s"></i>
-          <i style="--t:1.45s;--d:-.15s"></i>
-          <i style="--t:.85s;--d:-.55s"></i>
-          <i style="--t:1.3s;--d:-1.2s"></i>
-          <i style="--t:1.65s;--d:-.35s"></i>
-          <i style="--t:1.0s;--d:-.75s"></i>
-          <i style="--t:1.5s;--d:-.05s"></i>
-          <i style="--t:1.2s;--d:-.95s"></i>
-          <i style="--t:.92s;--d:-.45s"></i>
-          <i style="--t:1.6s;--d:-1.25s"></i>
-          <i style="--t:1.1s;--d:-.6s"></i>
-          <i style="--t:1.4s;--d:-.2s"></i>
-          <i style="--t:1.0s;--d:-.85s"></i>
-          <i style="--t:1.7s;--d:-.5s"></i>
-          <i style="--t:1.25s;--d:-1.05s"></i>
-        </div>
+    <div class="contact-box kn-contact-layout reveal">
+      <div class="kn-contact-copy">
+        <small class="kn-contact-overline">A NEW IDEA STARTS HERE</small>
+        <h2>خل نسوي شي<br><span class="glow-text">يستاهل ينسمع.</span></h2>
+        <p>عندك فكرة أغنية، تعاون، أو إعلان؟ احچي وياي بالتفاصيل. نرتّب الفكرة ونطلعها بصوت يحمل بصمتنا.</p>
+        <a class="btn gold" href="https://www.instagram.com/ki_do11?stkn=MTZ1cTZtOHpwOWYzZQ==" target="_blank" rel="noopener">خل نبدأ على إنستغرام <span class="kn-button-arrow" aria-hidden="true">↗</span></a>
       </div>
-      <h2 class="glow-text">حاب نسوي شي جديد ؟</h2>
-      <p>سواء تعاون فني، إعلان، أو بس تريد تحچي... أنا هنا. تابعني على كل المنصات وتواصل وياي بأي وكت.</p>
-      <a class="btn gold" id="waMainBtn" target="_blank" rel="noopener">تواصل عبر واتساب</a>
+      <div class="kn-contact-platforms">
+        <small>من كل منصة، نفس الصوت. تابعني واسمع الباقي.</small>
       <div class="social-row">
         <a class="social-pill" href="https://www.instagram.com/ki_do11?stkn=MTZ1cTZtOHpwOWYzZQ==" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.4" cy="6.6" r="1"/></svg>
@@ -1252,6 +1164,7 @@ html.kn-custom-scroll::-webkit-scrollbar,html.kn-custom-scroll body::-webkit-scr
           أنغامي
         </a>
       </div>
+      </div>
     </div>
 
     <footer class="foot">
@@ -1264,9 +1177,6 @@ html.kn-custom-scroll::-webkit-scrollbar,html.kn-custom-scroll body::-webkit-scr
   </div>
 </section>
 
-<a class="wa-float" id="waFloat" target="_blank" rel="noopener" aria-label="واتساب">
-  <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-8.5 15.3L2 22l4.8-1.5A10 10 0 1012 2zm5.8 14.2c-.2.7-1.4 1.3-2 1.4-.5.1-1.1.1-1.8-.1-.4-.1-1-.3-1.7-.6-3-1.3-5-4.3-5.1-4.5-.1-.2-1.2-1.6-1.2-3 0-1.4.7-2.1 1-2.4.3-.3.6-.3.8-.3h.6c.2 0 .4 0 .6.5.2.5.8 1.9.8 2 .1.2.1.4 0 .6-.1.2-.2.3-.3.5-.2.2-.3.3-.5.5-.2.2-.4.4-.2.7.2.3.9 1.5 2 2.4 1.3 1.2 2.4 1.6 2.8 1.7.3.1.5.1.7-.1.2-.2.8-.9 1-1.2.2-.3.4-.2.7-.1.3.1 1.7.8 2 1 .3.1.5.2.6.3.1.2.1.9-.1 1.6z"/></svg>
-</a>
 
 
 <div class="modal" id="videoModal">
@@ -1278,17 +1188,10 @@ html.kn-custom-scroll::-webkit-scrollbar,html.kn-custom-scroll body::-webkit-scr
 
 <script>
 /* ================= DATA ================= */
-const WHATSAPP_NUMBER = "9647817607623";
 const songs = ["01n2X9b0Wzs","ZBrWBK45f60","XGn3Fq8JJn0","DouWuNHojqI","0Ffj2L4pYMM","LBDmR2sGC2A","45K9oQFBAck"];
 const dass  = ["HNbUI1Mwlco","u8CAyh_SKW4","59Kbb-NIbTI"];
 const ads   = ["LBDmR2sGC2A","DouWuNHojqI","45K9oQFBAck","GoltnwCrYX4","vyKfQ5vfFv4"];
 
-function waLink(msg){
-  return "https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(msg);
-}
-document.getElementById("waMainBtn").href = waLink("هلا كايدو، شفت موقعك واريد أتواصل وياك.");
-document.getElementById("waAdsBtn").href = waLink("هلا كايدو، أريد أسوي إعلان وياك.");
-document.getElementById("waFloat").href = waLink("هلا كايدو، وصلتني صفحتك وحاب أحچي وياك.");
 
 /* ================= CARD BUILDERS ================= */
 function playIcon(){

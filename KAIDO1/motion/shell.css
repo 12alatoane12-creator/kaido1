@@ -26,3 +26,20 @@ body.kn-motion-off #boot *,body.kn-motion-off .mg-character *,body.kn-motion-off
 @keyframes kn-load-orbit{to{transform:rotate(360deg)}}@keyframes kn-load-signal{to{stroke-dashoffset:-315}}@keyframes kn-admin-in{from{opacity:0;translate:0 12px}to{opacity:1;translate:0 0}}
 @media(prefers-reduced-motion:reduce){#boot *,#adminDialog{animation:none!important;transition:none!important}#app,#boot{transition:none!important}.mg-character,.mg-character *{animation:none!important}}
 @media(max-width:700px){.kn-loader-form{width:132px;height:132px}.kn-loader-brand{font-size:22px}.kn-loader-label{font-size:7px;letter-spacing:2.5px}}
+
+/* Curtains reveal real readiness; no minimum loading duration is introduced. */
+#boot{background:none;isolation:isolate;transition:visibility 0s}
+#boot[data-artist=nova]{background:none}
+.kn-loader-veil{position:absolute;top:0;bottom:0;width:50.1%;z-index:-1;transition:transform .78s cubic-bezier(.76,0,.24,1);pointer-events:none}
+.kn-loader-veil.v1{left:0;background:radial-gradient(ellipse at 100% 44%,#1d1427,#08070d 70%);border-right:1px solid #d2b6ff0a}
+.kn-loader-veil.v2{right:0;background:radial-gradient(ellipse at 0% 44%,#1d1427,#08070d 70%);border-left:1px solid #d2b6ff0a}
+#boot[data-artist=nova] .v1{background:radial-gradient(ellipse at 100% 44%,#15273b,#070a10 70%)}
+#boot[data-artist=nova] .v2{background:radial-gradient(ellipse at 0% 44%,#15273b,#070a10 70%)}
+.kn-loader-ghost{position:absolute;left:50%;top:46%;translate:-50% -50%;direction:ltr;font:800 clamp(92px,22vw,340px)/1 Arial,sans-serif;letter-spacing:-.06em;color:transparent;-webkit-text-stroke:1px #d4b3ee09;white-space:nowrap;z-index:-1;transition:opacity .2s,scale .7s cubic-bezier(.16,1,.3,1)}
+#boot[data-artist=nova] .kn-loader-ghost{-webkit-text-stroke-color:#a6d5ff09}
+.kn-loader{transition:opacity .23s,translate .65s cubic-bezier(.16,1,.3,1)}
+#boot.hide{opacity:1;visibility:hidden;pointer-events:none;transition:visibility 0s .78s}
+#boot.hide .v1{transform:translateX(-100%)}#boot.hide .v2{transform:translateX(100%)}
+#boot.hide .kn-loader{opacity:0;translate:0 -16px}#boot.hide .kn-loader-ghost{opacity:0;scale:1.12}
+body.kn-motion-off #app,body.kn-motion-off #boot,body.kn-motion-off #boot *{transition:none!important}
+@media(prefers-reduced-motion:reduce){#boot,#boot *,#app{transition:none!important}.kn-loader-ghost{display:none}}

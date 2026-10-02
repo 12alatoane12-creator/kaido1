@@ -1,23 +1,22 @@
-KAIDO × NOVA — recovery verification, 2026-10-02
+KAIDO × NOVA — final motion refinement verification, 2026-10-02
 
-npm run build: PASS
-npm test: PASS — 32 tests, 0 failures, 0 cancelled, 0 skipped
-npm run check:frontend: PASS — 40 actual inline scripts parsed, including bridge-injected child documents; API data replacement verified for both artists in both entry points.
+Build: PASS; deterministic repeated build produces identical bytes.
+Tests: PASS — 49 tests, 0 failures, 0 cancelled, 0 skipped.
+Frontend: PASS — 40 actual inline scripts parsed, including bridge-injected child pages; four live-content replacement checks pass.
 
-Runtime tests: paced frames, no duplicate loop, offscreen stop/resume, reduced-motion zero scheduling, low-power quality bounds, perspective edge cases, metadata concurrency/error continuation and queue closure.
-Loader tests: immediate readiness, stale IDs and artist mismatch, duplicate readiness, old queued entrance, stale slow timer, failure/retry.
-Accessibility regressions: closed overlays inert/aria-hidden, reopen/close state, focus leaving nested player, native focus boundary wrapping. Empty NOVA archive resets count and empty state.
-Integration regressions: entry transfer budget and all 39 catalogue items, stalled content timeout/fallback in both entries, player presence in published output.
-Original backend tests: content persistence, authentication, tool-code verification, CSRF/origin checks, rate limits, empty lists, expiry/logout and URL validation.
+Removal: both actual entry shells and unpacked artist pages contain no WhatsApp service, number, UI controls, helper or assistant reference. Remaining original social/music platforms are preserved.
+Geometry: all three meshes are finite, bounded, seam-safe and have identical topology; morph output is reused; rapid retargeting starts at the displayed shape; static selection settles immediately.
+Actual renderer VM checks: entrance gating, single paced RAF, bounded pixel density, no per-frame layout read, finite draw coordinates, offscreen/hidden/user-policy stop, static mode controls, keyboard/class palette changes and observer cleanup pass. These checks simulate only the unavailable Canvas/DOM boundary and do not measure real-device GPU frame time.
+Journey: actual progress on long/short/overscrolled pages, current section selection, local fragment handling under the outer base, reduced-motion scroll, and modified/cross-artist click behavior pass.
+Catalogue: 39 seeded entries preserved; changed/empty launcher counts and empty archive state pass. Stalled content falls back to embedded catalogue data. Published YouTube player is present.
+Loader/accessibility/backend: previous stale-readiness, retry, metadata queue, focus/inert, authentication, persistence, rate limit, origin and validation checks pass.
 
-Original 11 backend/config/player files are byte-identical. Original external contact URLs and artwork identities are preserved. Images were resized/re-encoded, so image bytes differ. Repeated build output is byte-identical.
+Fresh independent code review completed. Both important findings (fragment navigation and stale archive-launcher counts), plus the keyboard palette mismatch, were reproduced failing and fixed passing. No unresolved material review finding.
+All 11 backend/config/environment/player files are byte-identical to the prior verified package. Artwork assets are byte-identical to the prior optimized package.
+Unique image bytes: 1,140,044 (original: 8,862,810).
+Root entry bytes: 2,177,408.
+Hosted entry bytes: 2,177,551 (original: 12,768,324; 82.9% smaller).
 
-Optimized unique images: 1,140,044 bytes, from 8,862,810 bytes.
-Root entry: 2,157,582 bytes.
-Hosted entry: 2,157,725 bytes, from 12,768,324 bytes (83.1% smaller).
+LIMITATION: local visual browser preview is restricted in this environment. Final layout, glyph clipping, curtain timing and real-device smoothness were not visually certified. No live deployment, database connection or administration mutation was performed. Normal browser inspection instructions are included in README_AR.md.
 
-Tests above were observed passing in this session. New runtime/loader and integration checks were first observed failing before implementation. Npm prints an environment http-proxy configuration warning; commands still exit 0.
-
-Limitations: visual browser QA could not run in this session due to browser access restrictions. No production deployment, real Upstash connection, or live admin transaction was performed. Manual visual check instructions are in README_AR.md.
-
-Archive CRC and source-byte equality: checked when packaging; see final delivery record in docs/progress.md.
+Package integrity is checked while creating the final ZIP: CRC, safe paths, archived bytes equal the source tree.
