@@ -1,0 +1,759 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KAIDO × NOVA</title>
+<style>
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#090711}
+#app{position:fixed;inset:0;width:100%;height:100%;border:0;display:block;background:#090711}
+#boot{position:fixed;inset:0;display:grid;place-items:center;background:#090711;color:#eee;font:600 15px Arial,sans-serif;z-index:2;transition:opacity .25s}
+#boot.hide{opacity:0;pointer-events:none}
+#boot span{opacity:.72}
+
+/* KAIDO ↔ NOVA musical transition */
+#musicTransition{position:fixed;inset:0;z-index:80;overflow:hidden;pointer-events:none;visibility:hidden;opacity:0;isolation:isolate;background:#070811}
+#musicTransition::before{content:"";position:absolute;inset:-25%;background:radial-gradient(circle at 50% 50%,rgba(93,174,255,.2),transparent 34%),conic-gradient(from 230deg at 50% 50%,rgba(63,132,255,.06),transparent 25%,rgba(255,196,92,.045),transparent 55%,rgba(135,86,255,.075),transparent 80%);filter:blur(22px);transform:scale(.9)}
+#musicTransition::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(210,242,255,.12),transparent);transform:translateX(-120%) skewX(-12deg);mix-blend-mode:screen}
+#musicTransition.active{visibility:visible;opacity:1;animation:mtBackdropIn .3s ease both}
+#musicTransition.active::after{animation:mtFlash 1.08s cubic-bezier(.22,.75,.2,1) .08s both}
+#musicTransition.to-kaido::before{background:radial-gradient(circle at 50% 50%,rgba(165,112,255,.18),transparent 35%),conic-gradient(from 120deg at 50% 50%,rgba(129,82,255,.08),transparent 30%,rgba(108,190,255,.05),transparent 62%,rgba(255,202,117,.045),transparent 82%)}
+.mt-grid{position:absolute;inset:0;opacity:.28;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:54px 54px;mask-image:radial-gradient(circle at center,#000 12%,transparent 76%);transform:scale(1.08)}
+.mt-wave{position:absolute;left:-4%;right:-4%;top:50%;height:150px;transform:translateY(-50%);opacity:.64;filter:drop-shadow(0 0 12px rgba(120,199,255,.38))}
+.mt-wave svg{width:100%;height:100%;overflow:visible}
+.mt-wave path{fill:none;stroke:rgba(190,231,255,.72);stroke-width:1.6;stroke-linecap:round;stroke-dasharray:10 14;vector-effect:non-scaling-stroke}
+#musicTransition.active .mt-wave path{animation:mtWaveDash .72s linear infinite,mtWaveGlow 1.08s ease-in-out both}
+.to-kaido .mt-wave{filter:drop-shadow(0 0 12px rgba(184,142,255,.34))}.to-kaido .mt-wave path{stroke:rgba(218,198,255,.72)}
+.mt-tool{position:absolute;width:clamp(54px,6vw,88px);height:clamp(54px,6vw,88px);display:grid;place-items:center;color:#dff6ff;opacity:0;filter:drop-shadow(0 0 14px rgba(111,196,255,.4));will-change:transform,opacity}
+.mt-tool svg{width:100%;height:100%;overflow:visible;stroke:currentColor;fill:none;stroke-width:1.55;stroke-linecap:round;stroke-linejoin:round}
+.to-kaido .mt-tool{color:#eadfff;filter:drop-shadow(0 0 14px rgba(173,125,255,.36))}
+.mt-tool::before{content:"";position:absolute;inset:15%;border-radius:50%;background:currentColor;opacity:.075;filter:blur(15px);transform:scale(1.35)}
+.mt-tool.t1{top:12%;--d:.02s;--r:-18deg;--s:.86}.mt-tool.t2{top:29%;--d:.1s;--r:13deg;--s:1.04}.mt-tool.t3{top:62%;--d:.04s;--r:-8deg;--s:.96}.mt-tool.t4{top:77%;--d:.14s;--r:18deg;--s:.82}.mt-tool.t5{top:43%;--d:.19s;--r:-15deg;--s:.9}.mt-tool.t6{top:6%;--d:.23s;--r:9deg;--s:.78}.mt-tool.t7{top:70%;--d:.25s;--r:-7deg;--s:.72}
+#musicTransition.to-nova.active .mt-tool{animation:mtToolNova .9s cubic-bezier(.18,.72,.25,1) var(--d) both}
+#musicTransition.to-kaido.active .mt-tool{animation:mtToolKaido .9s cubic-bezier(.18,.72,.25,1) var(--d) both}
+.mt-center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(.86);display:flex;align-items:center;gap:14px;direction:ltr;color:#ecfbff;opacity:0;font:700 clamp(11px,1.1vw,15px)/1 Arial,sans-serif;letter-spacing:.34em;text-shadow:0 0 24px rgba(139,215,255,.45);white-space:nowrap}
+.mt-center i{display:block;width:44px;height:1px;background:linear-gradient(90deg,transparent,currentColor,transparent);box-shadow:0 0 12px currentColor}
+#musicTransition.active .mt-center{animation:mtCenter 1.06s cubic-bezier(.2,.7,.2,1) both}
+#musicTransition.to-kaido .mt-center{color:#eadfff;text-shadow:0 0 24px rgba(179,135,255,.4)}
+#musicTransition.settling{animation:mtBackdropOut .5s cubic-bezier(.4,0,.2,1) both}
+#musicTransition.settling .mt-tool,#musicTransition.settling .mt-center,#musicTransition.settling .mt-wave{transition:opacity .24s ease;opacity:0!important}
+@keyframes mtBackdropIn{from{opacity:0}to{opacity:1}}
+@keyframes mtBackdropOut{0%{opacity:1;visibility:visible}100%{opacity:0;visibility:hidden}}
+@keyframes mtFlash{0%{transform:translateX(-125%) skewX(-12deg);opacity:0}22%{opacity:.25}63%{opacity:.75}100%{transform:translateX(125%) skewX(-12deg);opacity:0}}
+@keyframes mtWaveDash{to{stroke-dashoffset:-48}}
+@keyframes mtWaveGlow{0%,100%{opacity:.12;transform:scaleY(.72)}45%{opacity:1;transform:scaleY(1.08)}}
+@keyframes mtToolNova{0%{left:-14vw;transform:translate3d(-8vw,8vh,0) rotate(calc(var(--r) - 22deg)) scale(.56);opacity:0}15%{opacity:.32}48%{opacity:.96}100%{left:114vw;transform:translate3d(9vw,-12vh,0) rotate(calc(var(--r) + 42deg)) scale(var(--s));opacity:0}}
+@keyframes mtToolKaido{0%{right:-14vw;transform:translate3d(8vw,-7vh,0) rotate(calc(var(--r) + 22deg)) scale(.56);opacity:0}15%{opacity:.3}48%{opacity:.94}100%{right:114vw;transform:translate3d(-9vw,12vh,0) rotate(calc(var(--r) - 42deg)) scale(var(--s));opacity:0}}
+@keyframes mtCenter{0%,12%{opacity:0;transform:translate(-50%,-50%) scale(.82);filter:blur(8px)}42%{opacity:1;transform:translate(-50%,-50%) scale(1.03);filter:blur(0)}73%{opacity:.92;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(1.08);filter:blur(3px)}}
+@media(max-width:700px){.mt-tool{width:58px;height:58px}.mt-tool.t6,.mt-tool.t7{display:none}.mt-center{letter-spacing:.22em}.mt-wave{height:110px}}
+@media(prefers-reduced-motion:reduce){#musicTransition.active .mt-tool,#musicTransition.active .mt-wave path,#musicTransition.active .mt-center,#musicTransition.active::after{animation-duration:.01ms!important;animation-iteration-count:1!important}}
+
+
+/* ===== Interactive KAIDO character controller v2 ===== */
+#musicGuide{position:fixed;inset:0;z-index:72;pointer-events:none;font-family:"Cairo","Changa",Tahoma,Arial,sans-serif;direction:rtl;overflow:hidden;contain:layout paint}
+#musicGuide .mg-wrap{position:absolute;bottom:clamp(58px,10vh,106px);width:min(620px,calc(100vw - 22px));display:flex;align-items:flex-end;gap:8px;opacity:0;visibility:hidden;transition:opacity .3s ease,transform .62s cubic-bezier(.2,.85,.18,1),visibility .3s;will-change:transform,opacity}
+#musicGuide.side-right .mg-wrap{right:10px;transform:translateX(118%)}
+#musicGuide.side-left .mg-wrap{left:10px;flex-direction:row-reverse;transform:translateX(-118%)}
+#musicGuide.show .mg-wrap{opacity:1;visibility:visible;transform:translateX(0)}
+#musicGuide.leaving.side-right .mg-wrap{opacity:0;transform:translateX(118%);transition-duration:.46s}
+#musicGuide.leaving.side-left .mg-wrap{opacity:0;transform:translateX(-118%);transition-duration:.46s}
+
+.mg-character-shell{width:248px;min-width:248px;height:372px;position:relative;pointer-events:none;filter:drop-shadow(0 23px 32px rgba(0,0,0,.5)) drop-shadow(0 0 26px rgba(84,158,255,.16));transform-origin:50% 100%;isolation:isolate;will-change:transform}
+.mg-character-stage{position:absolute;inset:0;transform-origin:50% 100%;animation:mgLivingBreath 4.4s cubic-bezier(.4,0,.2,1) infinite}
+.mg-pose{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:center bottom;opacity:0;transform:translate3d(0,4px,0) scale(.99);transform-origin:50% 100%;transition:opacity .25s ease,transform .38s cubic-bezier(.2,.8,.2,1),filter .28s ease;will-change:opacity,transform;user-select:none;-webkit-user-drag:none}
+.mg-pose.active{opacity:1;transform:translate3d(0,0,0) scale(1);z-index:2}
+#musicGuide[data-state="prepare"] .mg-pose.active{animation:mgPrepare .62s cubic-bezier(.2,.75,.2,1) both}
+#musicGuide.speaking .mg-pose.active{animation:mgTalkLife .82s ease-in-out infinite}
+#musicGuide[data-state="waiting"] .mg-pose.active{animation:mgWaitingLife 3.8s ease-in-out infinite}
+#musicGuide[data-state="hover"] .mg-pose.active{filter:brightness(1.035) saturate(1.025)}
+#musicGuide[data-state="click"] .mg-pose.active{animation:mgClickReaction .34s cubic-bezier(.2,.9,.3,1) both}
+#musicGuide.micro-gesture .mg-character-stage{animation:mgMicroGesture .68s cubic-bezier(.25,.8,.25,1) both}
+.mg-floor{position:absolute;left:36px;right:28px;bottom:3px;height:19px;border-radius:50%;background:radial-gradient(ellipse,rgba(98,177,255,.32),rgba(112,75,255,.14) 46%,transparent 74%);filter:blur(5px);opacity:.8;animation:mgFloor 3.2s ease-in-out infinite;z-index:-1}
+.mg-note{position:absolute;z-index:4;font-weight:900;color:#d7f2ff;text-shadow:0 0 14px rgba(119,202,255,.95);opacity:0;font-size:21px;pointer-events:none}
+#musicGuide.speaking .mg-note{animation:mgNote 1.75s ease-out infinite}
+.mg-note.n1{right:9px;top:75px;animation-delay:.06s!important}.mg-note.n2{right:42px;top:38px;animation-delay:.61s!important;font-size:16px}.mg-note.n3{right:2px;top:126px;animation-delay:1.12s!important;font-size:17px}
+.mg-status-ring{position:absolute;left:50%;top:45%;width:155px;height:155px;border-radius:50%;transform:translate(-50%,-50%) scale(.82);background:radial-gradient(circle,rgba(91,177,255,.12),rgba(91,177,255,.035) 48%,transparent 70%);opacity:0;transition:opacity .35s ease,transform .5s ease;z-index:-1;filter:blur(.2px)}
+#musicGuide.speaking .mg-status-ring,#musicGuide[data-state="prepare"] .mg-status-ring{opacity:.9;transform:translate(-50%,-50%) scale(1.02)}
+
+.mg-bubble{position:relative;margin-bottom:166px;width:min(340px,calc(100vw - 260px));pointer-events:auto;opacity:0;visibility:hidden;transform:translateY(10px) scale(.965);transition:opacity .3s ease,transform .43s cubic-bezier(.2,.8,.2,1),visibility .3s}
+#musicGuide.show.bubble-visible .mg-bubble{opacity:1;visibility:visible;transform:translateY(0) scale(1)}
+.mg-card{width:100%;border:1px solid rgba(180,220,255,.19);border-radius:20px;padding:13px 14px 14px;color:#eef8ff;background:linear-gradient(145deg,rgba(10,20,31,.95),rgba(8,11,20,.97));box-shadow:0 18px 50px rgba(0,0,0,.44),0 0 0 1px rgba(255,255,255,.025) inset,0 0 30px rgba(83,166,255,.09);backdrop-filter:blur(16px);cursor:pointer;text-align:right;transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease;position:relative;overflow:hidden;outline:none}
+.mg-card::before{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 10%,rgba(150,222,255,.08) 42%,rgba(255,210,126,.05) 50%,transparent 62%);transform:translateX(-125%)}
+#musicGuide.bubble-visible .mg-card::before{animation:mgBubbleShine 3.5s ease-in-out 1.25s infinite}
+.mg-card:hover,.mg-card:focus-visible{transform:translateY(-3px) scale(1.006);border-color:rgba(180,225,255,.42);box-shadow:0 20px 55px rgba(0,0,0,.46),0 0 36px rgba(92,183,255,.15)}
+.mg-card:focus-visible{box-shadow:0 20px 55px rgba(0,0,0,.46),0 0 0 2px rgba(122,202,255,.62),0 0 36px rgba(92,183,255,.15)}
+.mg-kicker{position:relative;z-index:1;display:flex;align-items:center;gap:7px;color:#86cfff;font-size:10px;font-weight:800;letter-spacing:.7px;margin-bottom:7px;opacity:.92}
+.mg-kicker i{width:6px;height:6px;border-radius:50%;background:#8bddff;box-shadow:0 0 10px #79d8ff;animation:mgDot 1.15s ease-in-out infinite}
+.mg-text{position:relative;z-index:1;font-size:14.5px;line-height:1.8;font-weight:700;min-height:50px;text-shadow:0 1px 10px rgba(0,0,0,.25)}
+.mg-text::after{content:"";display:inline-block;width:5px;height:14px;margin-inline-start:3px;border-radius:3px;background:#8edcff;box-shadow:0 0 8px rgba(113,211,255,.7);vertical-align:-2px;opacity:0}
+#musicGuide.speaking .mg-text::after{opacity:.85;animation:mgCaret .7s steps(1,end) infinite}
+.mg-hint{position:relative;z-index:1;margin-top:8px;font-size:10.5px;color:#9baabb;display:flex;align-items:center;gap:5px;opacity:.78}.mg-hint b{color:#d8efff;font-size:13px}
+.mg-tail{position:absolute;bottom:20px;width:18px;height:18px;background:#09121d;border-right:1px solid rgba(180,220,255,.18);border-bottom:1px solid rgba(180,220,255,.18);z-index:-1}
+.side-right .mg-tail{right:-8px;transform:rotate(45deg)}.side-left .mg-tail{left:-8px;transform:rotate(225deg)}
+.mg-close{position:absolute;top:-8px;left:-7px;width:25px;height:25px;border-radius:50%;border:1px solid rgba(255,255,255,.12);background:rgba(4,8,14,.9);color:#9fb3c6;display:grid;place-items:center;font:700 14px Arial;cursor:pointer;pointer-events:auto;opacity:.75;transition:.2s;z-index:3}.mg-close:hover{opacity:1;color:#fff;border-color:rgba(255,255,255,.28)}
+.side-left .mg-close{left:auto;right:-7px}
+
+@keyframes mgLivingBreath{0%,100%{transform:translate3d(0,0,0) scale(1)}48%{transform:translate3d(0,-1.6px,0) scale(1.002,1.004)}56%{transform:translate3d(0,-1.4px,0) scale(1.001,1.003)}}
+@keyframes mgPrepare{0%{transform:translateY(2px) scale(.995)}52%{transform:translateY(-3px) scale(1.005)}100%{transform:translateY(0) scale(1)}}
+@keyframes mgTalkLife{0%,100%{transform:translate3d(0,0,0) rotate(0deg) scale(1)}28%{transform:translate3d(0,-1.6px,0) rotate(.24deg) scale(1.002)}63%{transform:translate3d(0,-.4px,0) rotate(-.18deg) scale(1.001)}}
+@keyframes mgWaitingLife{0%,100%{transform:translate3d(0,0,0)}48%{transform:translate3d(0,-1.15px,0)}54%{transform:translate3d(0,-1px,0)}}
+@keyframes mgClickReaction{0%{transform:translateY(0) scale(1)}45%{transform:translateY(-5px) scale(1.012)}100%{transform:translateY(0) scale(1)}}
+@keyframes mgMicroGesture{0%,100%{transform:translate3d(0,0,0) rotate(0)}38%{transform:translate3d(1.5px,-2px,0) rotate(.28deg)}72%{transform:translate3d(-.7px,-.5px,0) rotate(-.14deg)}}
+@keyframes mgFloor{0%,100%{opacity:.48;transform:scaleX(.9)}50%{opacity:.9;transform:scaleX(1.05)}}
+@keyframes mgNote{0%{opacity:0;transform:translate(0,10px) rotate(0deg) scale(.7)}20%{opacity:.95}100%{opacity:0;transform:translate(16px,-48px) rotate(18deg) scale(1.08)}}
+@keyframes mgBubbleShine{0%,70%{transform:translateX(-125%)}100%{transform:translateX(125%)}}
+@keyframes mgDot{0%,100%{opacity:.45;transform:scale(.75)}50%{opacity:1;transform:scale(1.2)}}
+@keyframes mgCaret{0%,49%{opacity:.82}50%,100%{opacity:.12}}
+
+@media(max-width:700px){
+  #musicGuide .mg-wrap{bottom:clamp(42px,9vh,78px);width:calc(100vw - 8px);gap:0}
+  #musicGuide.side-right .mg-wrap{right:4px}#musicGuide.side-left .mg-wrap{left:4px}
+  .mg-character-shell{width:166px;min-width:166px;height:249px}
+  .mg-bubble{width:calc(100vw - 158px);margin-bottom:106px}
+  .mg-card{padding:11px 11px 12px;border-radius:16px}.mg-text{font-size:12.6px;line-height:1.72;min-height:42px}.mg-kicker{font-size:9px}.mg-hint{font-size:9.2px}
+  .mg-note.n1{top:50px}.mg-note.n2{top:26px}.mg-note.n3{top:84px}
+}
+@media(max-width:420px){.mg-character-shell{width:142px;min-width:142px;height:213px}.mg-bubble{width:calc(100vw - 132px);margin-bottom:91px}.mg-text{font-size:12px}.mg-hint{font-size:8.8px}.mg-card{padding:10px}}
+@media(prefers-reduced-motion:reduce){#musicGuide .mg-wrap,.mg-bubble,.mg-pose{transition-duration:.01ms!important}.mg-character-stage,.mg-pose,.mg-note,.mg-floor,.mg-card::before,.mg-kicker i{animation:none!important}}
+
+
+/* ===== KIDO VIRTUAL ASSISTANT v3 ===== */
+:root{--kido-ai:#78c9ff;--kido-ai2:#7868ff;--kido-panel:rgba(7,12,22,.96)}
+#musicGuide{z-index:76}
+#musicGuide .mg-character-shell{pointer-events:auto;cursor:pointer}
+#musicGuide.chat-open .mg-wrap{opacity:1;visibility:visible;transform:none!important}
+#musicGuide.chat-open .mg-bubble{opacity:0!important;visibility:hidden!important;pointer-events:none!important}
+#musicGuide.free-pos .mg-wrap{left:var(--mg-x,10px)!important;right:auto!important;top:var(--mg-y,auto)!important;bottom:auto!important;transform:translateY(16px) scale(.97)!important}
+#musicGuide.free-pos.show .mg-wrap{transform:translateY(0) scale(1)!important}
+#musicGuide.free-pos.leaving .mg-wrap{transform:translateY(16px) scale(.97)!important;opacity:0!important}
+#musicGuide.free-pos.side-left .mg-wrap{flex-direction:row-reverse}
+#musicGuide.free-pos.side-right .mg-wrap{flex-direction:row}
+#musicGuide.peek-mode .mg-character-shell{height:225px;overflow:hidden;border-radius:0 0 18px 18px}
+#musicGuide.peek-mode .mg-character-stage{height:372px;inset:auto 0 0 0;bottom:-92px}
+#musicGuide.peek-mode .mg-pose{height:372px;object-position:center bottom}
+#musicGuide.peek-mode .mg-floor{display:none}
+#musicGuide.peek-mode .mg-bubble{margin-bottom:82px}
+#musicGuide[data-target-kind="video"] .mg-status-ring,#musicGuide[data-target-kind="image"] .mg-status-ring{opacity:.42;transform:translate(-50%,-50%) scale(1.05)}
+
+#mgLauncher{position:fixed;z-index:5;right:18px;bottom:18px;display:flex;align-items:center;gap:9px;pointer-events:auto;border:1px solid rgba(151,211,255,.24);background:linear-gradient(145deg,rgba(7,15,27,.96),rgba(8,10,18,.97));color:#eef9ff;border-radius:999px;padding:9px 13px 9px 9px;box-shadow:0 14px 40px rgba(0,0,0,.38),0 0 28px rgba(70,164,255,.1);font:800 12px/1.1 Cairo,Tahoma,Arial,sans-serif;cursor:pointer;transition:.25s;backdrop-filter:blur(14px)}
+#mgLauncher:hover{transform:translateY(-2px);border-color:rgba(151,211,255,.48);box-shadow:0 18px 46px rgba(0,0,0,.42),0 0 32px rgba(70,164,255,.16)}
+#mgLauncher .mg-launch-avatar{width:34px;height:34px;border-radius:50%;position:relative;overflow:hidden;background:radial-gradient(circle at 50% 35%,rgba(95,191,255,.22),rgba(34,54,96,.18) 60%,transparent);border:1px solid rgba(255,255,255,.12)}
+#mgLauncher .mg-launch-avatar img{position:absolute;width:58px;height:88px;max-width:none;left:50%;top:-8px;transform:translateX(-50%);object-fit:contain;object-position:center top}
+#mgLauncher .mg-launch-copy{display:flex;flex-direction:column;align-items:flex-start;gap:2px;direction:rtl}
+#mgLauncher small{font-size:8px;color:#7fd7ff;letter-spacing:.5px}#mgLauncher strong{font-size:11px}
+#musicGuide.chat-open #mgLauncher{opacity:0;pointer-events:none;transform:translateY(8px)}
+
+#mgChat{position:fixed;z-index:6;right:18px;bottom:18px;width:min(390px,calc(100vw - 24px));height:min(620px,calc(100vh - 36px));display:flex;flex-direction:column;pointer-events:auto;background:linear-gradient(155deg,rgba(8,15,27,.985),rgba(5,8,15,.985));border:1px solid rgba(155,215,255,.2);border-radius:24px;color:#edf7ff;box-shadow:0 28px 80px rgba(0,0,0,.56),0 0 50px rgba(75,158,255,.12);backdrop-filter:blur(20px);opacity:0;visibility:hidden;transform:translateY(18px) scale(.97);transition:.32s cubic-bezier(.2,.8,.2,1);overflow:hidden;direction:rtl}
+#musicGuide.chat-open #mgChat{opacity:1;visibility:visible;transform:none}
+.mg-chat-head{padding:13px 14px;border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:10px;background:linear-gradient(90deg,rgba(87,166,255,.08),transparent)}
+.mg-chat-head-avatar{width:45px;height:45px;border-radius:15px;position:relative;overflow:hidden;background:radial-gradient(circle at 50% 28%,rgba(110,194,255,.23),rgba(25,38,72,.18) 63%,transparent);border:1px solid rgba(255,255,255,.1)}
+.mg-chat-head-avatar img{position:absolute;width:78px;height:116px;max-width:none;left:50%;top:-10px;transform:translateX(-50%);object-fit:contain;object-position:center top}
+.mg-chat-title{min-width:0;flex:1}.mg-chat-title strong{display:block;font-size:13px}.mg-chat-title span{display:flex;align-items:center;gap:5px;font-size:9.5px;color:#93a9bd;margin-top:3px}.mg-chat-title i{width:6px;height:6px;border-radius:50%;background:#55e7a4;box-shadow:0 0 9px #55e7a4}
+.mg-head-actions{display:flex;gap:5px}.mg-icon-btn{width:30px;height:30px;border-radius:9px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.035);color:#bcd0e2;display:grid;place-items:center;cursor:pointer;font-size:14px}.mg-icon-btn:hover{color:#fff;background:rgba(255,255,255,.07)}
+#mgChatContext{padding:7px 13px;font-size:9px;color:#91a8bc;background:rgba(75,147,230,.045);border-bottom:1px solid rgba(255,255,255,.045);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#mgChatContext b{color:#7dd8ff}
+#mgMessages{flex:1;min-height:0;overflow:auto;padding:14px 12px 10px;scroll-behavior:smooth;overscroll-behavior:contain}
+.mg-msg{display:flex;margin:8px 0}.mg-msg.user{justify-content:flex-start}.mg-msg.bot{justify-content:flex-end}
+.mg-msg-box{max-width:86%;padding:10px 12px;border-radius:15px;font-size:12.3px;line-height:1.75;white-space:pre-wrap;box-shadow:0 8px 22px rgba(0,0,0,.16)}
+.mg-msg.bot .mg-msg-box{background:linear-gradient(145deg,rgba(27,50,76,.74),rgba(15,27,43,.82));border:1px solid rgba(129,201,255,.15);border-bottom-right-radius:5px}.mg-msg.user .mg-msg-box{background:linear-gradient(145deg,rgba(78,92,175,.68),rgba(46,60,119,.72));border:1px solid rgba(164,174,255,.13);border-bottom-left-radius:5px}
+.mg-msg-action{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.mg-msg-action button{border:1px solid rgba(129,204,255,.2);background:rgba(112,190,255,.07);color:#bfe8ff;border-radius:999px;padding:6px 9px;font:700 9px Cairo,Tahoma,Arial;cursor:pointer}.mg-msg-action button:hover{background:rgba(112,190,255,.14);color:#fff}
+#mgQuick{display:flex;gap:6px;overflow-x:auto;padding:8px 10px 3px;scrollbar-width:none;border-top:1px solid rgba(255,255,255,.045)}#mgQuick::-webkit-scrollbar{display:none}
+#mgQuick button{flex:none;border:1px solid rgba(153,205,255,.14);background:rgba(255,255,255,.035);color:#bcd1e4;border-radius:999px;padding:6px 9px;font:700 9px Cairo,Tahoma,Arial;cursor:pointer;white-space:nowrap}#mgQuick button:hover{color:#fff;border-color:rgba(153,205,255,.32)}
+.mg-compose{padding:9px 10px 10px;display:grid;grid-template-columns:31px 1fr 35px;gap:6px;align-items:end;background:rgba(2,5,10,.44)}
+#mgMic,#mgSend{height:35px;border-radius:11px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.04);color:#c9dceb;cursor:pointer;display:grid;place-items:center}#mgSend{background:linear-gradient(135deg,rgba(67,164,255,.28),rgba(104,86,255,.28));color:#eef8ff;border-color:rgba(120,199,255,.2)}#mgMic.listening{color:#ff8091;border-color:rgba(255,92,118,.35);box-shadow:0 0 0 3px rgba(255,92,118,.08)}
+#mgInput{resize:none;max-height:92px;min-height:35px;border-radius:12px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.035);color:#eef7ff;outline:none;padding:8px 10px;font:600 11.5px/1.55 Cairo,Tahoma,Arial;direction:rtl}#mgInput:focus{border-color:rgba(126,205,255,.34);box-shadow:0 0 0 3px rgba(80,166,255,.055)}#mgInput::placeholder{color:#6f8294}
+.mg-typing-dots{display:inline-flex;gap:3px;vertical-align:middle}.mg-typing-dots i{width:4px;height:4px;border-radius:50%;background:#91d7ff;animation:mgTypingDot 1s ease-in-out infinite}.mg-typing-dots i:nth-child(2){animation-delay:.15s}.mg-typing-dots i:nth-child(3){animation-delay:.3s}@keyframes mgTypingDot{0%,100%{opacity:.25;transform:translateY(0)}50%{opacity:1;transform:translateY(-2px)}}
+.mg-target-glow{outline:2px solid rgba(112,205,255,.72)!important;outline-offset:5px!important;filter:drop-shadow(0 0 18px rgba(80,180,255,.35))!important;transition:outline-color .3s,filter .3s!important}
+@media(max-width:700px){#mgLauncher{right:8px;bottom:8px}#mgChat{right:6px;bottom:6px;width:calc(100vw - 12px);height:min(640px,calc(100vh - 12px));border-radius:19px}#musicGuide.free-pos .mg-wrap{width:calc(100vw - 8px)!important}#musicGuide.peek-mode .mg-character-shell{height:165px}#musicGuide.peek-mode .mg-character-stage{height:249px;bottom:-62px}#musicGuide.peek-mode .mg-pose{height:249px}.mg-msg-box{font-size:11.7px}}
+@media(prefers-reduced-motion:reduce){#mgChat,#mgLauncher{transition-duration:.01ms!important}.mg-typing-dots i{animation:none!important}}
+
+
+/* ===== FULL CHARACTER FIX: never crop the assistant near video/image targets ===== */
+#musicGuide.peek-mode .mg-character-shell{height:372px!important;overflow:visible!important;border-radius:0!important}
+#musicGuide.peek-mode .mg-character-stage{height:372px!important;inset:0!important;bottom:auto!important}
+#musicGuide.peek-mode .mg-pose{height:100%!important;object-position:center bottom!important}
+#musicGuide.peek-mode .mg-floor{display:block!important}
+#musicGuide.peek-mode .mg-bubble{margin-bottom:166px!important}
+@media(max-width:700px){
+  #musicGuide.peek-mode .mg-character-shell{height:249px!important}
+  #musicGuide.peek-mode .mg-character-stage{height:249px!important}
+  #musicGuide.peek-mode .mg-pose{height:249px!important}
+  #musicGuide.peek-mode .mg-bubble{margin-bottom:106px!important}
+}
+@media(max-width:420px){
+  #musicGuide.peek-mode .mg-character-shell{height:213px!important}
+  #musicGuide.peek-mode .mg-character-stage{height:213px!important}
+  #musicGuide.peek-mode .mg-pose{height:213px!important}
+  #musicGuide.peek-mode .mg-bubble{margin-bottom:91px!important}
+}
+
+
+/* Joint-driven animation overrides the old sliding still images. */
+#musicGuide .mg-wrap{direction:ltr;flex-direction:row!important;left:var(--rig-x,0px)!important;right:auto!important;top:auto!important;bottom:70px!important;transform:none!important;transition:opacity .2s!important;gap:0;width:min(620px,100vw)!important}
+#musicGuide .mg-character-stage{animation:none!important;transform:none!important}
+#musicGuide.rig-ready .mg-pose{display:none!important}
+.mg-rig{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+#musicGuide .mg-character-shell{filter:drop-shadow(0 9px 9px #0006);outline-offset:-25px}
+#musicGuide .mg-floor{animation:none;left:25%;right:25%;bottom:2%;height:10px;background:radial-gradient(ellipse,#0009,transparent 72%)}
+#musicGuide .mg-note{display:none}
+#musicGuide .mg-bubble{direction:rtl;box-sizing:border-box;width:min(340px,calc(100vw - 248px));margin-bottom:180px}
+#musicGuide .mg-card{box-sizing:border-box}
+#musicGuide .mg-tail{left:-8px;right:auto;transform:rotate(225deg)}
+#musicGuide .mg-close{right:0;left:auto}
+#musicGuide.chat-open .mg-wrap{left:max(0px,calc(100vw - 660px))!important;bottom:22px!important}
+#musicGuide.chat-open .mg-character-shell{width:220px;min-width:220px;height:330px}
+@media(max-width:700px){#musicGuide .mg-bubble{width:calc(100vw - 166px);margin-bottom:111px;padding-right:7px}#musicGuide .mg-wrap{bottom:64px!important}#musicGuide.chat-open .mg-character-shell{display:none}}
+@media(max-width:420px){#musicGuide .mg-bubble{width:calc(100vw - 142px);margin-bottom:90px}}
+
+
+/* Peek choreography: clip the character below a real card edge until it rises. */
+#musicGuide .mg-wrap{will-change:opacity!important}
+#musicGuide .mg-wrap{top:var(--rig-y,auto)!important;bottom:auto!important;width:var(--actor-w,156px)!important;overflow:visible}
+#musicGuide .mg-character-shell{width:var(--actor-w,156px)!important;min-width:var(--actor-w,156px)!important;height:var(--actor-h,234px)!important}
+#musicGuide .mg-character-stage{height:100%!important}
+#musicGuide .mg-bubble{position:fixed!important;left:var(--bubble-x,12px)!important;top:var(--bubble-y,80px)!important;bottom:auto!important;width:var(--bubble-w,280px)!important;margin:0!important;padding:0!important}
+#musicGuide .mg-tail{display:none}
+#musicGuide .mg-floor{opacity:var(--floor-opacity,0)}
+#musicGuide.chat-open .mg-wrap{top:auto!important;bottom:22px!important}
+#musicGuide[data-state=peeking] .mg-character-shell{clip-path:inset(0 0 80% 0)}
+#musicGuide .mg-character-shell:focus-visible{outline:2px solid #8dd7ff;border-radius:20px}
+
+</style>
+</head>
+<body>
+<div id="boot"><span>جاري فتح التجربة…</span></div>
+<div id="musicTransition" aria-hidden="true">
+  <div class="mt-grid"></div>
+  <div class="mt-wave"><svg viewBox="0 0 1200 160" preserveAspectRatio="none" aria-hidden="true"><path d="M0 80 C55 80 58 28 112 80 S169 132 224 80 S282 25 337 80 S394 138 450 80 S508 34 563 80 S620 124 676 80 S734 18 789 80 S846 145 902 80 S960 38 1015 80 S1072 120 1128 80 S1170 54 1200 80"/></svg></div>
+  <div class="mt-tool t1"><svg viewBox="0 0 64 64"><rect x="24" y="7" width="16" height="31" rx="8"/><path d="M18 30v2a14 14 0 0 0 28 0v-2M32 46v10M24 56h16"/><path d="M28 15h8M28 22h8"/></svg></div>
+  <div class="mt-tool t2"><svg viewBox="0 0 64 64"><path d="M12 34V30a20 20 0 0 1 40 0v4"/><rect x="8" y="31" width="10" height="20" rx="4"/><rect x="46" y="31" width="10" height="20" rx="4"/><path d="M18 47c5 7 23 7 28 0"/></svg></div>
+  <div class="mt-tool t3"><svg viewBox="0 0 64 64"><rect x="7" y="14" width="50" height="36" rx="5"/><path d="M12 36h40M17 36v14M25 36v14M33 36v14M41 36v14M49 36v14M21 36V25M29 36V25M37 36V25M45 36V25"/></svg></div>
+  <div class="mt-tool t4"><svg viewBox="0 0 64 64"><path d="M12 14v36M27 14v36M42 14v36M57 14v36"/><circle cx="12" cy="25" r="5"/><circle cx="27" cy="39" r="5"/><circle cx="42" cy="22" r="5"/><circle cx="57" cy="34" r="5"/></svg></div>
+  <div class="mt-tool t5"><svg viewBox="0 0 64 64"><path d="M22 48c-8 0-13-5-13-11 0-5 4-9 10-10l8-2c5-1 7-4 7-8V9"/><path d="M34 9l18-4v31"/><ellipse cx="18" cy="49" rx="9" ry="6"/><ellipse cx="46" cy="39" rx="9" ry="6"/></svg></div>
+  <div class="mt-tool t6"><svg viewBox="0 0 64 64"><path d="M9 43c12-3 16-18 25-18 8 0 8 12 15 12 4 0 6-3 7-7"/><path d="M9 51h46M9 13h46"/><circle cx="34" cy="25" r="3"/><circle cx="49" cy="37" r="3"/></svg></div>
+  <div class="mt-tool t7"><svg viewBox="0 0 64 64"><path d="M18 8v38a10 10 0 1 1-5-9V17l32-7v29a10 10 0 1 1-5-9V8z"/></svg></div>
+  <div class="mt-center"><span>KAIDO</span><i></i><span>NOVA</span></div>
+</div>
+
+<div id="musicGuide" class="side-right" data-state="idle" data-pose="idle" aria-live="polite">
+  <div class="mg-wrap">
+    <div class="mg-character-shell" aria-hidden="true">
+      <div class="mg-floor"></div>
+      <div class="mg-status-ring"></div>
+      <span class="mg-note n1">♪</span><span class="mg-note n2">♫</span><span class="mg-note n3">♩</span>
+      <div class="mg-character-stage" id="mgCharacterStage">
+        <img class="mg-pose active" data-pose="idle" src="__KN_MEDIA:c6ffdf292c6e__" alt="" draggable="false">
+        <img class="mg-pose" data-pose="talk" data-src="__KN_MEDIA:5aec3e1abd69__" alt="" draggable="false">
+        <img class="mg-pose" data-pose="surprised" data-src="__KN_MEDIA:a95b4de4dac5__" alt="" draggable="false">
+        <img class="mg-pose" data-pose="question" data-src="__KN_MEDIA:1820fb44004f__" alt="" draggable="false">
+        <img class="mg-pose" data-pose="greet" data-src="__KN_MEDIA:1bff7161f3a8__" alt="" draggable="false">
+        <img class="mg-pose" data-pose="point" data-src="__KN_MEDIA:30b53442b32d__" alt="" draggable="false">
+      </div>
+    </div>
+    <div class="mg-bubble" id="mgBubble">
+      <button class="mg-close" id="mgClose" aria-label="إخفاء المساعد">×</button>
+      <div class="mg-card" id="mgCard" role="button" tabindex="0" aria-label="فتح القسم المقترح">
+        <div class="mg-kicker"><i></i><span>دليل KAIDO × NOVA</span></div>
+        <div class="mg-text" id="mgText"></div>
+        <div class="mg-hint"><b>↗</b><span>اضغط عالكلام وأوديك إلها مباشرة</span></div>
+      </div>
+      <span class="mg-tail"></span>
+    </div>
+  </div>
+
+  <button id="mgLauncher" type="button" aria-label="فتح المساعد الافتراضي">
+    <span class="mg-launch-avatar"><img id="mgLaunchAvatar" alt=""></span>
+    <span class="mg-launch-copy"><small>KIDO VIRTUAL GUIDE</small><strong>اسألني أو خلّيني أوديك</strong></span>
+  </button>
+  <aside id="mgChat" aria-label="المساعد الافتراضي KIDO">
+    <div class="mg-chat-head">
+      <div class="mg-chat-head-avatar"><img id="mgChatAvatar" alt=""></div>
+      <div class="mg-chat-title"><strong>KIDO — المساعد الافتراضي</strong><span><i></i><em>متصل بالموقع الحالي</em></span></div>
+      <div class="mg-head-actions"><button class="mg-icon-btn" id="mgSpeakToggle" type="button" title="الصوت">◖</button><button class="mg-icon-btn" id="mgChatClose" type="button" title="تصغير">−</button></div>
+    </div>
+    <div id="mgChatContext">أشوف الصفحة وياك…</div>
+    <div id="mgMessages" aria-live="polite"></div>
+    <div id="mgQuick"></div>
+    <div class="mg-compose">
+      <button id="mgMic" type="button" title="تكلم">◉</button>
+      <textarea id="mgInput" rows="1" placeholder="مثلاً: منو نوفا؟ أو وديني للأغاني"></textarea>
+      <button id="mgSend" type="button" title="إرسال">➜</button>
+    </div>
+  </aside>
+</div>
+
+<iframe id="app" title="KAIDO NOVA Experience" allow="autoplay; fullscreen; clipboard-write"></iframe>
+<script>
+const PACKED = {kaido:'__KN_PAGE_KAIDO__',nova:'__KN_PAGE_NOVA__'};
+
+const frame = document.getElementById('app');
+const boot = document.getElementById('boot');
+let loadSequence=0;
+let currentPage = null;
+const musicTransition = document.getElementById('musicTransition');
+let transitionTimer = null;
+
+/* ===== KIDO VIRTUAL ASSISTANT controller v3 ===== */
+const musicGuide = document.getElementById('musicGuide');
+const mgText = document.getElementById('mgText');
+const mgCard = document.getElementById('mgCard');
+const mgClose = document.getElementById('mgClose');
+const mgBubble = document.getElementById('mgBubble');
+const mgPoseNodes = musicGuide ? Array.from(musicGuide.querySelectorAll('.mg-pose')) : [];
+const mgLauncher = document.getElementById('mgLauncher');
+const mgChat = document.getElementById('mgChat');
+const mgChatClose = document.getElementById('mgChatClose');
+const mgMessages = document.getElementById('mgMessages');
+const mgQuick = document.getElementById('mgQuick');
+const mgInput = document.getElementById('mgInput');
+const mgSend = document.getElementById('mgSend');
+const mgMic = document.getElementById('mgMic');
+const mgSpeakToggle = document.getElementById('mgSpeakToggle');
+const mgChatContext = document.getElementById('mgChatContext');
+const mgCharacterShell = musicGuide ? musicGuide.querySelector('.mg-character-shell') : null;
+const mgIdlePose = mgPoseNodes.find(x => x.dataset.pose === 'idle');
+if(mgIdlePose){ const s=mgIdlePose.src; const a=document.getElementById('mgLaunchAvatar'), b=document.getElementById('mgChatAvatar'); if(a)a.src=s;if(b)b.src=s; }
+
+let mgTimer = null, mgHideTimer = null, mgTypingTimer = null, mgSequenceTimers = [], mgIdleTimer = null;
+let mgSideRight = true, mgLastKey = '', mgCurrentItem = null, mgStarted = false, mgNavigating = false;
+let mgCurrentPose = 'idle', mgWaitingPose = 'question', mgChatOpen = false, mgSpeakEnabled = false;
+let mgPageContext = {page:'kaido',section:'hero',candidates:[],title:''};
+let mgLastSubject = 'kaido', mgLastAssistantTarget = null, mgRecognition = null;
+
+const MG_KNOWLEDGE = {
+  kaido:{
+    name:'KAIDO / كايدو',
+    about:'كايدو فنان ومنتج موسيقي من العراق. بالموقع يعرّف شغله كمساحة تجمع الأغاني، الدسات، والإعلانات، ويقول: كل اغنية اسويها اخلي بيهة الواحد يتونس تكلي فايب تكلي لاينات ميهمني اهم شي اني اتونس.',
+    roles:'فنان، منتج موسيقي، ومن العراق. الموقع يعرض أعماله بالأغاني والدسات والإعلانات ويخلي التواصل المباشر متاح.',
+    ads:'قسم الإعلانات يعرض نماذج من الإعلانات والدعايات اللي اشتغل عليها كايدو بصوته وإنتاجه، ويذكر NOVA كمهندس الصوت الخاص بالإعلانات.',
+    contact:'تگدر تروح لقسم التواصل حتى تحصل طرق التواصل والحسابات، ومنه الواتساب للتعاون الفني أو الإعلانات.'
+  },
+  nova:{
+    name:'NOVA / نوفا',
+    about:'نوفا فنان ومهندس صوت. الموقع يقدمه كشخص ما حصر نفسه بهندسة محدودة؛ يفهم الفنان كمؤدّي والمستمع كإحساس، ويجمع الصوت والإنتاج والصورة حتى يطلع العمل بهوية كاملة.',
+    skills:'المهارات المعروضة لنوفا هي: هندسة الصوت (مكس، ماستر، تنظيف وتوازن)، فهم الفنان والنبرة والأداء، الإنتاج والتراكات، والصورة وAfter Effects والمونتاج والمؤثرات.',
+    visuals:'نوفا يشتغل على الجانب البصري أيضًا، وداخل الموقع أكو قسم «أعمال الفيديو و After Effects» يعرض فيديوهات صنعها بالكامل من الصفر، من الحركة والمؤثرات إلى الهوية البصرية.',
+    audio:'أكو قسم مستقل للهندسة الصوتية يعرض نماذج من شغل نوفا بالمكس والماستر ومعالجة الصوت.',
+    social:'داخل صفحة نوفا أكو روابط رسمية لليوتيوب والإنستغرام حتى توصل لبقية أعماله.'
+  }
+};
+
+const MG_DESTINATIONS = [
+  {id:'kaido-about',page:'kaido',anchor:'about',label:'نبذة كايدو',keys:['كايدو','كايدو','منو كايدو','منو كايدو','قصه كايدو','عن كايدو','kaido','kido']},
+  {id:'kaido-songs',page:'kaido',anchor:'songs',label:'أغاني كايدو',keys:['اغاني','الأغاني','اغنيه','تراكات كايدو','موسيقى كايدو','songs']},
+  {id:'kaido-dass',page:'kaido',anchor:'dass',label:'دسات كايدو',keys:['دسات','الدسات','دس','diss','dass']},
+  {id:'kaido-ads',page:'kaido',anchor:'ads',label:'إعلانات كايدو',keys:['اعلانات','الإعلانات','اعلان','دعايات','ads']},
+  {id:'kaido-contact',page:'kaido',anchor:'contact',label:'تواصل ويا كايدو',keys:['تواصل','واتساب','انستغرام كايدو','حسابات كايدو','contact']},
+  {id:'nova-story',page:'nova',anchor:'nova-story',label:'قصة نوفا',keys:['نوفا','منو نوفا','عن نوفا','قصه نوفا','nova']},
+  {id:'nova-skills',page:'nova',anchor:'nova-skills',label:'مهارات نوفا',keys:['مهارات نوفا','هندسه الصوت','هندسة الصوت','مكس','ماستر','مهندس الصوت','skills']},
+  {id:'nova-tracks',page:'nova',anchor:'nova-tracks',label:'تراكات نوفا',keys:['تراكات نوفا','اغاني نوفا','اعمال نوفا','موسيقى نوفا','tracks']},
+  {id:'nova-visuals',page:'nova',anchor:'nova-visuals',label:'أعمال الفيديو و After Effects',keys:['فيديوهات نوفا','اعمال الفيديو','أعمال الفيديو','افتر افكت','after effects','بصري','فيديو','visuals']},
+  {id:'nova-audio',page:'nova',anchor:'nova-audio-engineering',label:'الهندسة الصوتية',keys:['هندسة صوتية','الهندسه الصوتيه','الهندسة الصوتية','audio engineering','مكس','ماستر']},
+  {id:'nova-social',page:'nova',anchor:'nova-social',label:'حسابات نوفا',keys:['حسابات نوفا','انستغرام نوفا','يوتيوب نوفا','سوشيال نوفا','social']}
+];
+
+const MG_QUESTIONS = {
+  kaido:[
+    {key:'k-about',text:'تريد تعرف منو كايدو وشلون بلشت قصته؟',page:'kaido',anchor:'about'},
+    {key:'k-songs',text:'هاا، تريد تسمع أغاني كايدو؟ خلي أوديك عليهن 🎧',page:'kaido',anchor:'songs'},
+    {key:'k-diss',text:'تحب تشوف قسم الدسات؟ أوديك عليه مباشرة 😈',page:'kaido',anchor:'dass'},
+    {key:'k-ads',text:'تحب تسمع شغل الإعلانات مال كايدو؟ 🎙️',page:'kaido',anchor:'ads'},
+    {key:'k-contact',text:'تريد تحچي ويا كايدو مباشرة؟ أكدر أوديك للتواصل هسه.',page:'kaido',anchor:'contact'},
+    {key:'k-nova',text:'تدري منو نوفا؟ أوديك تتعرف على مهندس الصوت ورا الإعلانات؟',page:'nova',anchor:'nova-story'}
+  ],
+  nova:[
+    {key:'n-story',text:'تريد تعرف منو نوفا وليش شغله مختلف عن البقية؟',page:'nova',anchor:'nova-story'},
+    {key:'n-skills',text:'تريد تعرف شنو يسوي نوفا بالصوت وشلون يشتغل؟ 🎛️',page:'nova',anchor:'nova-skills'},
+    {key:'n-tracks',text:'تحب تسمع أعمال نوفا؟ يلا أوديك إلها 🎧',page:'nova',anchor:'nova-tracks'},
+    {key:'n-visuals',text:'تريد تشوف الفيديوهات اللي صنعها نوفا بالكامل بـ After Effects؟',page:'nova',anchor:'nova-visuals'},
+    {key:'n-audio',text:'تريد تسمع نماذج من شغل نوفا بالهندسة الصوتية؟ 🎛️',page:'nova',anchor:'nova-audio-engineering'},
+    {key:'n-social',text:'تريد حسابات نوفا حتى تشوف شغله وتتابعه؟',page:'nova',anchor:'nova-social'},
+    {key:'n-kaido-ads',text:'تريد ترجع تسمع إعلانات كايدو اللي اشتغل عليها نوفا؟',page:'kaido',anchor:'ads'}
+  ]
+};
+
+const MG_SECTION_LABELS={hero:'البداية',about:'نبذة كايدو',studio:'داخل الشغل',songs:'الأغاني',dass:'الدسات',ads:'الإعلانات',contact:'التواصل','nova-story':'قصة نوفا','nova-skills':'مهارات نوفا','nova-tracks':'تراكات نوفا','nova-visuals':'أعمال الفيديو و After Effects','nova-audio-engineering':'الهندسة الصوتية','nova-social':'حسابات نوفا'};
+
+function mgClearSequence(){mgSequenceTimers.forEach(clearTimeout);mgSequenceTimers=[];clearTimeout(mgTypingTimer);clearTimeout(mgIdleTimer)}
+function mgLater(fn,delay){const t=setTimeout(fn,delay);mgSequenceTimers.push(t);return t}
+function mgSetState(state){if(musicGuide)musicGuide.dataset.state=state}
+function mgSetPose(name){if(!musicGuide||!name||name===mgCurrentPose)return;const node=mgPoseNodes.find(x=>x.dataset.pose===name);if(!node)return;if(!mgMotion.ready&&node.dataset.src&&!node.getAttribute('src'))node.src=node.dataset.src;mgPoseNodes.forEach(x=>x.classList.toggle('active',x===node));mgCurrentPose=name;musicGuide.dataset.pose=name}
+function mgPickQuestion(){const page=currentPage==='nova'?'nova':'kaido';const pool=MG_QUESTIONS[page]||MG_QUESTIONS.kaido;const choices=pool.filter(x=>x.key!==mgLastKey);const item=choices[Math.floor(Math.random()*choices.length)]||pool[0];mgLastKey=item.key;return item}
+function mgPoseForQuestion(item){if(!item)return'question';const k=item.key||'';if(/songs|tracks|ads/.test(k))return'talk';if(/contact|social/.test(k))return'point';if(/story|about|nova/.test(k))return'surprised';return'question'}
+function mgStartIdleMicroMotion(){clearTimeout(mgIdleTimer);if(!musicGuide||!musicGuide.classList.contains('show')||musicGuide.dataset.state!=='waiting'||mgChatOpen)return;mgIdleTimer=setTimeout(()=>{if(!musicGuide.classList.contains('show')||musicGuide.dataset.state!=='waiting'||mgChatOpen)return;musicGuide.classList.add('micro-gesture');setTimeout(()=>musicGuide&&musicGuide.classList.remove('micro-gesture'),720);mgStartIdleMicroMotion()},2300+Math.random()*2600)}
+function mgType(text){clearTimeout(mgTypingTimer);mgText.textContent='';const chars=Array.from(text);let i=0;musicGuide.classList.add('speaking');mgSetState('talking');mgSetPose('talk');const tick=()=>{if(!musicGuide.classList.contains('show')){musicGuide.classList.remove('speaking');return}mgText.textContent+=chars[i++]||'';mgMotion.speechPulse=performance.now();if(i<chars.length){const c=chars[i-1];mgTypingTimer=setTimeout(tick,/[،؟!…,.]/.test(c)?92:24+Math.random()*16)}else{musicGuide.classList.remove('speaking');mgSetState('waiting');mgSetPose(mgWaitingPose);mgStartIdleMicroMotion()}};tick()}
+
+function mgResetPlacement(){if(!musicGuide)return;musicGuide.classList.remove('free-pos','peek-mode');musicGuide.style.removeProperty('--mg-x');musicGuide.style.removeProperty('--mg-y');musicGuide.dataset.targetKind=''}
+function mgPlaceNearCandidate(c){if(!musicGuide||!c||innerWidth<760){mgResetPlacement();return false}const wrapW=Math.min(620,innerWidth-22),wrapH=390,pad=10,r=c.rect||c;let x;if(r.left>wrapW+30){x=r.left-wrapW-14;mgSideRight=false}else if(innerWidth-r.right>wrapW+30){x=r.right+14;mgSideRight=true}else{x=Math.max(pad,Math.min(innerWidth-wrapW-pad,r.left+r.width/2-wrapW/2));mgSideRight=x<innerWidth/2}let y=Math.max(8,Math.min(innerHeight-wrapH-8,r.top+r.height/2-wrapH/2));musicGuide.classList.add('free-pos');musicGuide.classList.remove('peek-mode');musicGuide.classList.remove('side-left','side-right');musicGuide.classList.add(mgSideRight?'side-right':'side-left');musicGuide.style.setProperty('--mg-x',Math.round(x)+'px');musicGuide.style.setProperty('--mg-y',Math.round(y)+'px');musicGuide.dataset.targetKind=c.kind||'';mgLastAssistantTarget=c;return true}
+function mgSmartPlace(){const cs=(mgPageContext.candidates||[]).filter(c=>c.rect&&c.rect.width>110&&c.rect.height>70);if(cs.length&&Math.random()<.68){return mgPlaceNearCandidate(cs[Math.floor(Math.random()*cs.length)])}mgResetPlacement();mgSideRight=!mgSideRight;musicGuide.classList.remove('side-left','side-right');musicGuide.classList.add(mgSideRight?'side-right':'side-left');return false}
+
+function showMusicGuide(){
+ if(!musicGuide||document.hidden||!currentPage||mgChatOpen)return scheduleMusicGuide(3500);
+ if(musicTransition.classList.contains('active'))return scheduleMusicGuide(2400);
+ clearTimeout(mgHideTimer);mgClearSequence();mgNavigating=false;mgResetPlacement();
+ mgCurrentItem=mgPickQuestion();mgWaitingPose=mgPoseForQuestion(mgCurrentItem);mgText.textContent='';
+ musicGuide.classList.remove('leaving','speaking','bubble-visible','side-right');musicGuide.classList.add('side-left','show');
+ mgBeginPeek();
+}
+function hideMusicGuide(immediate){
+ mgMotion.moving=false;mgMotion.done=null;
+ clearTimeout(mgHideTimer);mgClearSequence();musicGuide.classList.remove('speaking','bubble-visible','micro-gesture');
+ if(mgChatOpen)return;
+ const finish=()=>{musicGuide.classList.remove('show','leaving');mgMotion.peek=null;mgMotion.moving=false;mgMotion.done=null;mgResetPlacement();mgSetState('idle');scheduleMusicGuide(6500+Math.random()*5000)};
+ if(immediate){finish();return}
+ if(!musicGuide.classList.contains('show'))return;
+ mgSetState('ducking');mgMotion.lookTarget=0;mgMotion.faceTarget='smile';
+ mgMotion.peek={start:performance.now(),exit:true,fromY:mgMotion.y};mgMotion.afterExit=finish;mgMotionWake();
+}
+function scheduleMusicGuide(delay=10000){clearTimeout(mgTimer);if(mgChatOpen)return;mgTimer=setTimeout(showMusicGuide,delay)}
+function mgDoNavigate(){const item=mgCurrentItem;if(!item)return;hideMusicGuide(true);mgNavigateTo(item.page,item.anchor,true);scheduleMusicGuide(10500)}
+function mgNavigate(){if(mgNavigating||!mgCurrentItem)return;mgNavigating=true;clearTimeout(mgHideTimer);clearTimeout(mgIdleTimer);clearTimeout(mgTypingTimer);musicGuide.classList.remove('speaking');mgSetState('click');mgSetPose('greet');mgLater(mgDoNavigate,330)}
+function mgHoverEnter(){if(!musicGuide||mgNavigating||!musicGuide.classList.contains('show'))return;if(musicGuide.dataset.state==='waiting'){mgSetState('hover');mgSetPose('point')}}
+function mgHoverLeave(){if(!musicGuide||mgNavigating||!musicGuide.classList.contains('show'))return;if(musicGuide.dataset.state==='hover'){mgSetState('waiting');mgSetPose(mgWaitingPose);mgStartIdleMicroMotion()}}
+
+function mgNormalize(s){return String(s||'').toLowerCase().replace(/[أإآ]/g,'ا').replace(/ى/g,'ي').replace(/ؤ/g,'و').replace(/ئ/g,'ي').replace(/ة/g,'ه').replace(/[ًٌٍَُِّْـ]/g,'').replace(/[^\u0600-\u06ff\w\s]/g,' ').replace(/\s+/g,' ').trim()}
+function mgHasAny(q,arr){return arr.some(k=>q.includes(mgNormalize(k)))}
+function mgDestinationForQuery(raw){const q=mgNormalize(raw);let best=null,bestScore=0;for(const d of MG_DESTINATIONS){let score=0;for(const k of d.keys){const nk=mgNormalize(k);if(q===nk)score+=6;else if(q.includes(nk))score+=nk.length>6?4:2}if(d.page==='nova'&&q.includes('نوفا'))score+=1;if(d.page==='kaido'&&(q.includes('كايدو')||q.includes('كايدو')))score+=1;if(score>bestScore){best=d;bestScore=score}}return bestScore>=2?best:null}
+function mgNeedsNavigation(q){return /(وديني|روح|افتح|نقلني|طلعني|اريد اشوف|اريد اسمع|خليني اشوف|خليني اسمع|وصلني|go to|open)/.test(mgNormalize(q))}
+function mgCurrentSectionText(){const id=mgPageContext.section||'';return MG_SECTION_LABELS[id]||id||((currentPage==='nova')?'صفحة نوفا':'صفحة كايدو')}
+function mgAnswer(raw){const q=mgNormalize(raw);const dest=mgDestinationForQuery(raw);if(q.includes('وين انا')||q.includes('وين هسه')||q.includes('اي قسم')||q.includes('شنو دا اشوف'))return{text:`إنت هسه داخل ${mgCurrentSectionText()}. إذا تريد، أكدر أنقلك لأي قسم ثاني مباشرة.`};if(q.includes('شنو هذا')||q.includes('هذا شنو'))return{text:`القسم الظاهر هسه هو «${mgCurrentSectionText()}». اسألني عنه أو گلي وين تريد أوديك.`};if(mgHasAny(q,['منو نوفا','عرفني على نوفا','عن نوفا','nova'])){mgLastSubject='nova';return{text:MG_KNOWLEDGE.nova.about,action:dest&&dest.page==='nova'?dest:null}}if(mgHasAny(q,['مهارات نوفا','هندسة الصوت','مكس','ماستر','مهندس الصوت'])){mgLastSubject='nova';return{text:MG_KNOWLEDGE.nova.skills,action:MG_DESTINATIONS.find(x=>x.id==='nova-skills')}}if(mgHasAny(q,['افتر افكت','after effects','فيديو نوفا','اعمال الفيديو','أعمال الفيديو','بصري'])){mgLastSubject='nova';return{text:MG_KNOWLEDGE.nova.visuals,action:MG_DESTINATIONS.find(x=>x.id==='nova-visuals')}}if(mgHasAny(q,['الهندسة الصوتية','هندسة صوتية','audio engineering'])){mgLastSubject='nova';return{text:MG_KNOWLEDGE.nova.audio,action:MG_DESTINATIONS.find(x=>x.id==='nova-audio')}}if(mgHasAny(q,['حسابات نوفا','انستغرام نوفا','يوتيوب نوفا'])){mgLastSubject='nova';return{text:MG_KNOWLEDGE.nova.social,action:MG_DESTINATIONS.find(x=>x.id==='nova-social')}}if(mgHasAny(q,['منو كايدو','منو كايدو','عرفني على كايدو','عن كايدو','عن كايدو'])){mgLastSubject='kaido';return{text:MG_KNOWLEDGE.kaido.about,action:MG_DESTINATIONS.find(x=>x.id==='kaido-about')}}if(mgHasAny(q,['شنو يسوي كايدو','شغل كايدو','شغل كايدو'])){mgLastSubject='kaido';return{text:MG_KNOWLEDGE.kaido.roles}}if(mgHasAny(q,['اعلانات','اعلان','دعايات'])){mgLastSubject='kaido';return{text:MG_KNOWLEDGE.kaido.ads,action:MG_DESTINATIONS.find(x=>x.id==='kaido-ads')}}if(mgHasAny(q,['تواصل','واتساب']))return{text:MG_KNOWLEDGE.kaido.contact,action:dest||MG_DESTINATIONS.find(x=>x.id==='kaido-contact')};if((q.includes('منو هو')||q.includes('احچيلي عنه')||q.includes('عنه'))&&mgLastSubject)return{text:MG_KNOWLEDGE[mgLastSubject].about};if(dest){if(mgNeedsNavigation(raw))return{text:`أكيد. راح أوديك هسه إلى «${dest.label}».`,action:dest,auto:true};return{text:`إي، عندي هذا القسم: «${dest.label}». أكدر أفتحه إلك مباشرة.`,action:dest}}return{text:'أكدر أساعدك بكايدو، نوفا، الأغاني، الدسات، الإعلانات، هندسة الصوت، الفيديوهات، الحسابات والتواصل، وأكدر أنقلك لأي قسم بالموقع. جرّب تكتب: «منو نوفا؟» أو «وديني للأغاني».'}}
+
+function mgAddMessage(role,text,action=null){if(!mgMessages)return;const row=document.createElement('div');row.className='mg-msg '+role;const box=document.createElement('div');box.className='mg-msg-box';box.textContent=text;row.appendChild(box);if(action){const actions=document.createElement('div');actions.className='mg-msg-action';const b=document.createElement('button');b.type='button';b.textContent='↗ افتح '+action.label;b.addEventListener('click',()=>mgNavigateTo(action.page,action.anchor,true));actions.appendChild(b);box.appendChild(actions)}mgMessages.appendChild(row);mgMessages.scrollTop=mgMessages.scrollHeight;return row}
+function mgTypingMessage(){const row=document.createElement('div');row.className='mg-msg bot';row.dataset.typing='1';row.innerHTML='<div class="mg-msg-box"><span class="mg-typing-dots"><i></i><i></i><i></i></span></div>';mgMessages.appendChild(row);mgMessages.scrollTop=mgMessages.scrollHeight;return row}
+function mgSpeak(text){if(!mgSpeakEnabled||!('speechSynthesis'in window))return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='ar-IQ';u.rate=.98;u.pitch=1;u.onboundary=()=>{mgMotion.speechPulse=performance.now()};u.onstart=()=>{mgMotion.voice=true;mgMotionWake()};u.onend=u.onerror=()=>{mgMotion.voice=false};speechSynthesis.speak(u)}catch(_){}}
+function mgHandleUser(text){text=String(text||'').trim();if(!text)return;mgAddMessage('user',text);mgInput.value='';mgAutoSizeInput();mgSetPose('talk');const typing=mgTypingMessage();setTimeout(()=>{typing.remove();const ans=mgAnswer(text);mgAddMessage('bot',ans.text,ans.action||null);mgSpeak(ans.text);if(!mgSpeakEnabled){musicGuide.classList.add('speaking');mgMotionWake();mgLater(()=>musicGuide.classList.remove('speaking'),Math.min(6000,ans.text.length*45))}mgSetPose(ans.action?'point':'question');if(ans.auto&&ans.action)setTimeout(()=>mgNavigateTo(ans.action.page,ans.action.anchor,true),700)},360+Math.random()*360)}
+function mgQuickItems(){return currentPage==='nova'?[['منو نوفا؟','منو نوفا؟'],['مهاراته','شنو مهارات نوفا؟'],['التراكات','وديني لتراكات نوفا'],['الفيديوهات','وديني لأعمال الفيديو'],['الهندسة الصوتية','وديني للهندسة الصوتية'],['ارجع لكايدو','وديني لإعلانات كايدو']]:[['منو كايدو؟','منو كايدو؟'],['الأغاني','وديني للأغاني'],['الإعلانات','وديني للإعلانات'],['منو نوفا؟','منو نوفا؟'],['التواصل','وديني للتواصل']]}
+function mgRenderQuick(){if(!mgQuick)return;mgQuick.innerHTML='';mgQuickItems().forEach(([label,q])=>{const b=document.createElement('button');b.type='button';b.textContent=label;b.addEventListener('click',()=>mgHandleUser(q));mgQuick.appendChild(b)})}
+function mgUpdateChatContext(){if(!mgChatContext)return;const pg=currentPage==='nova'?'NOVA':'KAIDO';mgChatContext.textContent=`أشوف وياك: ${pg} · ${mgCurrentSectionText()}`;mgRenderQuick()}
+function mgOpenChat(){if(!musicGuide)return;mgChatOpen=true;mgClearSequence();mgMotion.peek=null;mgMotion.lookTarget=0;mgMotion.tiltTarget=0;mgMotion.moving=false;mgMotion.done=null;mgMotionWake();clearTimeout(mgTimer);clearTimeout(mgHideTimer);mgResetPlacement();musicGuide.classList.remove('side-left','free-pos','peek-mode','leaving','bubble-visible');musicGuide.classList.remove('speaking');musicGuide.classList.add('chat-open','show','side-right');mgSetState('waiting');mgSetPose('idle');mgUpdateChatContext();if(!mgMessages.children.length)mgAddMessage('bot','هلا، أني دليلك داخل KAIDO × NOVA. اسألني عن الأشخاص أو الأعمال، أو گلي «وديني…» وأنا أنقلك للمكان مباشرة.');setTimeout(()=>mgInput&&mgInput.focus(),240)}
+function mgCloseChat(){if(!musicGuide)return;mgChatOpen=false;if('speechSynthesis'in window)speechSynthesis.cancel();mgMotion.voice=false;musicGuide.classList.remove('chat-open');mgLauncher.focus();hideMusicGuide(true);scheduleMusicGuide(4200)}
+function mgAutoSizeInput(){if(!mgInput)return;mgInput.style.height='35px';mgInput.style.height=Math.min(92,Math.max(35,mgInput.scrollHeight))+'px'}
+function mgNavigateTo(page,anchor,fromAssistant=false){if(fromAssistant&&frame&&frame.contentWindow){try{frame.contentWindow.postMessage({type:'KIDO_HIGHLIGHT',anchor},'*')}catch(_){}}if(page===currentPage){try{frame.contentWindow.postMessage({type:'KIDO_ASSIST_NAV',anchor},'*')}catch(_){ }if(currentPage==='kaido'&&anchor){try{history.pushState({page:'kaido',anchor},'',stateToHash('kaido',anchor))}catch(_){}}}else loadPage(page,anchor,'push');if(mgChatOpen){setTimeout(()=>{mgAddMessage('bot',`وصلتك إلى «${MG_SECTION_LABELS[anchor]||anchor}». إذا تريد شي ثاني، بس گلي.`);mgUpdateChatContext()},620)}}
+
+function mgSetupVoice(){if(!mgMic)return;const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){mgMic.style.opacity='.42';mgMic.title='التعرف الصوتي غير مدعوم بهذا المتصفح';return}mgRecognition=new SR();mgRecognition.lang='ar-IQ';mgRecognition.interimResults=false;mgRecognition.continuous=false;mgRecognition.onstart=()=>mgMic.classList.add('listening');mgRecognition.onend=()=>mgMic.classList.remove('listening');mgRecognition.onerror=()=>mgMic.classList.remove('listening');mgRecognition.onresult=e=>{const t=e.results&&e.results[0]&&e.results[0][0]?e.results[0][0].transcript:'';if(t)mgHandleUser(t)};mgMic.addEventListener('click',()=>{try{mgRecognition.start()}catch(_){}})}
+
+function mgHandlePageContext(d){mgPageContext={page:d.page||currentPage||'kaido',section:d.section||mgPageContext.section||'',candidates:Array.isArray(d.candidates)?d.candidates:[],title:d.title||''};mgUpdateChatContext()}
+
+function initMusicGuide(){if(mgStarted||!musicGuide)return;mgStarted=true;mgPoseNodes.forEach(img=>{try{img.decoding='async'}catch(_){}});mgCard.addEventListener('click',mgNavigate);mgCard.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();mgNavigate()}});mgCard.addEventListener('mouseenter',mgHoverEnter);mgCard.addEventListener('mouseleave',mgHoverLeave);mgCard.addEventListener('focus',mgHoverEnter);mgCard.addEventListener('blur',mgHoverLeave);mgClose.addEventListener('click',e=>{e.stopPropagation();hideMusicGuide(false);scheduleMusicGuide(10000)});mgLauncher&&mgLauncher.addEventListener('click',mgOpenChat);mgCharacterShell&&mgCharacterShell.addEventListener('click',()=>{if(!mgChatOpen)mgOpenChat()});mgChatClose&&mgChatClose.addEventListener('click',mgCloseChat);mgSend&&mgSend.addEventListener('click',()=>mgHandleUser(mgInput.value));mgInput&&mgInput.addEventListener('input',mgAutoSizeInput);mgInput&&mgInput.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();mgHandleUser(mgInput.value)}});mgSpeakToggle&&mgSpeakToggle.addEventListener('click',()=>{mgSpeakEnabled=!mgSpeakEnabled;if(!mgSpeakEnabled)mgMotion.voice=false;mgSpeakToggle.textContent=mgSpeakEnabled?'◕':'◖';mgSpeakToggle.title=mgSpeakEnabled?'الصوت مفعّل':'الصوت متوقف';if(!mgSpeakEnabled&&'speechSynthesis'in window)speechSynthesis.cancel()});document.addEventListener('visibilitychange',()=>{if(document.hidden)hideMusicGuide(true);else scheduleMusicGuide(3000)});mgSetupVoice();mgRenderQuick();scheduleMusicGuide(3600)}
+
+const MG_BRIDGE_SCRIPT = `
+<script id="kido-assistant-context-bridge">
+(()=>{if(window.__KIDO_ASSIST_V3__)return;window.__KIDO_ASSIST_V3__=1;
+const clean=s=>String(s||'').replace(/\\s+/g,' ').trim().slice(0,90);
+function visible(el){const r=el.getBoundingClientRect();return r.width>70&&r.height>45&&r.bottom>0&&r.right>0&&r.top<innerHeight&&r.left<innerWidth}
+function rect(el){const r=el.getBoundingClientRect();return{left:r.left,top:r.top,right:r.right,bottom:r.bottom,width:r.width,height:r.height}}
+function kind(el){if(el.matches('nav,[role=menu],.menu,.dropdown'))return'menu';if(el.tagName==='VIDEO'||el.matches('iframe[src*="youtube"],iframe[src*="youtu.be"]'))return'video';if(el.tagName==='IMG')return'image';if(el.tagName==='SECTION')return'section';return'card'}
+function currentSection(){let e=document.elementFromPoint(Math.max(1,innerWidth*.5),Math.max(1,innerHeight*.45));let s=e&&e.closest?e.closest('section[id]'):null;if(s)return s.id;const ss=[...document.querySelectorAll('section[id]')].filter(visible).sort((a,b)=>Math.abs(a.getBoundingClientRect().top)-Math.abs(b.getBoundingClientRect().top));return ss[0]?ss[0].id:''}
+let pointerAt=0;document.addEventListener('pointermove',e=>{if(performance.now()-pointerAt<90)return;pointerAt=performance.now();parent.postMessage({type:'KIDO_POINTER',x:e.clientX,y:e.clientY},'*')},{passive:true});
+let cachedEls=null;new MutationObserver(records=>{if(records.some(r=>r.type==='childList'))cachedEls=null}).observe(document.body,{childList:true,subtree:true});
+let raf=0;function send(){raf=0;if(document.hidden)return;const selectors='nav,[role=menu],.menu,.dropdown,video,img,iframe,section[id],.song-card,.ad-card,.nova-track,.nova-visual,.nova-card,[data-video]';const els=(cachedEls||(cachedEls=[...new Set(document.querySelectorAll(selectors))])).filter(visible);const cs=els.map(el=>({kind:kind(el),id:el.id||'',section:(el.closest('section[id]')||{}).id||'',label:clean(el.getAttribute('alt')||el.getAttribute('title')||el.querySelector?.('h2,h3,h4')?.textContent||''),rect:rect(el)})).filter(x=>x.rect.width*x.rect.height>5500).sort((a,b)=>{const av=Math.min(a.rect.bottom,innerHeight)-Math.max(a.rect.top,0),bv=Math.min(b.rect.bottom,innerHeight)-Math.max(b.rect.top,0);return bv-av}).slice(0,10);parent.postMessage({type:'KIDO_PAGE_CONTEXT',page:__KIDO_PAGE__,section:currentSection(),candidates:cs,title:document.title},'*')}
+function queue(){if(!raf)raf=setTimeout(send,120)}let scrollNotice=0;addEventListener('scroll',()=>{queue();if(performance.now()-scrollNotice>100){scrollNotice=performance.now();parent.postMessage({type:'KIDO_VIEW_MOVED'},'*')}},{passive:true});addEventListener('resize',queue,{passive:true});document.addEventListener('click',queue,{passive:true});setTimeout(send,180);setInterval(send,2800);
+addEventListener('message',e=>{const d=e.data||{};if(d.type==='KIDO_HIGHLIGHT'&&d.anchor){const el=document.getElementById(d.anchor);if(el){el.classList.add('mg-target-glow');setTimeout(()=>el.classList.remove('mg-target-glow'),1800)}}});
+})();
+<\/script>`;
+
+function mgInjectBridge(html,page){return html.replace(/<\/body>/i,MG_BRIDGE_SCRIPT.replace('__KIDO_PAGE__',JSON.stringify(page))+'</body>')}
+
+/* Articulated textured character. All assets remain embedded and work offline. */
+const mgMotion = {canvas:null,ctx:null,ready:false,raf:0,last:0,time:0,phase:0,walk:0,x:0,from:0,to:0,start:0,duration:0,moving:false,done:null,voice:false,y:0,height:234,width:156,ledge:0,peek:null,look:0,lookTarget:0,tilt:0,tiltTarget:0,face:0,faceTarget:"neutral",gazeX:0,gazeY:0,gazeUntil:0,lastSpot:-1,blinkAt:3,blinkStart:-10};
+const mgReduced = matchMedia('(prefers-reduced-motion: reduce)');
+function mgMotionInit(){
+ const c=document.createElement('canvas');c.className='mg-rig';c.width=512;c.height=768;c.setAttribute('aria-hidden','true');
+ mgMotion.canvas=c;mgMotion.ctx=c.getContext('2d');document.getElementById('mgCharacterStage').append(c);
+ const ready=()=>{const texture=document.createElement('canvas');texture.width=512;texture.height=768;texture.getContext('2d').drawImage(mgIdlePose,0,0,512,768);mgMotion.texture=texture;mgInitGPU();mgMotion.ready=true;musicGuide.classList.add('rig-ready');mgMotionWake()};
+ if(mgIdlePose.complete&&mgIdlePose.naturalWidth)ready();else mgIdlePose.addEventListener('load',ready,{once:true});
+ mgCharacterShell.removeAttribute('aria-hidden');mgCharacterShell.setAttribute('role','button');mgCharacterShell.tabIndex=0;mgCharacterShell.setAttribute('aria-label','التحدث مع كايدو');
+ mgCharacterShell.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();mgOpenChat()}});
+ document.addEventListener('visibilitychange',()=>{if(document.hidden){cancelAnimationFrame(mgMotion.raf);mgMotion.raf=0;mgMotion.last=0;if('speechSynthesis'in window)speechSynthesis.cancel();mgMotion.voice=false}else mgMotionWake()});
+ addEventListener('resize',()=>{if(mgChatOpen)mgMotionWake();if(!mgChatOpen){hideMusicGuide(true);scheduleMusicGuide(2000)}});document.addEventListener('pointermove',e=>mgPointerLook(e.clientX,e.clientY),{passive:true});
+}
+function mgMotionPlace(){musicGuide.style.setProperty('--rig-x',mgMotion.x+'px');musicGuide.style.setProperty('--rig-y',mgMotion.y+'px')}
+function mgClamp(v,a,b){return Math.max(a,Math.min(b,v))}
+function mgPlaceBubble(){
+ const m=mgMotion,bw=Math.min(294,innerWidth-24),right=m.x+m.width-18;
+ const bx=right+bw<innerWidth-10?right:mgClamp(m.x-bw+18,12,innerWidth-bw-12);
+ const by=mgClamp(m.y+14,18,innerHeight-235);
+ musicGuide.style.setProperty('--bubble-w',bw+'px');musicGuide.style.setProperty('--bubble-x',bx+'px');musicGuide.style.setProperty('--bubble-y',by+'px');
+}
+function mgBeginPeek(){
+ const m=mgMotion;m.moving=false;m.done=null;m.width=innerWidth<700?126:170;m.height=m.width*1.5;
+ musicGuide.style.setProperty('--actor-w',m.width+'px');musicGuide.style.setProperty('--actor-h',m.height+'px');
+ const candidates=(mgPageContext.candidates||[]).filter(c=>c.rect&&Number.isFinite(c.rect.top)&&c.rect.top>m.height+28&&c.rect.top<innerHeight-45&&c.rect.width>100);
+ let index=candidates.length?Math.floor(Math.random()*candidates.length):-1;if(candidates.length>1&&index===m.lastSpot)index=(index+1)%candidates.length;m.lastSpot=index;
+ const target=index>=0?candidates[index]:null,r=target&&target.rect;
+ m.ledge=r?r.top:innerHeight-66;
+ const chooseRight=Math.random()<.5;
+ m.spotMin=r?mgClamp(r.left-m.width*.18,5,innerWidth-m.width-5):5;m.spotMax=r?mgClamp(r.right-m.width*.82,5,innerWidth-m.width-5):innerWidth-m.width-5;
+ m.x=r?mgClamp(chooseRight?r.right-m.width*.82:r.left-m.width*.18,5,innerWidth-m.width-5):5+Math.random()*Math.max(0,innerWidth-m.width-10);
+ m.y=m.ledge;m.look=0;m.lookTarget=0;m.tiltTarget=0;m.faceTarget='curious';m.walk=0;
+ m.peek={start:performance.now(),playful:Math.random()<.4,reverse:chooseRight,exit:false};
+ musicGuide.dataset.entrance=m.peek.playful?'double-take':'peek';musicGuide.dataset.targetKind=target?target.kind:'edge';
+ mgSetState('peeking');mgMotionPlace();mgMotionWake();
+}
+function mgPeekUpdate(now){
+ const m=mgMotion,p=m.peek;if(!p)return;
+ const elapsed=mgReduced.matches?9999:now-p.start;
+ if(p.exit){const u=mgSmooth(0,650,elapsed);m.y=p.fromY+(m.ledge-p.fromY)*u;m.tiltTarget=.09*Math.sin(u*Math.PI);mgMotionPlace();if(u>=1){const done=m.afterExit;m.afterExit=null;m.peek=null;if(done)done()}return}
+ const peekHeight=m.height*.19;
+ if(elapsed<230){m.y=m.ledge-peekHeight*mgSmooth(0,230,elapsed);m.faceTarget='surprise'}
+ else if(elapsed<2100){m.y=m.ledge-peekHeight;m.lookTarget=(elapsed<850?-1:elapsed<1480?1:-.3)*(p.reverse?-1:1);m.tiltTarget=m.lookTarget*.085;m.faceTarget='curious';
+   if(p.playful&&elapsed>1550){const u=mgClamp((elapsed-1550)/550,0,1);m.y+=Math.sin(u*Math.PI)*peekHeight*.86;m.faceTarget='surprise'}
+ }else{mgSetState('emerging');const u=mgSmooth(2100,3300,elapsed);m.y=m.ledge-peekHeight-(m.height-peekHeight)*u;m.lookTarget=0;m.tiltTarget=p.playful?Math.sin(u*Math.PI*2)*.06:0;m.faceTarget='smile';
+   if(elapsed>=3300){m.peek=null;m.y=m.ledge-m.height;m.tiltTarget=0;mgSetState('walking');
+     const speak=()=>{mgPlaceBubble();musicGuide.classList.add('bubble-visible');const intro=p.playful?'ها! لگيتكم 😄 ':'';mgType(intro+mgCurrentItem.text);if(mgSpeakEnabled)mgSpeak(intro+mgCurrentItem.text);mgHideTimer=setTimeout(()=>hideMusicGuide(false),10000)};
+     const next=mgClamp(m.x+(p.reverse?-32:32),Math.min(m.spotMin,m.spotMax),Math.max(m.spotMin,m.spotMax));
+     if(mgReduced.matches||Math.abs(next-m.x)<8)speak();else mgWalkTo(next,speak);
+   }
+ }
+ mgMotionPlace();
+}
+function mgPointerLook(x,y){if(!Number.isFinite(x)||!Number.isFinite(y))return;const m=mgMotion;m.gazeX=mgClamp((x-m.x-m.width*.5)/220,-1,1);m.gazeY=mgClamp((y-m.y-m.height*.09)/220,-1,1);m.gazeUntil=performance.now()+1600}
+
+function mgWalkTo(x,done){const m=mgMotion;m.from=m.x;m.to=x;m.start=performance.now();m.duration=mgReduced.matches?1:Math.max(900,Math.abs(x-m.x)/72*1000);m.moving=true;m.done=done;mgMotionWake()}
+function mgMotionWake(){if(!mgMotion.raf&&mgMotion.ready&&!document.hidden)mgMotion.raf=requestAnimationFrame(mgMotionFrame)}
+function mgRotate(p,x,y,a){const c=Math.cos(a),s=Math.sin(a),dx=p.x-x,dy=p.y-y;return{x:x+dx*c-dy*s,y:y+dx*s+dy*c}}
+function mgSmooth(a,b,x){x=Math.max(0,Math.min(1,(x-a)/(b-a)));return x*x*(3-2*x)}
+function mgVertex(x,y,t,w,talk,legSide){
+ let p={x,y};const phase=mgMotion.phase;const breath=Math.sin(t*1.65);const bob=-Math.abs(Math.sin(phase))*3*w;
+ if(y>345&&(x>180||y>446)){
+   const split=256+mgSmooth(420,660,y)*22;const right=legSide===undefined?mgSmooth(split-5,split+5,x):legSide,a=Math.sin(phase)*.19*w;
+   function leg(sign,hx,ky){let q={x,y};let knee=Math.max(0,Math.cos(phase+(sign<0?Math.PI:0)))*.28*w;
+    if(y>ky)q=mgRotate(q,hx,ky,-knee);
+    q=mgRotate(q,hx,365,a*sign*mgSmooth(345,395,y));return q}
+   const l=leg(1,221,517),r=leg(-1,294,530);p.x=l.x*(1-right)+r.x*right;p.y=l.y*(1-right)+r.y*right;
+ }else{
+   const torso=mgSmooth(330,160,y);p.x+=Math.sin(phase)*1.5*w;p.y+=breath*1.15*torso;
+ }
+ // Free arm swings from shoulder, with a delayed elbow and wrist follow-through.
+ if(x<194&&y>160&&y<446){const weight=(1-mgSmooth(170,194,x))*mgSmooth(160,220,y);const gesture=talk?Math.sin(t*2.4)*.018:0;let q=mgRotate({x,y},175,181,-Math.sin(phase)*.14*w+gesture);if(y>310)q=mgRotate(q,158,310,Math.sin(phase-.6)*.055*w);p.x+=(q.x-x)*weight;p.y+=(q.y-y)*weight}
+ // Pocket hand follows the hip; the shoulder moves in opposition to the free arm.
+ if(x>323&&y>156&&y<351){const weight=mgSmooth(323,350,x);p.x+=Math.sin(phase)*3*w*weight;p.y+=Math.cos(phase)*1.7*w*weight}
+ if(y<143){
+   const influence=1-mgSmooth(112,143,y),look=mgMotion.look;
+   p.x+=look*9*influence;p.x=249+(p.x-249)*(1-Math.abs(look)*.045*influence);
+   p.y+=Math.sin(t*2.2)*.8*influence+(talk?Math.sin(t*5.3)*1.3*influence:0);
+   let q=mgRotate(p,249,141,(mgMotion.tilt+look*.035+Math.sin(t*1.1)*.012+(talk?Math.sin(t*3)*.022:0))*influence);p=q;
+   const surprised=mgMotion.faceTarget==='surprise'?1:0,smile=mgMotion.face;
+   for(const brow of [{x:237,y:54},{x:266,y:50}]){const weight=Math.exp(-(((x-brow.x)/13)**2)-((y-brow.y)/5)**2);p.y-=weight*(surprised*3.5+Math.abs(look)*1.1)}
+   for(const corner of [246,263]){const weight=Math.exp(-(((x-corner)/5)**2)-((y-89)/5)**2);p.y-=smile*1.7*weight}
+
+   if(y<51){const hair=(1-mgSmooth(10,54,y));p.x+=hair*(Math.sin(t*2.8-.6)*1.1+Math.sin(phase-1)*2*w);p.y+=hair*Math.cos(t*2.1)*.6}
+   const blink= Math.max(0,1-Math.abs((t-mgMotion.blinkStart)/.075-1));
+   for(const eye of [{x:237,y:63},{x:266,y:59}]){const ew=Math.exp(-(((x-eye.x)/12)**2)-((y-eye.y)/6)**2);p.y+=(eye.y-y)*blink*.96*ew;p.x+=ew*mgMotion.look*1.7;p.y+=ew*mgMotion.gazeY*.7}
+   if(talk){const mw=Math.exp(-(((x-255)/13)**2)-((y-89)/8)**2);p.y+=Math.max(0,Math.sin(t*19))*2.1*mw}
+ }
+ p.y+=bob;return p;
+}
+/* Build topology once; animate shared vertices instead of redrawing thousands of clipped images. */
+function mgBuildMesh(){
+ if(mgMotion.mesh)return mgMotion.mesh;
+ const nodes=[],indices=[];const split=y=>256+mgSmooth(420,660,y)*22;
+ for(const band of [{lo:0,hi:145,face:true},{lo:145,hi:345},{lo:345,hi:768,side:0},{lo:345,hi:768,side:1}]){
+  const rows=Math.ceil((band.hi-band.lo)/(band.face?5:band.side===undefined?22:28)),cols=band.face?32:band.side===undefined?20:10,base=nodes.length;
+  for(let row=0;row<=rows;row++){
+   const y=band.lo+(band.hi-band.lo)*row/rows,left=band.side===1?split(y):0,right=band.side===0?split(y):512;
+   for(let i=0;i<=cols;i++){const x=band.face?(i===0?0:i===cols?512:184+(i-1)*112/(cols-2)):left+(right-left)*i/cols;nodes.push({x,y,side:band.side})}
+   if(row)for(let i=0;i<cols;i++){const a=base+(row-1)*(cols+1)+i,c=a+cols+1;indices.push(a,a+1,c,a+1,c+1,c)}
+  }
+ }
+ // Empty texture regions need no triangles, on either renderer.
+ const source=mgMotion.texture||document.createElement('canvas');if(!mgMotion.texture){source.width=512;source.height=768;source.getContext('2d').drawImage(mgIdlePose,0,0,512,768)}
+ const pixels=source.getContext('2d').getImageData(0,0,512,768).data,integral=new Uint32Array(513*769);
+ for(let y=0;y<768;y++){let sum=0;for(let x=0;x<512;x++){sum+=pixels[(y*512+x)*4+3]>0?1:0;integral[(y+1)*513+x+1]=integral[y*513+x+1]+sum}}
+ const visible=[];for(let i=0;i<indices.length;i+=3){const a=nodes[indices[i]],b=nodes[indices[i+1]],c=nodes[indices[i+2]],x0=Math.max(0,Math.floor(Math.min(a.x,b.x,c.x))-2),x1=Math.min(512,Math.ceil(Math.max(a.x,b.x,c.x))+2),y0=Math.max(0,Math.floor(Math.min(a.y,b.y,c.y))-2),y1=Math.min(768,Math.ceil(Math.max(a.y,b.y,c.y))+2);if(integral[y1*513+x1]-integral[y0*513+x1]-integral[y1*513+x0]+integral[y0*513+x0]>0)visible.push(indices[i],indices[i+1],indices[i+2])}
+ indices.length=0;indices.push(...visible);
+ const data=new Float32Array(nodes.length*4);nodes.forEach((n,i)=>{data[i*4+2]=n.x/512;data[i*4+3]=n.y/768});
+ return mgMotion.mesh={nodes,indices:new Uint16Array(indices),data,posed:nodes.map(()=>({x:0,y:0}))};
+}
+function mgInitGPU(){
+ const mesh=mgBuildMesh(),canvas=document.createElement('canvas');canvas.width=512;canvas.height=768;
+ let gl;try{gl=canvas.getContext('webgl',{alpha:true,antialias:false,depth:false,stencil:false,premultipliedAlpha:true,preserveDrawingBuffer:false});if(!gl)return;
+ const compile=(type,source)=>{const shader=gl.createShader(type);gl.shaderSource(shader,source);gl.compileShader(shader);if(!gl.getShaderParameter(shader,gl.COMPILE_STATUS)){gl.deleteShader(shader);throw Error('shader')}return shader};
+ const vs=compile(gl.VERTEX_SHADER,'attribute vec2 position;attribute vec2 uv;varying vec2 tex;void main(){gl_Position=vec4(position.x/256.0-1.0,1.0-position.y/384.0,0.0,1.0);tex=uv;}');
+ const fs=compile(gl.FRAGMENT_SHADER,'precision mediump float;uniform sampler2D image;varying vec2 tex;void main(){gl_FragColor=texture2D(image,tex);}');
+ const program=gl.createProgram();gl.attachShader(program,vs);gl.attachShader(program,fs);gl.linkProgram(program);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error('link');gl.useProgram(program);gl.deleteShader(vs);gl.deleteShader(fs);
+ const buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,mesh.data,gl.DYNAMIC_DRAW);
+ for(const [name,offset] of [['position',0],['uv',8]]){const loc=gl.getAttribLocation(program,name);gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,2,gl.FLOAT,false,16,offset)}
+ const index=gl.createBuffer();gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,index);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,mesh.indices,gl.STATIC_DRAW);
+ const texture=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,texture);gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,true);
+ gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,mgMotion.texture);
+ gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+ gl.uniform1i(gl.getUniformLocation(program,'image'),0);gl.viewport(0,0,512,768);gl.clearColor(0,0,0,0);
+ mgMotion.gpu={gl,canvas,buffer};canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();mgMotion.gpu=null});canvas.addEventListener('webglcontextrestored',()=>{mgMotion.gpu=null;mgMotionWake()});
+ }catch(_){mgMotion.gpu=null;try{gl&&gl.getExtension('WEBGL_lose_context')?.loseContext()}catch(_){}}
+}
+function mgRenderRig(ctx,t,w,talk){
+ const m=mgMotion,mesh=mgBuildMesh();
+ for(let i=0;i<mesh.nodes.length;i++){const n=mesh.nodes[i],p=mgVertex(n.x,n.y,t,w,talk,n.side);mesh.posed[i].x=p.x;mesh.posed[i].y=p.y;mesh.data[i*4]=p.x;mesh.data[i*4+1]=p.y}
+ if(m.gpu){const {gl,canvas,buffer}=m.gpu;gl.clear(gl.COLOR_BUFFER_BIT);gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferSubData(gl.ARRAY_BUFFER,0,mesh.data);gl.drawElements(gl.TRIANGLES,mesh.indices.length,gl.UNSIGNED_SHORT,0);ctx.drawImage(canvas,0,0);return}
+ for(let i=0;i<mesh.indices.length;i+=3){const a=mesh.indices[i],b=mesh.indices[i+1],c=mesh.indices[i+2];mgTriangle(ctx,m.texture||mgIdlePose,mesh.nodes[a],mesh.nodes[b],mesh.nodes[c],mesh.posed[a],mesh.posed[b],mesh.posed[c])}
+}
+
+function mgTriangle(ctx,img,a,b,c,A,B,C){
+ const det=a.x*(b.y-c.y)+b.x*(c.y-a.y)+c.x*(a.y-b.y);if(!det)return;
+ const solve=(u,v,w)=>[(u*(b.y-c.y)+v*(c.y-a.y)+w*(a.y-b.y))/det,(u*(c.x-b.x)+v*(a.x-c.x)+w*(b.x-a.x))/det,(u*(b.x*c.y-c.x*b.y)+v*(c.x*a.y-a.x*c.y)+w*(a.x*b.y-b.x*a.y))/det];
+ const X=solve(A.x,B.x,C.x),Y=solve(A.y,B.y,C.y);ctx.save();ctx.beginPath();
+ // Slight clip overlap prevents hairline seams along the texture mesh.
+ const mx=(A.x+B.x+C.x)/3,my=(A.y+B.y+C.y)/3;
+ for(const [i,p] of [A,B,C].entries()){const dx=p.x-mx,dy=p.y-my,L=Math.hypot(dx,dy)||1;ctx[i?'lineTo':'moveTo'](p.x+dx/L*.45,p.y+dy/L*.45)}ctx.closePath();ctx.clip();ctx.transform(X[0],Y[0],X[1],Y[1],X[2],Y[2]);ctx.drawImage(img,0,0,512,768);ctx.restore();
+}
+function mgMotionFrame(now){
+ const m=mgMotion;m.raf=0;if(document.hidden||!m.ready||(mgChatOpen&&innerWidth<=700)){m.last=0;return;}
+ if(now-m.last<32){mgMotionWake();return}const dt=Math.min(.05,(now-(m.last||now))/1000);m.last=now;m.time+=dt;
+ if(m.moving){let u=Math.min(1,(now-m.start)/m.duration);const ease=u*u*(3-2*u),previous=m.x;m.x=m.from+(m.to-m.from)*ease;m.phase+=Math.abs(m.x-previous)/37*Math.PI;m.walk+=(Math.min(1,Math.abs(m.x-previous)/Math.max(dt,0.001)/65)-m.walk)*.3;mgMotionPlace();if(u===1){m.moving=false;const fn=m.done;m.done=null;if(fn)fn()}}
+ else m.walk*=.83;
+ if(m.time>m.blinkAt){m.blinkStart=m.time;m.blinkAt=m.time+2.7+Math.random()*3.5}
+ mgPeekUpdate(now);
+ if(!m.peek){m.lookTarget=now<m.gazeUntil?m.gazeX:Math.sin(m.time*.75)*.22;m.faceTarget=musicGuide.classList.contains('speaking')?'smile':'neutral'}
+ const blend=1-Math.exp(-dt*9);m.look+=(m.lookTarget-m.look)*blend;m.tilt+=(m.tiltTarget-m.tilt)*blend;m.face+=((m.faceTarget==='smile'?1:0)-m.face)*blend;
+ if(mgReduced.matches){m.look=m.tilt=m.face=0}
+ const visible=musicGuide.classList.contains('show');if(!visible){m.last=0;return}
+ const ctx=m.ctx;ctx.clearRect(0,0,512,768);const talk=!mgReduced.matches&&(musicGuide.classList.contains('speaking')||m.voice);const w=mgReduced.matches?0:m.walk;
+
+ mgRenderRig(ctx,mgReduced.matches?0:m.time,w,talk);
+
+ const blink=mgReduced.matches?0:Math.max(0,1-Math.abs((m.time-m.blinkStart)/.075-1));
+ for(const eye of [{x:237,y:63},{x:266,y:59}]){
+   const center=mgVertex(eye.x,eye.y,mgReduced.matches?0:m.time,w,talk);
+   ctx.save();ctx.translate(center.x,center.y);ctx.rotate(m.tilt+m.look*.035-.12);
+   ctx.beginPath();ctx.ellipse(0,0,4.4,Math.max(.25,2.15*(1-blink)),0,0,Math.PI*2);ctx.clip();
+   ctx.fillStyle='#d5c9bc';ctx.fillRect(-5,-3,10,6);
+   ctx.fillStyle='#443329';ctx.beginPath();ctx.arc(m.look*1.6,-.15+m.gazeY*.45,1.9,0,Math.PI*2);ctx.fill();
+   ctx.fillStyle='#151414';ctx.beginPath();ctx.arc(m.look*1.6,-.15+m.gazeY*.45,1.05,0,Math.PI*2);ctx.fill();
+   ctx.fillStyle='#eee3d7';ctx.beginPath();ctx.arc(m.look*1.6-.5,-.8+m.gazeY*.45,.4,0,Math.PI*2);ctx.fill();ctx.restore();
+ }
+ if(talk){const v=mgVertex(255,89,m.time,w,true),pulse=Math.max(0,1-(now-(m.speechPulse||0))/220),open=Math.max(0,Math.sin(m.time*19))*(.35+.65*pulse);ctx.fillStyle='#4b2926';ctx.beginPath();ctx.ellipse(v.x,v.y,4.2,open*1.9+.3,-.1,0,Math.PI*2);ctx.fill()}
+ // The card's top edge occludes the body; it is not drawn over the card.
+ if(!mgChatOpen&&m.peek){const cutoff=mgClamp((m.ledge-m.y)/m.height*768,0,768);ctx.clearRect(0,cutoff,512,768-cutoff);musicGuide.style.setProperty('--floor-opacity','0')}
+ else musicGuide.style.setProperty('--floor-opacity','0.7');
+ mgMotionWake();
+}
+
+function beginMusicTransition(targetPage) {
+  if (!currentPage || currentPage === targetPage || !musicTransition) return false;
+  if (typeof hideMusicGuide === 'function') hideMusicGuide(true);
+  clearTimeout(transitionTimer);
+  musicTransition.className = '';
+  musicTransition.offsetWidth;
+  musicTransition.classList.add('active', targetPage === 'nova' ? 'to-nova' : 'to-kaido');
+  return true;
+}
+
+function endMusicTransition() {
+  if (!musicTransition || !musicTransition.classList.contains('active')) return;
+  musicTransition.classList.add('settling');
+  transitionTimer = setTimeout(() => {
+    musicTransition.className = '';
+  }, 520);
+}
+
+function b64ToBytes(b64) {
+  const bin = atob(b64);
+  const out = new Uint8Array(bin.length);
+  for (let i=0; i<bin.length; i++) out[i] = bin.charCodeAt(i);
+  return out;
+}
+
+const mgHtmlCache=new Map();
+async function mgCachedHtml(page){if(!mgHtmlCache.has(page))mgHtmlCache.set(page,unpackHtml(PACKED[page]).then(async html=>{try{const r=await fetch("/api/content");if(r.ok){const data=await r.json();const map={"nova": {"tracks": "NOVA_TRACKS", "visuals": "NOVA_VISUALS", "audio": "NOVA_AUDIO_ENGINEERING"}, "kaido": {"songs": "songs", "dass": "dass", "ads": "ads"}};for(const [key,name] of Object.entries(map[page]))html=html.replace(new RegExp("const "+name+"\\s*=\\s*\\[[\\s\\S]*?\\];"),"const "+name+"="+JSON.stringify(data[page][key])+";")}}catch(e){}return mgInjectBridge(html,page)}).catch(error=>{mgHtmlCache.delete(page);throw error}));return mgHtmlCache.get(page)}
+async function unpackHtml(b64) {
+  if (!('DecompressionStream' in window)) {
+    throw new Error('هذا المتصفح قديم ولا يدعم فك الضغط المطلوب. افتح الملف بآخر إصدار من Chrome أو Edge.');
+  }
+  const ds = new DecompressionStream('gzip');
+  const stream = new Blob([b64ToBytes(b64)]).stream().pipeThrough(ds);
+  return await new Response(stream).text();
+}
+
+function stateToHash(page, anchor='') {
+  if (page === 'nova') return '#nova'+(anchor?'-'+encodeURIComponent(anchor):'');
+  if (anchor) return '#kaido-' + encodeURIComponent(anchor);
+  return '#kaido';
+}
+
+function hashToState() {
+  const h = location.hash.replace(/^#/, '');
+  if(h.startsWith('nova-')){try{return {page:'nova',anchor:decodeURIComponent(h.slice(5))}}catch(_){return {page:'nova',anchor:''}}}
+  if (h === 'nova') return {page:'nova', anchor:''};
+  if(h.startsWith('kaido-')){try{return {page:'kaido',anchor:decodeURIComponent(h.slice(6))}}catch(_){return {page:'kaido',anchor:''}}}
+  return {page:'kaido', anchor:''};
+}
+
+async function loadPage(page, anchor='', historyMode='none') {
+  if (!PACKED[page]) page = 'kaido';
+  const sequence=++loadSequence;
+  const switching = beginMusicTransition(page);
+  boot.classList.remove('hide');
+  try {
+    const html = await mgCachedHtml(page);
+    if (switching) await new Promise(resolve => setTimeout(resolve, 360));
+    if(sequence!==loadSequence)return;
+    currentPage = page;
+
+    frame.onload = () => {
+      boot.classList.add('hide');
+      setTimeout(() => { try{ frame.contentWindow.postMessage({type:'KIDO_ASSIST_CONTEXT_PING'}, '*'); }catch(_){ } }, 160);
+      if (switching) setTimeout(endMusicTransition, 260);
+      if (anchor) {
+        try { frame.contentDocument.getElementById(anchor)?.scrollIntoView(); } catch (_) {}
+      }
+      frame.onload = null;
+    };
+    // srcdoc inherits the HTTPS embedding page's referrer instead of a blob URL.
+    frame.referrerPolicy = 'strict-origin-when-cross-origin';
+    frame.removeAttribute('src');
+    frame.srcdoc = html.replace(/<head([^>]*)>/i,
+      '<head$1><meta name="referrer" content="strict-origin-when-cross-origin">');
+
+    const hash = stateToHash(page, anchor);
+    const state = {page, anchor};
+    if (historyMode === 'push') history.pushState(state, '', hash);
+    else if (historyMode === 'replace') history.replaceState(state, '', hash);
+  } catch (err) {
+    if(sequence!==loadSequence)return;
+    endMusicTransition();console.error(err);
+    boot.textContent=String(err.message||err);
+  }
+}
+
+addEventListener('message', (e) => {
+  if(e.source!==frame.contentWindow)return;
+  const d = e.data || {};
+  if(d.type==='KIDO_VIEW_MOVED'){if(!mgChatOpen){hideMusicGuide(true);scheduleMusicGuide(2400)}return;}
+  if(d.type==='KIDO_POINTER'){mgPointerLook(d.x,d.y);return;}
+  if (d.type === 'KIDO_PAGE_CONTEXT') { mgHandlePageContext(d); return; }
+  if (d.type === 'KIDO_SINGLE_ROUTE') { loadPage(d.page === 'nova' ? 'nova' : 'kaido', d.anchor || '', 'push'); return; }
+});
+
+addEventListener('popstate', (e) => {
+  const s = e.state || hashToState();
+  loadPage(s.page || 'kaido', s.anchor || '', 'none');
+});
+
+const initial = hashToState();
+loadPage(initial.page, initial.anchor, 'replace');
+mgMotionInit();
+initMusicGuide();
+</script>
+<style>
+#adminDialog{box-sizing:border-box;width:min(1050px,94vw);max-height:90vh;overflow:auto;border:1px solid #708ac355;border-radius:24px;background:radial-gradient(ellipse at top right,#17253c,#090b15 65%);color:#f2f5ff;padding:30px;font:15px/1.8 Tahoma,Arial;box-shadow:0 40px 150px #000b}#adminDialog::backdrop{background:#02040cdd;backdrop-filter:blur(14px)}#adminDialog *{box-sizing:border-box}#adminDialog button,#adminDialog input{font:inherit}#adminDialog button{cursor:pointer;border:1px solid #829ecc55;background:#1b2940;color:white;border-radius:12px;padding:10px 18px}#adminDialog button:hover{border-color:#8edfff}#adminDialog input{width:100%;border:1px solid #879bb855;background:#060b18;color:white;padding:12px;border-radius:10px;margin:6px 0 15px;direction:ltr}#adminDialog label{display:block}#adminDialog h2{margin:0;font-size:29px}#adminDialog .muted{color:#a0b1c9}#adminDialog .top{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:24px}#adminDialog form{max-width:440px;margin:25px auto}#adminDialog .owners{display:grid;grid-template-columns:1fr 1fr;gap:20px;direction:rtl}#adminDialog .owner{padding:30px;background:linear-gradient(135deg,#16253b,#111020);border-radius:20px}#adminDialog .owner img{display:block;width:100%;height:210px;object-fit:contain;filter:drop-shadow(0 0 25px #629afa55)}#adminDialog .tabs{display:flex;flex-wrap:wrap;gap:10px;margin:20px 0}#adminDialog .active{background:#375982;border-color:#80d5ff}#adminDialog .entry{display:flex;align-items:center;gap:15px;background:#ffffff05;border:1px solid #ffffff12;border-radius:14px;padding:12px;margin:10px 0}#adminDialog .entry img{width:110px;border-radius:8px}#adminDialog .entry a{color:#a2daff;overflow-wrap:anywhere;flex:1;direction:ltr}#adminDialog .danger{color:#ffb7c2;border-color:#dd556755}#adminNotice{min-height:28px;color:#a9e5ff}#adminDialog [hidden]{display:none!important}@media(max-width:600px){#adminDialog{padding:18px}.owners{gap:8px!important}#adminDialog .owner{padding:12px}#adminDialog .owner img{height:130px}#adminDialog .entry{flex-wrap:wrap}#adminDialog .entry img{width:70px}}
+</style>
+<dialog id="adminDialog" dir="rtl" aria-labelledby="adminTitle"><div class="top"><div><small class="muted">KAIDO × NOVA / CONTROL ROOM</small><h2 id="adminTitle">لوحة الإدارة</h2></div><button id="adminClose" aria-label="إغلاق">✕</button></div><p id="adminNotice" role="status" aria-live="polite"></p><div id="adminBody"></div></dialog>
+<script>
+(()=>{
+const dialog=document.getElementById('adminDialog'),body=document.getElementById('adminBody'),notice=document.getElementById('adminNotice');let csrf='',owner='nova',category='tracks',data={},busy=false;
+const labels={nova:{tracks:'من أجمل التراكات',visuals:'أعمال الفيديو',audio:'الهندسة الصوتية'},kaido:{songs:'أعمالي',dass:'الدسات',ads:'الإعلانات'}};
+const logos={"nova": "__KN_MEDIA:9885f0396c96__", "kaido": "__KN_MEDIA:f6a938b75ee9__"};
+function say(s){notice.textContent=s}
+async function api(path,payload){if(location.protocol==='file:')throw Error('شغّل الموقع عبر الخادم المرفق لتفعيل تسجيل الدخول والحفظ.');const r=await fetch('/api/'+path,{method:payload?'POST':'GET',headers:{'Content-Type':'application/json','X-CSRF-Token':csrf},body:payload?JSON.stringify(payload):undefined});let d;try{d=await r.json()}catch(e){throw Error('شغّل الموقع عبر الخادم المرفق لتفعيل تسجيل الدخول والحفظ.')}if(!r.ok)throw Error(d.error||'تعذر تنفيذ الطلب');return d}
+function login(){body.innerHTML='<form id="loginForm"><p class="muted">دخول المسؤولين فقط</p><label>اسم المستخدم<input name="username" required autocomplete="username" placeholder="kaido / nova"></label><label>كلمة المرور<input name="password" type="password" required autocomplete="current-password"></label><button>متابعة ←</button></form>';body.querySelector('form').onsubmit=async e=>{e.preventDefault();if(busy)return;busy=true;try{await api('login',Object.fromEntries(new FormData(e.target)));say('أدخل رمز التوول لإكمال الدخول.');tool()}catch(e){say(e.message)}finally{busy=false}}}
+function tool(){body.innerHTML='<form><label>رمز التوول<input name="code" type="password" required autocomplete="off" autofocus></label><button>فتح لوحة الإدارة</button></form>';body.querySelector('form').onsubmit=async e=>{e.preventDefault();if(busy)return;busy=true;try{const r=await api('verify',Object.fromEntries(new FormData(e.target)));csrf=r.csrf;await dashboard();say('تم تسجيل الدخول بنجاح.')}catch(e){say(e.message)}finally{busy=false}}}
+async function dashboard(){data=await api('content');body.innerHTML='<div class="top"><p class="muted">اختر الفنان لإدارة قوائمه</p><button id="logout">تسجيل الخروج</button></div><div class="owners"><button class="owner" data-owner="nova"><img alt="NOVA"><b>NOVA / نوفا</b></button><button class="owner" data-owner="kaido"><img alt="KI DO"><b>KI DO / كايدو</b></button></div>';body.querySelectorAll('[data-owner]').forEach(b=>{b.querySelector('img').src=logos[b.dataset.owner];b.onclick=()=>{owner=b.dataset.owner;category=Object.keys(labels[owner])[0];editor()}});body.querySelector('#logout').onclick=async()=>{try{await api('logout',{});csrf='';say('تم تسجيل الخروج.');login()}catch(e){say(e.message)}}}
+function editor(){body.innerHTML='<div class="top"><h3>'+owner.toUpperCase()+' / إدارة الأعمال</h3><button id="back">← الفنانين</button></div><div class="tabs"></div><form id="addVideo"><label>رابط فيديو يوتيوب<input name="url" type="url" required placeholder="https://www.youtube.com/watch?v=..."></label><button>＋ إضافة الفيديو</button></form><p class="muted" id="count"></p><div id="entries"></div>';body.querySelector('#back').onclick=()=>dashboard().catch(e=>say(e.message));for(const [key,label]of Object.entries(labels[owner])){const b=document.createElement('button');b.textContent=label;b.className=key===category?'active':'';b.onclick=()=>{category=key;editor()};body.querySelector('.tabs').append(b)}const list=data[owner][category];body.querySelector('#count').textContent=list.length+' فيديو • التغييرات تظهر لكل الزوار';if(!list.length)body.querySelector('#entries').textContent='القائمة فارغة. أضف أول فيديو.';list.forEach(id=>{const row=document.createElement('div');row.className='entry';const im=document.createElement('img');im.src='https://i.ytimg.com/vi/'+id+'/mqdefault.jpg';im.alt='معاينة الفيديو';const a=document.createElement('a');a.href='https://www.youtube.com/watch?v='+id;a.target='_blank';a.rel='noopener noreferrer';a.textContent=id+' ↗';const b=document.createElement('button');b.className='danger';b.textContent='حذف';b.onclick=()=>{if(confirm('حذف هذا الفيديو من القائمة؟'))mutate({action:'delete',url:id})};row.append(im,a,b);body.querySelector('#entries').append(row)});body.querySelector('#addVideo').onsubmit=e=>{e.preventDefault();mutate({action:'add',url:new FormData(e.target).get('url')})}}
+async function mutate(change){if(busy)return;busy=true;try{data=await api('content',{owner,category,...change});editor();say(change.action==='add'?'تمت إضافة الفيديو وحفظه.':'تم حذف الفيديو وحفظ التعديل.');mgHtmlCache.clear();loadPage(currentPage||'kaido','','replace')}catch(e){say(e.message)}finally{busy=false}}
+async function open(){if(!dialog.open)dialog.showModal();say('');try{const s=await api('session');if(s.csrf){csrf=s.csrf;await dashboard()}else login()}catch(e){login();say(e.message)}}
+document.getElementById('adminClose').onclick=()=>dialog.close();window.addEventListener('message',e=>{if(e.source===document.getElementById('app').contentWindow&&e.data?.type==='ADMIN_OPEN')open()});
+})();
+</script>
+</body>
+</html>

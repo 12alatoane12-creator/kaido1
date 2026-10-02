@@ -1,35 +1,23 @@
-KAIDO × NOVA — Motion update verification
-Date: 2026-10-02 (Asia/Baghdad)
+KAIDO × NOVA — recovery verification, 2026-10-02
 
-PASS — npm run build
-Both entry points contain the shared motion styles and controllers.
-The five existing API entry points and seed content are present.
+npm run build: PASS
+npm test: PASS — 32 tests, 0 failures, 0 cancelled, 0 skipped
+npm run check:frontend: PASS — 40 actual inline scripts parsed, including bridge-injected child documents; API data replacement verified for both artists in both entry points.
 
-PASS — npm test
-17 tests passed, 0 failed.
-10 existing backend tests cover authentication, two-step verification,
-sessions, rate limits, permitted requests, stored content and YouTube URLs.
-7 loader state tests cover DOM readiness, outdated/duplicate ready messages,
-superseded timers, stale entrance callbacks and retry after a failure.
+Runtime tests: paced frames, no duplicate loop, offscreen stop/resume, reduced-motion zero scheduling, low-power quality bounds, perspective edge cases, metadata concurrency/error continuation and queue closure.
+Loader tests: immediate readiness, stale IDs and artist mismatch, duplicate readiness, old queued entrance, stale slow timer, failure/retry.
+Accessibility regressions: closed overlays inert/aria-hidden, reopen/close state, focus leaving nested player, native focus boundary wrapping. Empty NOVA archive resets count and empty state.
+Integration regressions: entry transfer budget and all 39 catalogue items, stalled content timeout/fallback in both entries, player presence in published output.
+Original backend tests: content persistence, authentication, tool-code verification, CSRF/origin checks, rate limits, empty lists, expiry/logout and URL validation.
 
-PASS — JavaScript syntax checks
-40 embedded scripts parsed successfully across both entry points and the
-actual frame documents produced by mgInjectBridge, including motion policy,
-shared motion controller and assistant bridge.
+Original 11 backend/config/player files are byte-identical. Original external contact URLs and artwork identities are preserved. Images were resized/re-encoded, so image bytes differ. Repeated build output is byte-identical.
 
-PASS — Repeat-build check
-Running motion synchronization again does not change already generated HTML.
+Optimized unique images: 1,140,044 bytes, from 8,862,810 bytes.
+Root entry: 2,157,582 bytes.
+Hosted entry: 2,157,725 bytes, from 12,768,324 bytes (83.1% smaller).
 
-PASS — Preservation check
-Embedded images and YouTube links in both artist pages match the attachment.
-API handlers, backend, seed data, package.json and vercel.json are unchanged.
-All 39 original seed videos remain in the project.
+Tests above were observed passing in this session. New runtime/loader and integration checks were first observed failing before implementation. Npm prints an environment http-proxy configuration warning; commands still exit 0.
 
-LIMITATIONS
-Browser layout and live interaction QA could not be completed in this session:
-the local browser executable was unavailable, and the remote browser could not
-access the local preview URL (ERR_BLOCKED_BY_CLIENT).
-Responsive rules and reduced-motion behavior were inspected in source.
-The DOM state tests are not browser geometry or animation-performance tests.
-The backend tests use the project's in-memory Redis REST double, not a live
-Upstash connection. No deployment or external service configuration was changed.
+Limitations: visual browser QA could not run in this session due to browser access restrictions. No production deployment, real Upstash connection, or live admin transaction was performed. Manual visual check instructions are in README_AR.md.
+
+Archive CRC and source-byte equality: checked when packaging; see final delivery record in docs/progress.md.

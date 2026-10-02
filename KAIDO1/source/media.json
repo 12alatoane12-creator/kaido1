@@ -1,0 +1,212 @@
+{
+  "7fbe3458a506": {
+    "file": "source/media/7fbe3458a506.webp",
+    "original_bytes": 2443,
+    "bytes": 1168,
+    "original_size": [
+      64,
+      64
+    ],
+    "size": [
+      64,
+      64
+    ],
+    "transparent": false
+  },
+  "f6a938b75ee9": {
+    "file": "source/media/f6a938b75ee9.webp",
+    "original_bytes": 106269,
+    "bytes": 64186,
+    "original_size": [
+      700,
+      700
+    ],
+    "size": [
+      700,
+      700
+    ],
+    "transparent": true
+  },
+  "096288c7a784": {
+    "file": "source/media/096288c7a784.webp",
+    "original_bytes": 108701,
+    "bytes": 127002,
+    "original_size": [
+      700,
+      697
+    ],
+    "size": [
+      700,
+      697
+    ],
+    "transparent": false
+  },
+  "9885f0396c96": {
+    "file": "source/media/9885f0396c96.webp",
+    "original_bytes": 244422,
+    "bytes": 117060,
+    "original_size": [
+      1400,
+      581
+    ],
+    "size": [
+      1000,
+      415
+    ],
+    "transparent": true
+  },
+  "5088a1e7a6ea": {
+    "file": "source/media/5088a1e7a6ea.webp",
+    "original_bytes": 268524,
+    "bytes": 130226,
+    "original_size": [
+      1400,
+      700
+    ],
+    "size": [
+      1000,
+      500
+    ],
+    "transparent": true
+  },
+  "1c0707f0a5cd": {
+    "file": "source/media/1c0707f0a5cd.webp",
+    "original_bytes": 1573947,
+    "bytes": 106128,
+    "original_size": [
+      1119,
+      1405
+    ],
+    "size": [
+      796,
+      1000
+    ],
+    "transparent": true
+  },
+  "b30234d0b195": {
+    "file": "source/media/b30234d0b195.webp",
+    "original_bytes": 2112301,
+    "bytes": 92092,
+    "original_size": [
+      993,
+      1584
+    ],
+    "size": [
+      627,
+      1000
+    ],
+    "transparent": true
+  },
+  "67def6cfd0c3": {
+    "file": "source/media/67def6cfd0c3.webp",
+    "original_bytes": 1279712,
+    "bytes": 74214,
+    "original_size": [
+      1164,
+      1351
+    ],
+    "size": [
+      862,
+      1000
+    ],
+    "transparent": true
+  },
+  "9e83bbd00fd1": {
+    "file": "source/media/9e83bbd00fd1.webp",
+    "original_bytes": 2329665,
+    "bytes": 132458,
+    "original_size": [
+      938,
+      1677
+    ],
+    "size": [
+      559,
+      1000
+    ],
+    "transparent": true
+  },
+  "c6ffdf292c6e": {
+    "file": "source/media/c6ffdf292c6e.webp",
+    "original_bytes": 127010,
+    "bytes": 44588,
+    "original_size": [
+      1024,
+      1536
+    ],
+    "size": [
+      512,
+      768
+    ],
+    "transparent": true
+  },
+  "5aec3e1abd69": {
+    "file": "source/media/5aec3e1abd69.webp",
+    "original_bytes": 137672,
+    "bytes": 49386,
+    "original_size": [
+      1024,
+      1536
+    ],
+    "size": [
+      512,
+      768
+    ],
+    "transparent": true
+  },
+  "a95b4de4dac5": {
+    "file": "source/media/a95b4de4dac5.webp",
+    "original_bytes": 141512,
+    "bytes": 49620,
+    "original_size": [
+      1024,
+      1536
+    ],
+    "size": [
+      512,
+      768
+    ],
+    "transparent": true
+  },
+  "1820fb44004f": {
+    "file": "source/media/1820fb44004f.webp",
+    "original_bytes": 149480,
+    "bytes": 53066,
+    "original_size": [
+      1024,
+      1536
+    ],
+    "size": [
+      512,
+      768
+    ],
+    "transparent": true
+  },
+  "1bff7161f3a8": {
+    "file": "source/media/1bff7161f3a8.webp",
+    "original_bytes": 139230,
+    "bytes": 48904,
+    "original_size": [
+      1024,
+      1536
+    ],
+    "size": [
+      512,
+      768
+    ],
+    "transparent": true
+  },
+  "30b53442b32d": {
+    "file": "source/media/30b53442b32d.webp",
+    "original_bytes": 141922,
+    "bytes": 49946,
+    "original_size": [
+      1024,
+      1536
+    ],
+    "size": [
+      512,
+      768
+    ],
+    "transparent": true
+  }
+}

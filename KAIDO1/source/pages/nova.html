@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NOVA | نوفا — Sound Engineer & Artist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Changa:wght@400;600;700;800&family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+
+:root{--gold:#f2c565;--violet:#8b5cf6;--font-d:'Changa',sans-serif;--font-b:'Cairo',sans-serif;--ease-out:cubic-bezier(.16,1,.3,1)}
+*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth;background:#05070a}body{margin:0;background:#05070a;color:#e7f0fa;font-family:var(--font-b);overflow-x:hidden}a{color:inherit;text-decoration:none}img{max-width:100%;display:block}button{font:inherit}
+.nova-page{display:block!important;position:relative!important;inset:auto!important;z-index:auto!important;overflow:visible!important;min-height:100vh!important;overscroll-behavior:auto!important}
+.nova-page.open{animation:novaPageIn .65s cubic-bezier(.16,1,.3,1)}
+.nova-nav a,.nova-nav button,.nova-media-card,.nova-logo-stage{cursor:pointer!important}
+@keyframes novaOrbit{to{transform:rotate(360deg)}}
+.modal{position:fixed;inset:0;background:rgba(3,6,10,.94);z-index:500;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity .25s}.modal.open{opacity:1;pointer-events:auto}.modal-inner{width:min(100%,1000px);aspect-ratio:16/9;position:relative}.modal-inner iframe{width:100%;height:100%;border:0;border-radius:16px;background:#000}.modal-close{position:absolute;top:-50px;left:0;padding:9px 17px;border-radius:999px;border:1px solid rgba(170,198,231,.18);background:#0d1723;color:#e7f0fa;cursor:pointer}
+
+:root{
+    --nova-logo-blue:url("__KN_MEDIA:9885f0396c96__");
+    --nova-logo-gold:url("__KN_MEDIA:5088a1e7a6ea__");
+  }
+
+  /* Shared NOVA logo asset */
+  .nova-logo-asset{
+    position:relative; display:block; isolation:isolate;
+    width:100%; aspect-ratio:2.28/1;
+    transform-style:preserve-3d;
+    filter:drop-shadow(0 12px 24px rgba(0,0,0,.28));
+  }
+  .nova-logo-asset .nova-asset-blue,
+  .nova-logo-asset .nova-asset-gold,
+  .nova-logo-asset .nova-asset-shine{
+    position:absolute; inset:0; display:block; pointer-events:none;
+  }
+  .nova-logo-asset .nova-asset-blue,
+  .nova-logo-asset .nova-asset-gold{
+    background-position:center; background-repeat:no-repeat; background-size:contain;
+    will-change:opacity,transform,filter;
+  }
+  .nova-logo-asset .nova-asset-blue{
+    background-image:var(--nova-logo-blue);
+    opacity:1;
+    filter:drop-shadow(0 0 13px rgba(111,177,255,.23));
+    animation:novaBluePhase 13.5s ease-in-out infinite;
+  }
+  .nova-logo-asset .nova-asset-gold{
+    background-image:var(--nova-logo-gold);
+    opacity:0; transform:scale(.965);
+    filter:drop-shadow(0 0 18px rgba(255,188,54,.18));
+    animation:novaGoldPhase 13.5s ease-in-out infinite;
+  }
+  .nova-logo-asset .nova-asset-shine{
+    z-index:4;
+    background:linear-gradient(108deg,
+      transparent 0 37%,
+      rgba(169,220,255,0) 41%,
+      rgba(218,242,255,.35) 45%,
+      #fff 49%,
+      rgba(167,220,255,.72) 52%,
+      rgba(255,255,255,0) 58%,
+      transparent 100%);
+    background-size:260% 100%; background-position:150% 0;
+    -webkit-mask:var(--nova-logo-blue) center/contain no-repeat;
+    mask:var(--nova-logo-blue) center/contain no-repeat;
+    mix-blend-mode:screen;
+    filter:drop-shadow(0 0 7px rgba(157,218,255,.8));
+    animation:novaLetterShine 3.8s cubic-bezier(.2,.7,.25,1) infinite;
+  }
+  .nova-logo-asset::before{
+    content:""; position:absolute; inset:10% 4% 4%; z-index:-2; border-radius:50%;
+    background:radial-gradient(ellipse at center,rgba(88,162,255,.25),rgba(54,111,207,.08) 42%,transparent 72%);
+    filter:blur(24px); opacity:.72; transform:scale(.94);
+    animation:novaAuraPulse 4.8s ease-in-out infinite;
+  }
+  .nova-logo-asset::after{
+    content:""; position:absolute; z-index:-1; left:9%; right:9%; bottom:7%; height:2px;
+    background:linear-gradient(90deg,transparent,rgba(124,197,255,.18),#dff5ff,rgba(124,197,255,.18),transparent);
+    box-shadow:0 0 18px rgba(120,196,255,.55);
+    opacity:.5; transform:scaleX(.55);
+    animation:novaBaseline 4.2s ease-in-out infinite;
+  }
+
+  @keyframes novaBluePhase{
+    0%,42%,76%,100%{opacity:1;transform:scale(1);filter:drop-shadow(0 0 13px rgba(111,177,255,.23))}
+    50%,66%{opacity:.12;transform:scale(.985);filter:drop-shadow(0 0 6px rgba(111,177,255,.08))}
+  }
+  @keyframes novaGoldPhase{
+    0%,42%,76%,100%{opacity:0;transform:scale(.965);filter:drop-shadow(0 0 8px rgba(255,188,54,.05))}
+    49%{opacity:.86;transform:scale(1.012);filter:drop-shadow(0 0 24px rgba(255,190,64,.42))}
+    54%,65%{opacity:1;transform:scale(1);filter:drop-shadow(0 0 32px rgba(255,190,64,.48))}
+    71%{opacity:.36;transform:scale(.985)}
+  }
+  @keyframes novaLetterShine{
+    0%,14%{background-position:150% 0;opacity:0}
+    20%{opacity:.25}
+    38%{background-position:-45% 0;opacity:1}
+    44%,100%{background-position:-45% 0;opacity:0}
+  }
+  @keyframes novaAuraPulse{0%,100%{opacity:.45;transform:scale(.92)}50%{opacity:.9;transform:scale(1.04)}}
+  @keyframes novaBaseline{0%,100%{opacity:.25;transform:scaleX(.4)}50%{opacity:.72;transform:scaleX(1)}}
+
+  /* Main hero signature */
+  .nova-logo-stage{
+    --mx:50%; --my:50%;
+    position:relative; width:82%; max-width:455px; aspect-ratio:2.2/1;
+    display:grid; place-items:center; z-index:5; outline:none;
+    transform-style:preserve-3d;
+    animation:novaLogoIdle 5.8s ease-in-out infinite;
+  }
+  .nova-page.open .nova-logo-stage{
+    animation:novaLogoReveal 1.25s cubic-bezier(.16,1,.3,1) .16s both,
+              novaLogoIdle 5.8s ease-in-out 1.4s infinite;
+  }
+  .nova-logo-stage .nova-logo-asset{width:100%;}
+  .nova-logo-stage .nova-logo-asset::before{
+    inset:4% -8% -8%;
+    background:
+      radial-gradient(circle at var(--mx) var(--my),rgba(217,244,255,.27),transparent 22%),
+      radial-gradient(ellipse at center,rgba(76,154,255,.34),rgba(32,91,190,.1) 48%,transparent 72%);
+    filter:blur(28px);
+  }
+  .nova-logo-stage .nova-asset-blue{filter:drop-shadow(0 0 17px rgba(128,196,255,.36)) drop-shadow(0 24px 26px rgba(0,0,0,.32));}
+  .nova-logo-stage .nova-asset-gold{filter:drop-shadow(0 0 24px rgba(255,190,64,.35)) drop-shadow(0 24px 26px rgba(0,0,0,.32));}
+
+  .nova-logo-ring{
+    position:absolute; inset:-26% -9%; z-index:-3; pointer-events:none;
+    border-radius:50%; border:1px solid rgba(140,200,255,.11);
+    transform:rotate(-8deg) scaleY(.48);
+    box-shadow:inset 0 0 32px rgba(78,154,245,.08),0 0 32px rgba(78,154,245,.06);
+    animation:novaLogoRing 8s linear infinite;
+  }
+  .nova-logo-ring::before,.nova-logo-ring::after{
+    content:"";position:absolute;border-radius:50%;
+  }
+  .nova-logo-ring::before{
+    width:7px;height:7px;background:#e5f7ff;left:18%;top:9%;
+    box-shadow:0 0 8px 2px #89c9ff,0 0 22px 6px rgba(91,172,255,.55);
+  }
+  .nova-logo-ring::after{
+    width:5px;height:5px;background:#ffc95e;right:14%;bottom:14%;
+    box-shadow:0 0 8px 2px #ffc95e,0 0 20px 5px rgba(255,172,47,.38);
+  }
+
+  .nova-logo-spark{
+    position:absolute; z-index:8; width:4px; height:4px; border-radius:50%;
+    background:#eaf8ff; pointer-events:none; opacity:0;
+    box-shadow:0 0 7px 2px rgba(154,218,255,.8),0 0 19px 6px rgba(83,156,245,.28);
+    animation:novaSpark 4.6s ease-in-out infinite;
+  }
+  .nova-logo-spark::before,.nova-logo-spark::after{
+    content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:currentColor;border-radius:99px;
+  }
+  .nova-logo-spark::before{width:18px;height:1px}
+  .nova-logo-spark::after{width:1px;height:18px}
+  .nova-logo-spark.s1{left:17%;top:24%;animation-delay:.35s}
+  .nova-logo-spark.s2{left:49%;top:65%;animation-delay:1.65s}
+  .nova-logo-spark.s3{right:13%;top:29%;animation-delay:2.8s}
+  .nova-logo-spark.s4{right:31%;bottom:16%;animation-delay:3.6s}
+
+  .nova-logo-flare{
+    position:absolute; z-index:7; inset:0; pointer-events:none; opacity:.85;
+    background:radial-gradient(circle at var(--mx) var(--my),rgba(235,250,255,.35) 0,rgba(127,203,255,.08) 8%,transparent 20%);
+    mix-blend-mode:screen;
+    transition:background .12s linear;
+  }
+  .nova-logo-stage:hover .nova-logo-asset{transform:translateZ(12px) scale(1.018);}
+  .nova-logo-stage:hover .nova-asset-shine{animation-duration:2.2s;}
+  .nova-logo-stage:hover .nova-logo-ring{border-color:rgba(162,216,255,.23);box-shadow:inset 0 0 38px rgba(78,154,245,.12),0 0 42px rgba(78,154,245,.1)}
+  .nova-logo-stage.is-gold .nova-asset-blue{animation:none!important;opacity:.06;transform:scale(.985)}
+  .nova-logo-stage.is-gold .nova-asset-gold{animation:none!important;opacity:1;transform:scale(1.015);filter:drop-shadow(0 0 34px rgba(255,192,65,.56)) drop-shadow(0 24px 28px rgba(0,0,0,.32))}
+  .nova-logo-stage.is-gold .nova-logo-ring{border-color:rgba(255,200,92,.22)}
+  .nova-logo-stage.is-gold .nova-logo-ring::before{background:#ffe7aa;box-shadow:0 0 9px 2px #ffd675,0 0 25px 7px rgba(255,177,48,.48)}
+  .nova-logo-stage.is-gold .nova-logo-asset::before{background:radial-gradient(ellipse at center,rgba(255,190,58,.3),rgba(182,112,12,.08) 48%,transparent 72%)}
+
+  @keyframes novaLogoReveal{
+    0%{opacity:0;transform:translateY(24px) scale(.82) rotateX(18deg);filter:blur(14px) brightness(2.4)}
+    48%{opacity:1;transform:translateY(-6px) scale(1.045) rotateX(-2deg);filter:blur(0) brightness(1.22)}
+    72%{transform:translateY(2px) scale(.992) rotateX(0);filter:brightness(1.04)}
+    100%{opacity:1;transform:translateY(0) scale(1);filter:none}
+  }
+  @keyframes novaLogoIdle{0%,100%{transform:translateY(0) rotateZ(-.25deg)}50%{transform:translateY(-9px) rotateZ(.25deg)}}
+  @keyframes novaLogoRing{to{transform:rotate(352deg) scaleY(.48)}}
+  @keyframes novaSpark{
+    0%,70%,100%{opacity:0;transform:scale(.35) rotate(0)}
+    78%{opacity:1;transform:scale(1.25) rotate(22deg)}
+    86%{opacity:.25;transform:scale(.7) rotate(45deg)}
+  }
+
+  /* Mini instances: ad card, nav, footer */
+  .nova-mini-logo{
+    position:relative;display:block;width:100%;aspect-ratio:2.2/1;isolation:isolate;
+  }
+  .nova-mini-logo .nova-logo-asset{width:100%;height:100%;}
+  .nova-mini-logo .nova-logo-asset::before{inset:12% 2% 4%;filter:blur(15px);opacity:.45}
+  .nova-mini-logo .nova-asset-shine{animation-duration:5.2s}
+  .nova-nav-brand .nova-mini-logo{width:96px;}
+  .nova-footer .nova-mini-logo{width:90px;opacity:.86}
+  .se-logo-wrap .nova-mini-logo{width:100%;}
+  .se-logo-wrap{
+    overflow:visible;
+    transition:transform .45s cubic-bezier(.16,1,.3,1),box-shadow .45s,border-color .45s;
+  }
+  .se-logo-wrap:hover{
+    transform:translateY(-5px) scale(1.018);
+    border-color:rgba(174,215,255,.31);
+    box-shadow:inset 0 0 52px rgba(87,158,246,.12),0 32px 90px rgba(0,0,0,.42),0 0 48px rgba(76,149,237,.12);
+  }
+  .se-logo-wrap:hover .nova-asset-shine{animation-duration:2.25s}
+  .se-logo-wrap::after{
+    content:"";position:absolute;left:8%;right:8%;bottom:-1px;height:1px;
+    background:linear-gradient(90deg,transparent,#9fd8ff,transparent);
+    box-shadow:0 0 12px rgba(115,193,255,.65);
+    animation:novaMiniBeam 3.2s ease-in-out infinite;
+  }
+  @keyframes novaMiniBeam{0%,100%{opacity:.15;transform:scaleX(.4)}50%{opacity:.8;transform:scaleX(1)}}
+
+  /* Upgrade the NOVA machine entrance while keeping the rest of the page intact */
+  .nova-page.open .nova-core{animation:novaCoreReveal .95s cubic-bezier(.16,1,.3,1) both}
+  @keyframes novaCoreReveal{
+    from{opacity:0;transform:perspective(900px) scale(.9) rotateY(-8deg);box-shadow:inset 0 0 0 rgba(0,0,0,0),0 0 0 rgba(0,0,0,0)}
+    to{opacity:1;transform:perspective(900px) scale(1) rotateY(0);}
+  }
+  .nova-core .nova-logo-stage{width:86%;max-width:455px;}
+  .nova-core .nova-logo-stage::before{
+    content:"";position:absolute;inset:-35% -16%;z-index:-5;pointer-events:none;
+    background:conic-gradient(from 0deg,transparent 0 22%,rgba(100,174,255,.09) 27%,transparent 33% 61%,rgba(126,207,255,.08) 67%,transparent 73%);
+    border-radius:50%;filter:blur(2px);animation:novaEnergyRotor 10s linear infinite;
+  }
+  @keyframes novaEnergyRotor{to{transform:rotate(360deg)}}
+
+  /* replace legacy image sizing rules on NOVA-only placements */
+  .nova-core > img,.nova-nav-brand > img,.nova-footer > img,.se-logo-wrap > img{display:none!important}
+
+
+  @media(prefers-reduced-motion:reduce){
+    *,*::before,*::after{ animation-duration:.001ms!important; animation-iteration-count:1!important; scroll-behavior:auto!important; transition-duration:.001ms!important; }
+    .nova-logo-asset .nova-asset-blue{opacity:1!important}
+    .nova-logo-asset .nova-asset-gold{opacity:0!important}
+    .nova-logo-asset .nova-asset-shine,.nova-logo-spark{display:none!important}
+  }
+
+
+
+
+  .nova-page{
+    --n-bg:#05070a; --n-bg2:#09101a; --n-panel:#0e1621; --n-panel2:#121d2b;
+    --n-steel:#9eb4cf; --n-ice:#e7f0fa; --n-blue:#6fa7ee; --n-cyan:#80ddff; --n-muted:#8797aa;
+    display:none; position:fixed; inset:0; z-index:220; overflow-y:auto; overflow-x:hidden;
+    background:
+      radial-gradient(circle at 15% 12%,rgba(86,133,197,.16),transparent 31%),
+      radial-gradient(circle at 85% 18%,rgba(128,221,255,.07),transparent 28%),
+      linear-gradient(180deg,#05070a 0%,#07101a 45%,#05070a 100%);
+    color:var(--n-ice); direction:rtl; font-family:var(--font-b); overscroll-behavior:contain;
+  }
+  .nova-page.open{display:block;animation:novaPageIn .65s cubic-bezier(.16,1,.3,1)}
+  @keyframes novaPageIn{from{opacity:0;clip-path:inset(0 0 100% 0)}to{opacity:1;clip-path:inset(0)}}
+  body.nova-open{overflow:hidden}
+  body.nova-open #magic-canvas,body.nova-open #bg-stars,body.nova-open #spotlight{opacity:0!important;visibility:hidden!important}
+  .nova-page::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background-image:linear-gradient(rgba(255,255,255,.022) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.022) 1px,transparent 1px);background-size:64px 64px;mask-image:linear-gradient(to bottom,rgba(0,0,0,.9),transparent 86%)}
+  .nova-page::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:40;opacity:.055;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.86' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.7'/%3E%3C/svg%3E");mix-blend-mode:soft-light}
+  .nova-page-bg-logo{position:fixed;inset:0;display:grid;place-items:center;pointer-events:none;z-index:1;overflow:hidden;isolation:isolate;contain:layout paint style}
+  .nova-page-bg-logo::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 38%,rgba(176,225,255,.075),rgba(94,161,255,.028) 18%,transparent 39%);opacity:.82}
+  .nova-page-bg-logo::after{content:"";position:absolute;inset:-10%;background:radial-gradient(circle at center,rgba(113,173,255,.075),transparent 58%);opacity:.42}
+  .nova-bg-logo-inner{position:relative;width:min(92vw,1080px);aspect-ratio:2.2/1;display:grid;place-items:center;transform:scale(1.05);transform-origin:center center;opacity:.18;animation:none!important;will-change:auto;backface-visibility:hidden}
+  .nova-bg-logo-inner .nova-logo-asset{width:100%;height:100%;filter:drop-shadow(0 0 22px rgba(93,171,255,.11))}
+  .nova-page-bg-logo .nova-logo-asset::before{animation:none!important;opacity:.34;transform:scale(.96);filter:blur(28px)}
+  .nova-page-bg-logo .nova-logo-asset::after{display:none!important}
+  .nova-page-bg-logo .nova-asset-blue{opacity:.78;transform:none!important;filter:drop-shadow(0 0 15px rgba(125,198,255,.18));animation:none!important}
+  .nova-page-bg-logo .nova-asset-gold{opacity:.055;transform:none!important;filter:drop-shadow(0 0 18px rgba(255,198,90,.08));animation:none!important}
+  .nova-page-bg-logo .nova-asset-shine{
+    display:block!important;z-index:6;opacity:0;
+    background:linear-gradient(104deg,
+      transparent 0 32%,
+      rgba(126,205,255,0) 36%,
+      rgba(139,215,255,.16) 39%,
+      rgba(212,244,255,.58) 43%,
+      rgba(255,255,255,.98) 46%,
+      rgba(185,232,255,.72) 48.5%,
+      rgba(255,215,137,.26) 51%,
+      rgba(130,204,255,.08) 55%,
+      transparent 61% 100%);
+    background-size:320% 100%;background-position:165% 0;
+    -webkit-mask:var(--nova-logo-blue) center/contain no-repeat;mask:var(--nova-logo-blue) center/contain no-repeat;
+    mix-blend-mode:screen;
+    filter:brightness(1.18) drop-shadow(0 0 5px rgba(226,249,255,.9)) drop-shadow(0 0 16px rgba(112,198,255,.55)) drop-shadow(0 0 30px rgba(63,128,255,.18));
+    animation:novaBgLetterSweep 10.8s cubic-bezier(.22,.61,.36,1) infinite!important;
+  }
+  .nova-bg-logo-inner::before{content:"";position:absolute;inset:8% -7% 1%;z-index:-1;background:radial-gradient(ellipse at center,rgba(77,158,255,.12),rgba(22,56,112,.035) 48%,transparent 72%);filter:blur(24px);opacity:.64}
+  .nova-bg-logo-inner::after{display:none!important}
+  .nova-bg-logo-spark{display:none!important}
+  @keyframes novaBgLetterSweep{
+    0%,9%{background-position:165% 0;opacity:0}
+    14%{opacity:.16}
+    24%{opacity:.52}
+    43%{background-position:18% 0;opacity:.95}
+    55%{background-position:-58% 0;opacity:1}
+    61%{opacity:.22}
+    66%,100%{background-position:-58% 0;opacity:0}
+  }
+  .nova-shell{position:relative;z-index:2;max-width:1240px;margin:0 auto;padding:0 28px}.nova-section{padding:110px 0;position:relative}
+  .nova-nav{position:sticky;top:0;z-index:35;height:80px;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:0 26px;background:rgba(5,7,10,.72);border-bottom:1px solid rgba(173,197,226,.09);backdrop-filter:blur(20px) saturate(130%)}
+  .nova-nav-brand{display:flex;align-items:center;gap:13px;direction:ltr}.nova-nav-brand img{width:92px;max-height:38px;object-fit:contain;filter:drop-shadow(0 0 10px rgba(160,190,230,.22))}.nova-nav-brand span{font-family:var(--font-d);font-size:12px;letter-spacing:2.2px;color:#a9b9cc}
+  .nova-nav-actions{display:flex;align-items:center;gap:9px}.nova-nav a,.nova-nav button{cursor:none}.nova-mini-link,.nova-back{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;border:1px solid rgba(170,196,228,.13);background:rgba(255,255,255,.025);color:#cbd8e8;font-family:var(--font-b);font-size:12px;transition:.25s}.nova-mini-link:hover,.nova-back:hover{background:rgba(111,167,238,.09);border-color:rgba(147,188,240,.32);transform:translateY(-2px)}.nova-back{font-family:var(--font-d);font-size:13px}
+  .nova-hero{min-height:calc(100svh - 80px);display:grid;grid-template-columns:.95fr 1.05fr;align-items:center;gap:70px;padding:70px 0 80px;position:relative}.nova-hero::before{content:"NOVA";position:absolute;direction:ltr;left:50%;top:50%;transform:translate(-50%,-50%);font-family:var(--font-d);font-size:clamp(120px,24vw,320px);font-weight:800;letter-spacing:18px;color:rgba(220,235,255,.022);pointer-events:none;white-space:nowrap}
+  .nova-hero-copy{position:relative;z-index:2}.nova-overline{display:flex;align-items:center;gap:12px;direction:ltr;color:#8da4c1;font-size:10px;letter-spacing:3px;margin-bottom:18px}.nova-overline::before{content:"";width:42px;height:1px;background:linear-gradient(90deg,#75b3ff,transparent)}.nova-hero h1{font-size:clamp(64px,10vw,132px);direction:ltr;letter-spacing:4px;line-height:.86;margin-bottom:22px;color:#edf5ff;text-shadow:0 22px 75px rgba(82,137,208,.18)}.nova-hero h1 span{display:block;font-size:.16em;letter-spacing:7px;color:#8ca3bf;margin-top:20px;font-family:var(--font-b);font-weight:500}.nova-hero-copy>p{max-width:610px;color:#99a8bb;line-height:2.1;font-size:16px}.nova-hero-actions{display:flex;gap:11px;flex-wrap:wrap;margin-top:30px}.nova-btn{display:inline-flex;align-items:center;gap:10px;padding:13px 20px;border-radius:999px;border:1px solid rgba(161,190,228,.17);background:rgba(255,255,255,.03);color:#e8f2ff;font-family:var(--font-d);font-size:14px;transition:.3s}.nova-btn.primary{background:linear-gradient(120deg,#a6bad2,#6f9fd8);color:#07101a;border-color:transparent}.nova-btn:hover{transform:translateY(-3px);box-shadow:0 18px 45px rgba(50,96,154,.2)}
+  .nova-machine{position:relative;z-index:2;min-height:500px;display:grid;place-items:center}.nova-core{position:relative;width:min(100%,520px);aspect-ratio:1.1/1;border-radius:38px;border:1px solid rgba(177,201,231,.14);background:linear-gradient(145deg,rgba(18,31,47,.84),rgba(5,8,13,.94));box-shadow:inset 0 0 60px rgba(100,151,216,.08),0 50px 120px rgba(0,0,0,.4);display:grid;place-items:center;overflow:hidden;transform-style:preserve-3d;transition:transform .3s ease-out}.nova-core::before{content:"";position:absolute;inset:24px;border:1px solid rgba(177,201,231,.08);border-radius:28px}.nova-core::after{content:"";position:absolute;left:0;right:0;height:1px;top:15%;background:linear-gradient(90deg,transparent,#9dc7f6,transparent);box-shadow:0 0 18px #79aff0;animation:novaScan 4s ease-in-out infinite}.nova-core img{width:72%;height:auto;position:relative;z-index:3;filter:drop-shadow(0 0 25px rgba(158,190,230,.3));animation:novaLogoBreath 4.8s ease-in-out infinite}.nova-core-grid{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 38px,rgba(255,255,255,.018) 39px 40px),repeating-linear-gradient(90deg,transparent 0 38px,rgba(255,255,255,.018) 39px 40px);opacity:.7}.nova-orbit{position:absolute;border-radius:50%;border:1px solid rgba(153,184,223,.12);pointer-events:none}.nova-orbit.o1{width:420px;height:420px;animation:novaOrbit 17s linear infinite}.nova-orbit.o2{width:330px;height:330px;border-style:dashed;animation:novaOrbit 11s linear infinite reverse}.nova-orbit.o3{width:590px;height:590px;border-color:rgba(122,169,229,.06);animation:novaOrbit 25s linear infinite}.nova-orbit::before{content:"";position:absolute;width:7px;height:7px;border-radius:50%;background:#a8caf5;top:10%;left:18%;box-shadow:0 0 18px 4px rgba(116,172,240,.5)}
+  @keyframes novaScan{0%,100%{top:11%;opacity:.2}50%{top:88%;opacity:.85}}@keyframes novaLogoBreath{50%{transform:scale(1.035);filter:drop-shadow(0 0 36px rgba(158,190,230,.45))}}
+  #novaWaveCanvas{position:absolute;inset:auto 0 0;width:100%;height:130px;opacity:.55;pointer-events:none}
+  .nova-hero-meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}.nova-hero-meta span{padding:8px 11px;border:1px solid rgba(172,198,228,.1);background:rgba(255,255,255,.02);border-radius:999px;color:#8fa2b8;font-size:10px;letter-spacing:.5px}
+  .nova-section-head{display:flex;justify-content:space-between;align-items:flex-end;gap:30px;margin-bottom:48px}.nova-section-head small{display:block;direction:ltr;color:#7492b8;letter-spacing:2.5px;font-size:10px;margin-bottom:12px}.nova-section-head h2{font-size:clamp(34px,5vw,62px);color:#e9f2fd}.nova-section-head p{max-width:470px;color:#8595aa;line-height:2;font-size:14px}
+  .nova-story-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:22px}.nova-story-card,.nova-quote-card{border:1px solid rgba(167,193,224,.11);border-radius:28px;background:linear-gradient(145deg,rgba(16,26,39,.7),rgba(7,11,18,.78));padding:clamp(28px,5vw,56px);position:relative;overflow:hidden}.nova-story-card::before{content:"";position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(111,167,238,.13),transparent 68%);left:-130px;top:-130px}.nova-story-card p{position:relative;color:#9aaabd;line-height:2.2;font-size:16px;margin-bottom:18px}.nova-story-card p strong{color:#e0ebf8}.nova-quote-card{display:flex;flex-direction:column;justify-content:space-between;min-height:100%}.nova-quote-card b{font-family:var(--font-d);font-size:clamp(26px,3vw,40px);line-height:1.6;color:#c9daee}.nova-quote-card span{margin-top:32px;color:#6f86a3;font-size:11px;letter-spacing:2px;direction:ltr}.nova-quote-meter{height:110px;display:flex;align-items:flex-end;gap:6px;margin-top:28px}.nova-quote-meter i{display:block;flex:1;min-width:3px;background:linear-gradient(to top,#4f7db7,#a9c8ed);border-radius:4px 4px 0 0;animation:novaMeter 1.5s ease-in-out infinite alternate;transform-origin:bottom}.nova-quote-meter i:nth-child(2n){animation-duration:1.9s}.nova-quote-meter i:nth-child(3n){animation-duration:1.2s}.nova-quote-meter i:nth-child(4n){animation-duration:2.2s}@keyframes novaMeter{from{height:18%}to{height:95%}}
+  .nova-cap-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.nova-cap{min-height:240px;padding:26px;border:1px solid rgba(169,196,228,.1);border-radius:22px;background:rgba(255,255,255,.024);position:relative;overflow:hidden;transition:.35s}.nova-cap::before{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent,rgba(105,159,216,.1),transparent);transform:translateX(110%);transition:.55s}.nova-cap:hover::before{transform:translateX(-110%)}.nova-cap:hover{transform:translateY(-7px);border-color:rgba(161,197,239,.25);background:rgba(96,147,208,.05)}.nova-cap em{font-family:var(--font-d);font-style:normal;color:#7395bc;font-size:11px;letter-spacing:2px}.nova-cap h3{font-size:21px;margin:55px 0 10px;color:#dce8f6}.nova-cap p{color:#8596ab;line-height:1.9;font-size:13px}
+  .nova-media-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.nova-media-grid.visuals{grid-template-columns:repeat(5,1fr)}.nova-media-card{border:1px solid rgba(170,198,231,.1);border-radius:20px;overflow:hidden;background:#0a111b;transition:.35s;cursor:none}.nova-media-card:hover{transform:translateY(-7px);border-color:rgba(157,193,237,.25);box-shadow:0 22px 55px rgba(0,0,0,.28)}.nova-media-thumb{position:relative;aspect-ratio:16/9;overflow:hidden}.nova-media-thumb img{width:100%;height:100%;object-fit:cover;filter:saturate(.6) contrast(1.07) brightness(.72);transition:.55s}.nova-media-card:hover img{transform:scale(1.06);filter:saturate(.9) brightness(.88)}.nova-media-play{position:absolute;inset:0;margin:auto;width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:rgba(5,9,14,.65);border:1px solid rgba(224,239,255,.28);backdrop-filter:blur(7px);transition:.3s}.nova-media-play svg{width:19px;height:19px}.nova-media-card:hover .nova-media-play{transform:scale(1.1);background:#7a9fc9;color:#06101a}.nova-media-body{padding:17px 18px 20px}.nova-media-body small{color:#6f86a2;font-size:10px;letter-spacing:1.2px;direction:ltr;display:block;margin-bottom:6px}.nova-media-body h3{font-family:var(--font-b);font-size:14px;line-height:1.6;color:#cddbeb;font-weight:600}
+  .nova-social-cta{display:grid;grid-template-columns:1fr auto;gap:30px;align-items:center;padding:46px;border:1px solid rgba(174,201,232,.12);border-radius:28px;background:radial-gradient(circle at 10% 20%,rgba(90,145,211,.14),transparent 30%),linear-gradient(135deg,#0d1723,#070b11)}.nova-social-cta h2{font-size:clamp(32px,5vw,60px);margin-bottom:12px}.nova-social-cta p{color:#8d9db1;max-width:650px;line-height:2}.nova-social-buttons{display:flex;gap:10px;flex-wrap:wrap}.nova-footer{padding:34px 0 46px;border-top:1px solid rgba(171,198,229,.08);display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;color:#62748a;font-size:11px;direction:ltr}.nova-footer img{width:88px;max-height:34px;object-fit:contain;opacity:.8}
+  .nova-reveal{opacity:0;transform:translateY(24px);transition:opacity .8s ease,transform .8s cubic-bezier(.16,1,.3,1)}.nova-reveal.in{opacity:1;transform:none}
+  @media(max-width:1000px){.nova-hero{grid-template-columns:1fr;gap:30px;text-align:center}.nova-hero-copy>p{margin-inline:auto}.nova-overline,.nova-hero-actions,.nova-hero-meta{justify-content:center}.nova-machine{min-height:430px}.nova-cap-grid{grid-template-columns:repeat(2,1fr)}.nova-media-grid.visuals{grid-template-columns:repeat(3,1fr)}.nova-story-grid{grid-template-columns:1fr}.nova-section-head{align-items:flex-start;flex-direction:column}.nova-social-cta{grid-template-columns:1fr}.nova-social-buttons{justify-content:flex-start}}
+  @media(max-width:680px){.nova-shell{padding:0 18px}.nova-section{padding:78px 0}.nova-nav{height:70px;padding:0 14px}.nova-nav-brand span,.nova-mini-link{display:none}.nova-nav-brand img{width:78px}.nova-hero{padding-top:36px;min-height:auto}.nova-hero h1{font-size:64px}.nova-machine{min-height:350px}.nova-core{border-radius:28px}.nova-orbit.o3{width:470px;height:470px}.nova-orbit.o1{width:340px;height:340px}.nova-orbit.o2{width:260px;height:260px}.nova-cap-grid,.nova-media-grid,.nova-media-grid.visuals{grid-template-columns:1fr}.nova-social-cta{padding:30px 22px}.nova-footer{flex-direction:column}.nova-story-card,.nova-quote-card{padding:30px 23px}}
+
+
+body.nova-open{overflow:auto!important}
+.nova-page{display:block!important;position:relative!important;inset:auto!important;z-index:auto!important;overflow:visible!important;min-height:100vh!important;overscroll-behavior:auto!important}
+.nova-core>img,.nova-nav-brand>img,.nova-footer>img{display:none!important}
+.nova-nav{top:0}
+@media(max-width:680px){.nova-nav-actions{gap:6px}.nova-back{white-space:nowrap}}
+
+
+  /* ===== Searchable NOVA work libraries ===== */
+  .nova-library-launch{
+    width:100%;border:1px solid rgba(166,202,243,.14);border-radius:26px;padding:26px 28px;
+    display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:20px;text-align:right;
+    background:
+      radial-gradient(circle at 14% 20%,rgba(86,154,234,.16),transparent 28%),
+      linear-gradient(135deg,rgba(14,26,41,.95),rgba(7,12,20,.97));
+    color:#e8f3ff;box-shadow:0 18px 55px rgba(0,0,0,.18);cursor:pointer!important;
+    transition:transform .3s cubic-bezier(.16,1,.3,1),border-color .3s,box-shadow .3s;
+  }
+  .nova-library-launch:hover{transform:translateY(-5px);border-color:rgba(167,207,255,.34);box-shadow:0 24px 70px rgba(0,0,0,.28),0 0 38px rgba(79,151,236,.08)}
+  .nova-library-launch:focus-visible{outline:2px solid rgba(129,198,255,.7);outline-offset:4px}
+  .nova-library-launch-icon{width:62px;height:62px;border-radius:20px;display:grid;place-items:center;
+    background:linear-gradient(145deg,rgba(103,171,247,.22),rgba(70,105,160,.08));
+    border:1px solid rgba(170,211,255,.17);font-size:20px;color:#cfe7ff;box-shadow:inset 0 0 22px rgba(97,171,255,.06)}
+  .nova-library-launch-icon.audio{font-size:24px}
+  .nova-library-launch-copy{display:block;min-width:0}
+  .nova-library-launch-copy small{display:block;direction:ltr;text-align:right;color:#7699c4;letter-spacing:2px;font-size:10px;margin-bottom:7px}
+  .nova-library-launch-copy strong{display:block;font-family:var(--font-b);font-size:clamp(19px,2.6vw,28px);line-height:1.45}
+  .nova-library-launch-copy em{display:block;font-style:normal;color:#8193a9;font-size:12px;margin-top:6px}
+  .nova-library-launch-action{display:flex;align-items:center;gap:9px;color:#afcce9;font-size:12px;white-space:nowrap}
+  .nova-library-launch-action b{font-size:18px;font-weight:400}
+
+  .nova-library-modal{position:fixed;inset:0;z-index:450;background:rgba(2,6,11,.94);backdrop-filter:blur(18px);
+    opacity:0;visibility:hidden;pointer-events:none;transition:opacity .28s ease,visibility .28s;overflow:auto;padding:20px}
+  .nova-library-modal.open{opacity:1;visibility:visible;pointer-events:auto}
+  .nova-library-window{width:min(1180px,100%);min-height:calc(100vh - 40px);margin:0 auto;border:1px solid rgba(164,201,243,.14);
+    border-radius:28px;padding:clamp(20px,3vw,34px);background:
+      radial-gradient(circle at 90% 4%,rgba(92,153,226,.13),transparent 26%),
+      linear-gradient(160deg,#0b1420,#060a10 70%);box-shadow:0 32px 100px rgba(0,0,0,.5)}
+  .nova-library-head{display:flex;justify-content:space-between;gap:24px;align-items:flex-start;padding-bottom:20px}
+  .nova-library-head small{direction:ltr;display:block;color:#7797bc;letter-spacing:2.5px;font-size:10px;margin-bottom:9px}
+  .nova-library-head h2{font-family:var(--font-b);font-size:clamp(30px,4vw,48px);color:#edf6ff;line-height:1.2}
+  .nova-library-head p{color:#8496aa;font-size:13px;line-height:1.9;margin-top:8px}
+  .nova-library-close{width:43px;height:43px;flex:none;border-radius:14px;border:1px solid rgba(184,211,242,.13);
+    background:rgba(255,255,255,.035);color:#c6d9ec;cursor:pointer!important}
+  .nova-library-close:hover{background:rgba(255,255,255,.08);color:#fff}
+  .nova-library-searchbar{position:sticky;top:0;z-index:4;display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;
+    padding:11px 12px 11px 15px;margin:2px 0 10px;border:1px solid rgba(157,198,244,.16);border-radius:18px;
+    background:rgba(7,14,23,.94);backdrop-filter:blur(14px);box-shadow:0 12px 34px rgba(0,0,0,.22)}
+  .nova-library-searchbar>span{font-size:24px;color:#7da6d4;line-height:1}
+  .nova-library-searchbar input{width:100%;border:0;outline:0;background:transparent;color:#edf6ff;font:600 13px/1.6 var(--font-b);padding:8px 2px;direction:rtl}
+  .nova-library-searchbar input::placeholder{color:#60748a}
+  .nova-library-searchbar button{border:1px solid rgba(158,196,237,.12);border-radius:11px;padding:8px 11px;background:rgba(255,255,255,.035);color:#8fa7bf;cursor:pointer!important}
+  .nova-library-searchbar button:hover{color:#fff;background:rgba(255,255,255,.07)}
+  .nova-library-meta{display:flex;justify-content:space-between;gap:18px;align-items:center;color:#687d94;font-size:10px;padding:3px 3px 18px}
+  .nova-library-meta span:first-child{color:#9bb9d8}
+  .nova-library-grid{grid-template-columns:repeat(3,1fr)!important;gap:16px}
+  .nova-library-modal .nova-media-card{cursor:pointer!important;display:block}
+  .nova-library-modal .nova-media-card[hidden]{display:none!important}
+  .nova-library-empty{text-align:center;padding:70px 20px;color:#72879e}
+  .nova-library-empty b{display:block;color:#c7d9ea;font-size:18px;margin-bottom:8px}
+  .nova-library-empty span{font-size:12px}
+  body.nova-library-open{overflow:hidden!important}
+
+  @media(max-width:900px){
+    .nova-library-grid{grid-template-columns:repeat(2,1fr)!important}
+  }
+  @media(max-width:680px){
+    .nova-library-launch{grid-template-columns:auto 1fr;padding:20px 18px;gap:13px}
+    .nova-library-launch-icon{width:50px;height:50px;border-radius:16px}
+    .nova-library-launch-action{grid-column:1/-1;justify-content:flex-end;border-top:1px solid rgba(255,255,255,.055);padding-top:13px}
+    .nova-library-modal{padding:7px}
+    .nova-library-window{min-height:calc(100vh - 14px);border-radius:20px;padding:18px 13px}
+    .nova-library-head{gap:12px}
+    .nova-library-grid{grid-template-columns:1fr!important}
+    .nova-library-meta{align-items:flex-start;flex-direction:column;gap:4px}
+  }
+
+
+/* ===== NOVA DYNAMIC SECTION-SYNC BACKGROUND v2 — NO BACKGROUND WORDS ===== */
+.nova-page{isolation:isolate;background:linear-gradient(180deg,#03070c 0%,#06101a 35%,#050913 68%,#03070c 100%)!important}
+/* No textual/logo watermark in the background. Foreground NOVA logo remains untouched. */
+.nova-page-bg-logo{display:none!important}
+.nova-dynamic-bg{position:fixed;inset:0;z-index:1;pointer-events:none;overflow:hidden;isolation:isolate;contain:paint;--nb-c1:92,205,255;--nb-c2:116,84,255;--nb-c3:255,197,93;transition:filter .9s ease}
+.nova-dynamic-bg::before{content:"";position:absolute;inset:-22%;background:radial-gradient(circle at 16% 18%,rgba(var(--nb-c1),.18),transparent 26%),radial-gradient(circle at 84% 70%,rgba(var(--nb-c2),.15),transparent 30%),radial-gradient(circle at 52% 112%,rgba(var(--nb-c3),.065),transparent 26%);filter:blur(38px);animation:nbAmbientDrift 14s ease-in-out infinite alternate;transition:background 1s ease}
+.nova-dynamic-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(1,4,8,.03),rgba(2,5,10,.28)),radial-gradient(circle at 50% 45%,transparent 0 34%,rgba(0,0,0,.24) 82%);opacity:.82}
+.nova-bg-scene{position:absolute;inset:0;opacity:0;transform:scale(1.035);transition:opacity .85s ease,transform 1.35s var(--ease-out),filter .85s ease;filter:blur(4px) saturate(.8);overflow:hidden}
+.nova-bg-scene.active{opacity:1;transform:scale(1);filter:none}
+.nova-bg-scene>*{position:absolute}
+.nb-grid{inset:0;background-image:linear-gradient(rgba(var(--nb-c1),.03) 1px,transparent 1px),linear-gradient(90deg,rgba(var(--nb-c1),.03) 1px,transparent 1px);background-size:50px 50px;mask-image:radial-gradient(circle at center,#000 5%,transparent 78%);animation:nbGridMove 18s linear infinite}
+.nb-glow{width:52vw;height:52vw;border-radius:50%;filter:blur(62px);opacity:.17;background:radial-gradient(circle,rgba(var(--nb-c1),.72),transparent 64%);animation:nbGlowBreathe 7s ease-in-out infinite alternate}
+.nb-glow.g1{left:-18vw;top:-19vw}.nb-glow.g2{right:-20vw;bottom:-23vw;background:radial-gradient(circle,rgba(var(--nb-c2),.68),transparent 64%);animation-delay:-3.5s}
+.nb-glow.g3{width:33vw;height:33vw;left:36%;top:31%;opacity:.075;background:radial-gradient(circle,rgba(var(--nb-c3),.75),transparent 65%);animation-delay:-1.8s}
+.nb-wave{left:-5%;width:110%;height:190px;top:52%;opacity:.25;filter:drop-shadow(0 0 20px rgba(var(--nb-c1),.22))}
+.nb-wave.w2{top:61%;opacity:.12;transform:scaleY(.72)}
+.nb-wave svg{width:100%;height:100%;overflow:visible}.nb-wave path{fill:none;stroke:rgba(var(--nb-c1),.86);stroke-width:1.35;stroke-linecap:round;stroke-dasharray:8 14;vector-effect:non-scaling-stroke;animation:nbWaveDash 8s linear infinite}
+.nb-wave path:nth-child(2){opacity:.42;stroke-dasharray:2 16;animation-duration:5.5s;animation-direction:reverse}
+.nb-note{font:700 clamp(22px,3.4vw,50px)/1 Georgia,serif;color:rgba(var(--nb-c1),.26);text-shadow:0 0 20px rgba(var(--nb-c1),.24);animation:nbFloat var(--dur,8s) ease-in-out infinite alternate;animation-delay:var(--delay,0s)}
+.nb-note.gold{color:rgba(var(--nb-c3),.20);text-shadow:0 0 20px rgba(var(--nb-c3),.14)}
+.nb-spectrum{display:flex;align-items:center;gap:5px;height:145px;opacity:.27;direction:ltr}.nb-spectrum i{display:block;width:5px;height:var(--h);border-radius:8px;background:linear-gradient(180deg,rgba(var(--nb-c1),.92),rgba(var(--nb-c2),.12));box-shadow:0 0 15px rgba(var(--nb-c1),.18);transform-origin:center bottom;animation:nbEq 1.18s ease-in-out infinite alternate;animation-delay:var(--d)}
+.nb-rings{width:min(48vw,650px);aspect-ratio:1;border-radius:50%;border:1px solid rgba(var(--nb-c1),.11);box-shadow:0 0 0 48px rgba(var(--nb-c1),.018),0 0 0 96px rgba(var(--nb-c1),.012),0 0 85px rgba(var(--nb-c1),.055);animation:nbSpin 23s linear infinite}
+.nb-rings::before,.nb-rings::after{content:"";position:absolute;border-radius:50%;inset:12%;border:1px dashed rgba(var(--nb-c1),.14)}.nb-rings::after{inset:31%;border-style:solid;border-color:rgba(var(--nb-c3),.10)}
+.nb-rings i{position:absolute;left:50%;top:-4px;width:8px;height:8px;border-radius:50%;background:rgba(var(--nb-c1),.9);box-shadow:0 0 18px rgba(var(--nb-c1),.8)}
+.nb-beatdots{display:flex;gap:18px;align-items:center;opacity:.28}.nb-beatdots i{width:5px;height:5px;border-radius:50%;background:rgba(var(--nb-c1),.8);box-shadow:0 0 14px rgba(var(--nb-c1),.65);animation:nbBeat 1.45s ease-in-out infinite;animation-delay:var(--d)}
+.nb-particles{inset:0}.nb-particles i{position:absolute;width:3px;height:3px;border-radius:50%;background:rgba(var(--nb-c1),.55);box-shadow:0 0 12px rgba(var(--nb-c1),.45);left:var(--x);top:var(--y);animation:nbParticle var(--t) ease-in-out infinite alternate;animation-delay:var(--d)}
+.nb-icon{width:92px;height:92px;color:rgba(var(--nb-c1),.23);filter:drop-shadow(0 0 18px rgba(var(--nb-c1),.12));animation:nbIconFloat 7s ease-in-out infinite alternate}
+.nb-icon svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.35;stroke-linecap:round;stroke-linejoin:round;overflow:visible}
+.nb-icon.alt{color:rgba(var(--nb-c2),.24);animation-delay:-2.8s}.nb-icon.gold{color:rgba(var(--nb-c3),.20);animation-delay:-4.2s}
+.nb-pulse{width:12px;height:12px;border-radius:50%;background:rgba(var(--nb-c1),.7);box-shadow:0 0 0 0 rgba(var(--nb-c1),.25),0 0 22px rgba(var(--nb-c1),.5);animation:nbPulseRing 2.8s ease-out infinite}
+/* HERO — broad musical universe */
+.scene-hero .nb-wave{top:55%}.scene-hero .w2{top:67%}.scene-hero .nb-rings{right:6%;top:12%;opacity:.43}.scene-hero .nb-spectrum{left:9%;bottom:10%;height:105px;transform:scale(.82)}
+.scene-hero .n1{left:7%;top:19%;--dur:6.8s}.scene-hero .n2{left:24%;top:72%;--dur:9s;--delay:-3s}.scene-hero .n3{right:11%;top:67%;--dur:7.4s;--delay:-5s}.scene-hero .n4{right:33%;top:16%;--dur:8.5s;--delay:-2s}.scene-hero .n5{left:54%;top:29%;--dur:10s;--delay:-6s}.scene-hero .n6{right:44%;bottom:12%;--dur:7.8s;--delay:-1.5s}
+.scene-hero .nb-beatdots{left:38%;top:25%}
+/* STORY — voice, microphone, listening + living waveform */
+.scene-story .nb-rings{left:-8%;top:15%;opacity:.31;animation-direction:reverse}.scene-story .nb-wave{top:58%;opacity:.22}.scene-story .w2{top:70%;opacity:.09}.scene-story .mic{right:11%;top:18%;width:118px;height:118px}.scene-story .headphones{left:28%;bottom:15%;width:108px;height:108px}.scene-story .nb-beatdots{right:22%;bottom:18%}.scene-story .n1{right:34%;top:28%;--dur:7s}.scene-story .n2{left:13%;bottom:23%;--dur:10s;--delay:-3s}.scene-story .n3{right:10%;bottom:39%;--dur:8s;--delay:-5s}
+/* SKILLS — four visual disciplines, all icon-only */
+.scene-skills .nb-grid{opacity:.95}.scene-skills .nb-orb{width:112px;height:112px;border-radius:50%;display:grid;place-items:center;border:1px solid rgba(var(--nb-c1),.12);background:radial-gradient(circle,rgba(var(--nb-c1),.08),transparent 67%);animation:nbNodePulse 4.2s ease-in-out infinite}.scene-skills .nb-orb .nb-icon{position:relative;width:58px;height:58px}.scene-skills .k1{left:7%;top:18%}.scene-skills .k2{left:27%;top:59%;animation-delay:-1.2s}.scene-skills .k3{right:28%;top:20%;animation-delay:-2.4s}.scene-skills .k4{right:7%;top:60%;animation-delay:-3.1s}.scene-skills .nb-link{height:1px;background:linear-gradient(90deg,transparent,rgba(var(--nb-c1),.17),transparent);transform-origin:left center;opacity:.8}.scene-skills .l1{left:13%;top:35%;width:35%;transform:rotate(20deg)}.scene-skills .l2{left:34%;top:62%;width:32%;transform:rotate(-34deg)}.scene-skills .l3{right:13%;top:42%;width:31%;transform:rotate(-22deg)}.scene-skills .nb-wave{top:44%;opacity:.08}.scene-skills .nb-pulse.p1{left:49%;top:45%}.scene-skills .nb-pulse.p2{left:52%;top:52%;animation-delay:-1.2s}
+/* TRACKS — records, spectra, notes, beat lights */
+.scene-tracks .nb-record{width:min(35vw,480px);aspect-ratio:1;border-radius:50%;border:1px solid rgba(var(--nb-c1),.10);background:repeating-radial-gradient(circle,rgba(var(--nb-c1),.065) 0 1px,transparent 2px 14px),radial-gradient(circle at center,rgba(var(--nb-c1),.15) 0 3%,transparent 3.5% 12%,rgba(var(--nb-c2),.04) 12.5% 24%,transparent 25%);animation:nbSpin 15s linear infinite}.scene-tracks .r1{left:-8%;top:10%;opacity:.58}.scene-tracks .r2{right:-9%;bottom:3%;width:min(28vw,390px);opacity:.36;animation-direction:reverse;animation-duration:21s}.scene-tracks .r1::after,.scene-tracks .r2::after{content:"";position:absolute;left:50%;top:50%;width:10%;height:10%;border-radius:50%;transform:translate(-50%,-50%);border:1px solid rgba(var(--nb-c3),.18);box-shadow:0 0 22px rgba(var(--nb-c3),.06)}
+.scene-tracks .nb-spectrum.main{left:50%;top:52%;transform:translate(-50%,-50%)}.scene-tracks .nb-spectrum.side{right:7%;top:18%;height:90px;transform:scale(.7);opacity:.16}.scene-tracks .nb-wave{top:68%;opacity:.13}.scene-tracks .n1{left:41%;top:17%;--dur:6s}.scene-tracks .n2{right:19%;top:27%;--dur:8s;--delay:-4s}.scene-tracks .n3{left:18%;bottom:16%;--dur:7s;--delay:-2s}.scene-tracks .n4{right:39%;bottom:13%;--dur:9s;--delay:-5s}.scene-tracks .nb-beatdots{left:50%;top:28%;transform:translateX(-50%)}
+/* VISUALS — timeline, frames, keyframes, bezier motion path */
+.scene-visuals .nb-grid{opacity:.85}.scene-visuals .nb-timeline{left:4%;right:4%;bottom:10%;height:205px;border-top:1px solid rgba(var(--nb-c1),.12);border-bottom:1px solid rgba(var(--nb-c1),.06);background:repeating-linear-gradient(90deg,rgba(var(--nb-c1),.05) 0 1px,transparent 1px 54px)}.scene-visuals .nb-timeline::before,.scene-visuals .nb-timeline::after{content:"";position:absolute;left:3%;right:12%;height:14px;border-radius:3px;background:linear-gradient(90deg,rgba(var(--nb-c1),.04),rgba(var(--nb-c1),.14),rgba(var(--nb-c2),.08));border:1px solid rgba(var(--nb-c1),.08);animation:nbTrackGlow 3.8s ease-in-out infinite alternate}.scene-visuals .nb-timeline::before{top:48px}.scene-visuals .nb-timeline::after{top:104px;left:16%;right:3%;animation-delay:-1.9s}.scene-visuals .nb-playhead{left:42%;top:0;bottom:0;width:1px;background:linear-gradient(180deg,rgba(var(--nb-c3),.55),rgba(var(--nb-c3),.05));animation:nbPlayhead 5.8s ease-in-out infinite}.scene-visuals .nb-playhead::before{content:"";position:absolute;top:-5px;left:-4px;border-left:5px solid transparent;border-right:5px solid transparent;border-top:7px solid rgba(var(--nb-c3),.72)}.scene-visuals .nb-frame{width:190px;aspect-ratio:16/9;border:1px solid rgba(var(--nb-c1),.13);background:linear-gradient(135deg,rgba(var(--nb-c1),.055),rgba(var(--nb-c2),.035));box-shadow:0 0 42px rgba(var(--nb-c1),.035);animation:nbFrameFloat 8s ease-in-out infinite alternate}.scene-visuals .f1{left:8%;top:18%;transform:rotate(-5deg)}.scene-visuals .f2{right:10%;top:25%;transform:rotate(7deg);animation-delay:-4s}.scene-visuals .f3{left:40%;top:13%;width:135px;opacity:.55;animation-delay:-2s}.scene-visuals .nb-diamond{width:9px;height:9px;border:1px solid rgba(var(--nb-c1),.33);transform:rotate(45deg);animation:nbDiamond 2.25s ease-in-out infinite}.scene-visuals .d1{left:25%;bottom:31%}.scene-visuals .d2{left:52%;bottom:22%;animation-delay:-.8s}.scene-visuals .d3{right:18%;bottom:34%;animation-delay:-1.5s}.scene-visuals .d4{right:37%;top:31%;animation-delay:-.3s}.scene-visuals .nb-motionpath{left:19%;right:21%;top:26%;height:150px;opacity:.18}.scene-visuals .nb-motionpath svg{width:100%;height:100%;overflow:visible}.scene-visuals .nb-motionpath path{fill:none;stroke:rgba(var(--nb-c2),.8);stroke-width:1;stroke-dasharray:4 10;animation:nbWaveDash 8s linear infinite}.scene-visuals .nb-motionpath circle{fill:rgba(var(--nb-c3),.65);filter:drop-shadow(0 0 8px rgba(var(--nb-c3),.4));offset-path:path('M20,120 C170,-25 350,190 560,35 C690,-60 790,75 930,25');animation:nbMotionDot 6s ease-in-out infinite}
+/* AUDIO ENGINEERING — mixer, EQ, VU meters, knobs, waveform */
+.scene-audio .nb-mixer{left:5%;right:5%;bottom:7%;height:280px;display:grid;grid-template-columns:repeat(12,1fr);gap:15px;opacity:.32;direction:ltr}.scene-audio .nb-channel{position:relative;border-left:1px solid rgba(var(--nb-c1),.08);border-right:1px solid rgba(var(--nb-c1),.035)}.scene-audio .nb-channel::before{content:"";position:absolute;left:50%;top:10%;bottom:13%;width:1px;background:linear-gradient(180deg,rgba(var(--nb-c1),.15),rgba(var(--nb-c1),.03))}.scene-audio .nb-channel::after{content:"";position:absolute;left:50%;top:var(--f);width:25px;height:7px;border-radius:4px;transform:translateX(-50%);background:rgba(var(--nb-c1),.34);box-shadow:0 0 14px rgba(var(--nb-c1),.16);animation:nbFader 3.2s ease-in-out infinite alternate;animation-delay:var(--d)}.scene-audio .nb-eqcurve{left:10%;right:10%;top:20%;height:150px;opacity:.28}.scene-audio .nb-eqcurve svg{width:100%;height:100%}.scene-audio .nb-eqcurve path{fill:none;stroke:rgba(var(--nb-c1),.82);stroke-width:1.45;filter:drop-shadow(0 0 8px rgba(var(--nb-c1),.25));stroke-dasharray:900;stroke-dashoffset:900;animation:nbEqDraw 4.6s ease-in-out infinite}.scene-audio .nb-vu{width:150px;height:62px;border:1px solid rgba(var(--nb-c1),.10);border-radius:8px;background:radial-gradient(circle at 50% 100%,rgba(var(--nb-c1),.07),transparent 65%);overflow:hidden}.scene-audio .nb-vu::before{content:"";position:absolute;left:50%;bottom:7px;width:1px;height:48px;transform-origin:bottom center;transform:rotate(var(--r,-28deg));background:linear-gradient(180deg,rgba(var(--nb-c3),.75),rgba(var(--nb-c3),.08));animation:nbNeedle 1.7s ease-in-out infinite alternate;animation-delay:var(--d)}.scene-audio .vu1{right:8%;top:16%}.scene-audio .vu2{right:26%;top:18%;opacity:.7}.scene-audio .nb-knobs{left:8%;top:17%;display:flex;gap:18px;opacity:.28}.scene-audio .nb-knobs i{width:28px;height:28px;border-radius:50%;border:1px solid rgba(var(--nb-c1),.22);box-shadow:inset 0 0 14px rgba(var(--nb-c1),.06);animation:nbKnob 5s linear infinite}.scene-audio .nb-knobs i:nth-child(2){animation-direction:reverse;animation-duration:7s}.scene-audio .nb-knobs i:nth-child(3){animation-duration:4s}.scene-audio .nb-knobs i::before{content:"";position:absolute;left:50%;top:3px;width:1px;height:7px;background:rgba(var(--nb-c1),.55)}.scene-audio .nb-wave{top:52%;opacity:.095}
+/* SOCIAL — clean connection constellation, no labels */
+.scene-social .nb-signal{left:50%;top:50%;width:min(67vw,860px);aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;border:1px solid rgba(var(--nb-c1),.08);box-shadow:0 0 0 70px rgba(var(--nb-c1),.018),0 0 0 140px rgba(var(--nb-c2),.011);animation:nbSignal 4s ease-out infinite}.scene-social .nb-dot{width:6px;height:6px;border-radius:50%;background:rgba(var(--nb-c1),.58);box-shadow:0 0 16px rgba(var(--nb-c1),.48);animation:nbDot 2.5s ease-in-out infinite}.scene-social .s1{left:15%;top:22%}.scene-social .s2{right:18%;top:17%;animation-delay:-.8s}.scene-social .s3{left:27%;bottom:16%;animation-delay:-1.5s}.scene-social .s4{right:23%;bottom:22%;animation-delay:-2s}.scene-social .s5{left:50%;top:27%;animation-delay:-.5s}.scene-social .s6{left:48%;bottom:18%;animation-delay:-1.2s}.scene-social .nb-connection{height:1px;background:linear-gradient(90deg,transparent,rgba(var(--nb-c1),.15),transparent);transform-origin:left center;opacity:.8}.scene-social .c1{left:16%;top:23%;width:38%;transform:rotate(17deg)}.scene-social .c2{left:29%;bottom:18%;width:46%;transform:rotate(-28deg)}.scene-social .c3{right:20%;top:19%;width:38%;transform:rotate(122deg)}.scene-social .headphones{left:50%;top:50%;width:120px;height:120px;transform:translate(-50%,-50%);opacity:.65}.scene-social .nb-beatdots{left:50%;bottom:14%;transform:translateX(-50%)}
+/* Local section depth — graphics only, zero text */
+.nova-section{position:relative;isolation:isolate}.nova-section>.nova-local-art{position:absolute;inset:0;z-index:-1;pointer-events:none;overflow:hidden;opacity:.72;transition:filter .8s ease,opacity .8s ease}.nova-section.nova-bg-active>.nova-local-art{filter:brightness(1.22);opacity:.9}.nova-local-art::before{content:"";position:absolute;width:34vw;height:34vw;border-radius:50%;left:var(--lx,75%);top:50%;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(var(--lc,111,190,255),.085),transparent 66%);filter:blur(22px);animation:nbLocalGlow 8s ease-in-out infinite alternate}.nova-local-art.story{--lx:82%;--lc:118,167,255}.nova-local-art.skills{--lx:13%;--lc:113,205,255}.nova-local-art.tracks{--lx:84%;--lc:93,183,255}.nova-local-art.visuals{--lx:13%;--lc:126,99,255}.nova-local-art.audio{--lx:86%;--lc:80,215,255}.nova-local-art.social{--lx:50%;--lc:120,174,255}.nova-local-marks{position:absolute;inset:0;opacity:.12;background-image:radial-gradient(circle at 15% 25%,rgba(176,226,255,.7) 0 1px,transparent 1.5px),radial-gradient(circle at 82% 64%,rgba(176,226,255,.65) 0 1px,transparent 1.5px),radial-gradient(circle at 38% 82%,rgba(255,210,123,.5) 0 1px,transparent 1.5px);background-size:120px 120px,170px 170px,210px 210px;animation:nbMarks 20s linear infinite}.nova-local-pulse{position:absolute;width:150px;height:150px;border-radius:50%;border:1px solid rgba(var(--lc,111,190,255),.06);left:var(--lx,75%);top:50%;transform:translate(-50%,-50%);animation:nbLocalPulse 4s ease-out infinite}.nova-local-art.tracks .nova-local-marks{background-image:repeating-linear-gradient(90deg,transparent 0 35px,rgba(141,207,255,.05) 36px 37px,transparent 38px 72px)}.nova-local-art.visuals .nova-local-marks{background-image:linear-gradient(rgba(146,204,255,.036) 1px,transparent 1px),linear-gradient(90deg,rgba(146,204,255,.036) 1px,transparent 1px);background-size:42px 42px;transform:perspective(700px) rotateX(58deg) scale(1.25);transform-origin:center bottom}.nova-local-art.audio .nova-local-marks{background-image:repeating-linear-gradient(90deg,transparent 0 72px,rgba(131,211,255,.05) 73px,transparent 74px),repeating-linear-gradient(0deg,transparent 0 27px,rgba(131,211,255,.027) 28px,transparent 29px)}
+@keyframes nbAmbientDrift{to{transform:translate3d(5vw,-4vh,0) scale(1.09) rotate(2.5deg)}}
+@keyframes nbGridMove{to{background-position:100px 50px,50px 100px}}
+@keyframes nbGlowBreathe{0%{transform:scale(.88);opacity:.10}100%{transform:scale(1.12);opacity:.2}}
+@keyframes nbWaveDash{to{stroke-dashoffset:-240}}
+@keyframes nbFloat{0%{transform:translate3d(0,10px,0) rotate(-9deg);opacity:.07}55%{opacity:.32}100%{transform:translate3d(20px,-28px,0) rotate(14deg);opacity:.16}}
+@keyframes nbEq{from{transform:scaleY(.2);opacity:.18}to{transform:scaleY(1);opacity:.9}}
+@keyframes nbSpin{to{transform:rotate(360deg)}}
+@keyframes nbBeat{0%,100%{transform:scale(.65);opacity:.18}50%{transform:scale(1.55);opacity:.8}}
+@keyframes nbParticle{to{transform:translate3d(16px,-24px,0) scale(1.5);opacity:.18}}
+@keyframes nbIconFloat{to{transform:translate3d(10px,-14px,0) rotate(5deg);opacity:.85}}
+@keyframes nbPulseRing{0%{box-shadow:0 0 0 0 rgba(var(--nb-c1),.28),0 0 22px rgba(var(--nb-c1),.5)}100%{box-shadow:0 0 0 52px rgba(var(--nb-c1),0),0 0 8px rgba(var(--nb-c1),.1);opacity:.12}}
+@keyframes nbNodePulse{0%,100%{transform:scale(.94);box-shadow:0 0 0 0 rgba(var(--nb-c1),0)}50%{transform:scale(1.06);box-shadow:0 0 0 32px rgba(var(--nb-c1),.018)}}
+@keyframes nbPlayhead{0%,100%{transform:translateX(-25vw);opacity:.16}50%{transform:translateX(34vw);opacity:.65}}
+@keyframes nbTrackGlow{to{filter:brightness(1.7);box-shadow:0 0 25px rgba(var(--nb-c1),.06)}}
+@keyframes nbFrameFloat{to{transform:translateY(-12px) rotate(2deg);filter:brightness(1.2)}}
+@keyframes nbDiamond{0%,100%{opacity:.12;transform:rotate(45deg) scale(.72)}50%{opacity:.55;transform:rotate(45deg) scale(1.35)}}
+@keyframes nbMotionDot{0%{offset-distance:0%;opacity:.1}20%{opacity:.85}85%{opacity:.65}100%{offset-distance:100%;opacity:0}}
+@keyframes nbFader{to{transform:translate(-50%,42px)}}
+@keyframes nbEqDraw{0%,10%{stroke-dashoffset:900;opacity:.16}43%,72%{stroke-dashoffset:0;opacity:.92}100%{stroke-dashoffset:-900;opacity:.12}}
+@keyframes nbNeedle{from{transform:rotate(-36deg)}to{transform:rotate(34deg)}}
+@keyframes nbKnob{to{transform:rotate(360deg)}}
+@keyframes nbSignal{0%{transform:translate(-50%,-50%) scale(.68);opacity:.25}82%,100%{transform:translate(-50%,-50%) scale(1.1);opacity:0}}
+@keyframes nbDot{0%,100%{opacity:.15;transform:scale(.65)}50%{opacity:.8;transform:scale(1.5)}}
+@keyframes nbMarks{to{background-position:120px 80px,-130px 170px,180px -110px}}
+@keyframes nbLocalGlow{to{transform:translate(-50%,-50%) scale(1.18);opacity:.65}}
+@keyframes nbLocalPulse{0%{transform:translate(-50%,-50%) scale(.45);opacity:.2}100%{transform:translate(-50%,-50%) scale(1.65);opacity:0}}
+@media(max-width:820px){.nova-dynamic-bg{opacity:.86}.nb-rings{width:72vw}.scene-skills .nb-orb{width:82px;height:82px}.scene-skills .nb-orb .nb-icon{width:42px;height:42px}.scene-skills .k1{left:3%}.scene-skills .k2{left:18%}.scene-skills .k3{right:18%}.scene-skills .k4{right:3%}.scene-audio .nb-mixer{gap:7px;left:2%;right:2%;height:205px;grid-template-columns:repeat(9,1fr)}.scene-audio .nb-channel:nth-child(n+10){display:none}.scene-visuals .nb-frame{width:125px}.scene-story .mic{right:4%}.scene-story .headphones{left:15%}.nb-icon{width:72px;height:72px}}
+@media(max-width:540px){.scene-hero .nb-rings,.scene-story .nb-rings,.scene-tracks .r2{display:none}.nb-wave{height:125px}.scene-skills .nb-orb{opacity:.72}.scene-visuals .nb-timeline{height:145px}.scene-visuals .f3{display:none}.scene-audio .nb-mixer{grid-template-columns:repeat(7,1fr)}.scene-audio .nb-channel:nth-child(n+8){display:none}.scene-audio .vu2{display:none}.nova-local-marks{opacity:.08}.nb-particles i:nth-child(n+11){display:none}}
+@media(prefers-reduced-motion:reduce){.nova-dynamic-bg *,.nova-local-art *{animation:none!important}.nova-bg-scene{transition-duration:.01ms!important}}
+
+
+</style>
+<style>#nova-social{scroll-margin-top:120px}</style>
+
+<style id="custom-page-scrollbar">
+html{color-scheme:dark;scrollbar-color:#477a9f #080c14}
+html.kn-custom-scroll,html.kn-custom-scroll body{scrollbar-width:none!important;scrollbar-gutter:auto!important}
+html.kn-custom-scroll::-webkit-scrollbar,html.kn-custom-scroll body::-webkit-scrollbar{display:none!important;width:0!important;height:0!important}
+#kn-scroll-rail{position:fixed;inset:0 auto 0 0;width:14px;z-index:2147483000;background:linear-gradient(90deg,#060911,#0d1420);border-right:1px solid #ffffff0c;touch-action:none;direction:ltr;cursor:pointer}
+#kn-scroll-rail[hidden]{display:none}
+#kn-scroll-thumb{position:absolute;top:0;left:4px;width:6px;min-height:0;border-radius:99px;background:linear-gradient(180deg,#83bbd6,#477a9f 75%,#c5a972);box-shadow:0 0 9px #477a9f;cursor:grab;touch-action:none;transition:width .18s,left .18s,filter .18s}
+#kn-scroll-rail:hover #kn-scroll-thumb,#kn-scroll-rail.dragging #kn-scroll-thumb,#kn-scroll-thumb:focus-visible{width:10px;left:2px;filter:brightness(1.2)}
+#kn-scroll-rail.dragging #kn-scroll-thumb{cursor:grabbing}
+#kn-scroll-thumb:focus-visible{outline:2px solid #eee;outline-offset:1px}
+@media(prefers-reduced-motion:reduce){#kn-scroll-thumb{transition:none}}
+@media(forced-colors:active){#kn-scroll-rail{background:Canvas}#kn-scroll-thumb{background:ButtonText}}
+</style>
+<style id="nova-mobile-stability">
+/* Keep mobile content in normal paint flow; avoid full-screen animated filter layers. */
+@media (max-width: 900px), (hover: none) and (pointer: coarse) {
+  .nova-page.open { animation: none !important; clip-path: none !important; }
+  .nova-reveal, .nova-reveal.in { opacity: 1 !important; transform: none !important; transition: none !important; }
+  .nova-dynamic-bg, .nova-page::before, .nova-page::after,
+  .nova-local-art { display: none !important; }
+  .nova-nav { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; background: #080e17; }
+  .nova-core { transform: none !important; transform-style: flat; animation: none !important; }
+  .nova-logo-stage, .nova-logo-asset, .nova-logo-asset::before,
+  .nova-logo-asset::after, .nova-logo-asset img, .nova-asset-blue,
+  .nova-asset-gold, .nova-asset-shine, .nova-logo-spark,
+  .nova-orbit, .nova-core::after { animation: none !important; filter: none !important; will-change: auto !important; }
+  .nova-asset-blue { opacity: 1 !important; transform: none !important; }
+  .nova-asset-gold, .nova-asset-shine, .nova-logo-spark { opacity: 0 !important; }
+  .nova-logo-stage.is-gold .nova-asset-blue { opacity: 0 !important; }
+  .nova-logo-stage.is-gold .nova-asset-gold { opacity: 1 !important; }
+}
+</style>
+</head>
+<body>
+<div class="nova-page open" id="novaPage">
+  <nav class="nova-nav">
+    <div class="nova-nav-brand">
+      <span class="nova-mini-logo" role="img" aria-label="NOVA"><span class="nova-logo-asset" aria-hidden="true">
+  <i class="nova-asset-blue"></i>
+  <i class="nova-asset-gold"></i>
+  <i class="nova-asset-shine"></i>
+</span></span>
+      <span>SOUND ENGINEER / ARTIST / VISUAL CREATOR</span>
+    </div>
+    <div class="nova-nav-actions">
+      <a class="nova-back" href="#nova-social">طلب مكس وماستر</a>
+      <a class="nova-mini-link" href="https://youtube.com/@novamusic964?si=N3YGBzr5sd915ZKh" target="_blank" rel="noopener">YouTube ↗</a>
+      <a class="nova-mini-link" href="https://www.instagram.com/upar.nova?stkn=djZicG5zbmU5cWZ2" target="_blank" rel="noopener">Instagram ↗</a>
+      <a class="nova-back" href="#" data-single-route="kaido" data-single-anchor="ads">رجوع إلى KAIDO ←</a>
+    </div>
+  </nav>
+
+  <main>
+    <section class="nova-hero nova-shell">
+      <div class="nova-hero-copy nova-reveal in">
+        <div class="nova-overline">NOVA / SOUND / VISION</div>
+        <h1>NOVA<span class="kn-hero-period">.</span> <span class="kn-hero-subtitle">نوفا — مهندس الصوت الخاص بالإعلانات</span></h1>
+        <p>شخص ما حصر نفسه بقالب واحد. نوفا يتعامل ويا الصوت كمساحة مفتوحة: يسمع الفنان، يفهم إحساسه، ويقرأ أذن المستمع بنفس الوقت. وكل فترة يثبت إن عنده قابلية يطلع بشي جديد، مختلف، ومغاير للعمل اللي قبله.</p>
+        <div class="nova-hero-meta"><span>MIX / MASTER</span><span>VOCAL DIRECTION</span><span>MUSIC</span><span>AFTER EFFECTS</span><span>VISUAL IDENTITY</span></div>
+        <div class="nova-hero-actions">
+          <a class="nova-btn primary" href="#nova-tracks">اسمع التراكات</a>
+          <a class="nova-btn" href="#nova-visuals">شوف أعمال الفيديو</a>
+        </div>
+      </div>
+      <div class="kn-hero-visual nova-machine" id="novaMachine">
+      <div class="kn-signal-stage" data-scene-artist="nova">
+        <div class="kn-stage-top"><span>NOVA / SOUND & VISION</span><span class="kn-signal-dot"><i></i> LIVE FORM</span></div>
+        <div class="kn-stage-floor" aria-hidden="true"></div><canvas class="kn-scene-canvas" aria-hidden="true"></canvas>
+        <div class="nova-logo-stage" id="novaLogoStage" role="button" tabindex="0" aria-label="شعار NOVA — اضغط للتبديل بين الجليدي والذهبي">
+            <span class="nova-logo-asset" aria-hidden="true">
+  <i class="nova-asset-blue"></i>
+  <i class="nova-asset-gold"></i>
+  <i class="nova-asset-shine"></i>
+</span>
+            <i class="nova-logo-ring"></i>
+            <i class="nova-logo-flare"></i>
+            <i class="nova-logo-spark s1"></i><i class="nova-logo-spark s2"></i>
+            <i class="nova-logo-spark s3"></i><i class="nova-logo-spark s4"></i>
+          </div>
+        <div class="kn-stage-bottom"><span>SOUND → MOTION</span><span>MIX / MASTER / CREATE</span></div>
+      </div>
+      <div class="kn-stage-controls"><div class="kn-scene-switch" role="group" aria-label="شكل المشهد"><button type="button" data-scene-mode="orbit" aria-pressed="true">مدار</button><button type="button" data-scene-mode="wave" aria-pressed="false">موجة</button></div><button type="button" class="kn-motion-toggle" aria-pressed="true"><span class="kn-motion-icon" aria-hidden="true">◉</span><span class="kn-motion-label">الحركة مفعّلة</span></button></div>
+    </div>
+    </section>
+
+    <section class="nova-section" id="nova-story">
+      <div class="nova-shell">
+        <div class="nova-section-head nova-reveal">
+          <div><small>01 / THE MIND BEHIND THE SOUND</small><h2>مو هندسة محدودة… <br>هوية كاملة</h2></div>
+          <p>الفرق مو بس بالـ EQ أو الـ Compressor. الفرق بطريقة الفهم، الاختيار، والقدرة على خلق شخصية للعمل من أول طبقة صوت إلى آخر فريم بالصورة.</p>
+        </div>
+        <div class="nova-story-grid">
+          <article class="nova-story-card nova-reveal">
+            <p><strong>نوفا فنان ومهندس صوت مبدع.</strong> و نوفا هوة من ال 444. نكدر نكول هو الشخص اللي يكدر يفهمك كمغني وكمستمع بنفس الوقت. أعماله اختلفت عن هواي من مهندسين الصوت لأنّه ما انعزل بهندسة محدودة، ولا قفل على نفسه باب المعرفة.</p>
+            <p>بالعكس، أثبت إنّه لحد الآن مستعد يقدّم شي جديد ومختلف. أبدع بهندسته وأبدع بتراكاته، وكل فترة تبقى تنصدم من قدرته على إنتاج فكرة مو نسخة من اللي قبلها.</p>
+            <p>والأكثر اختلافًا إنّه مو بس مهندس صوت ومغني؛ دخل بالصورة أيضًا، واشتغل على الفيديوهات باستخدام <strong>After Effects</strong> حتى صارت التفاصيل البصرية جزء من بصمته، مو مجرد إضافة جانبية.</p>
+          </article>
+          <aside class="nova-quote-card nova-reveal">
+            <b>"إذا الصوت ما عنده شخصية، التقنية وحدها ما تكفي."</b>
+            <div class="nova-quote-meter" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            <span>NOVA / SOUND ENGINEER</span>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="nova-section" id="nova-skills">
+      <div class="nova-shell">
+        <div class="nova-section-head nova-reveal">
+          <div><small>02 / CAPABILITIES</small><h2>أربع مهارات<br>وشخص واحد</h2></div>
+          <p>الصفحة مصممة حتى توضح ليش NOVA مو مجرد اسم داخل كريدت الإعلان، وإنما جزء من تكوين العمل من ناحية السمع والصورة.</p>
+        </div>
+        <div class="nova-cap-grid">
+          <article class="nova-cap nova-reveal"><em>01</em><h3>هندسة الصوت</h3><p>مكس، ماستر، تنظيف، توازن، وإخراج يخلي كل طبقة بمكانها بدون ما يخنق شخصية الفنان.</p></article>
+          <article class="nova-cap nova-reveal"><em>02</em><h3>فهم الفنان</h3><p>مو كل فوكل يحتاج نفس المعالجة. الأساس هو فهم النبرة، الأداء، والجو اللي يريد الفنان يوصله.</p></article>
+          <article class="nova-cap nova-reveal"><em>03</em><h3>الإنتاج والتراكات</h3><p>يخلق تراك بهوية مو مجرد خلفية؛ كل عنصر يخدم المزاج ويشتغل ويا الكلمة بدل ما ينافسها.</p></article>
+          <article class="nova-cap nova-reveal"><em>04</em><h3>الصورة و After Effects</h3><p>التجربة تكمل بالفيديو. حركة، مونتاج، مؤثرات، وهوية بصرية تكمل الإحساس اللي بدأ بالصوت.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="nova-section" id="nova-tracks">
+      <div class="nova-shell">
+        <div class="nova-section-head nova-reveal">
+          <div><small>03 / SELECTED TRACKS</small><h2>من أجمل<br>التراكات</h2></div>
+          <p>اضغط على أي عمل حتى يشتغل مباشرة داخل الموقع.</p>
+        </div>
+        <div class="nova-media-grid" id="novaTracksGrid"></div>
+      </div>
+    </section>
+
+    <section class="nova-section" id="nova-visuals">
+      <div class="nova-shell">
+        <div class="nova-section-head nova-reveal">
+          <div><small>04 / VIDEO WORKS + AFTER EFFECTS</small><h2>أعمال الفيديو<br>و After Effects</h2></div>
+          <p>فيديوهات نفّذها NOVA بالكامل من الصفر باستخدام After Effects؛ ادخل إلى القائمة وابحث باسم العمل أو بأي حرف أو كلمة.</p>
+        </div>
+        <button class="nova-library-launch nova-reveal" type="button" data-library-open="visuals" aria-label="فتح قائمة أعمال الفيديو و After Effects">
+          <span class="nova-library-launch-icon" aria-hidden="true">▶</span>
+          <span class="nova-library-launch-copy">
+            <small>VISUAL ARCHIVE / 15 WORKS</small>
+            <strong>ادخل إلى قائمة أعمال الفيديو</strong>
+            <em>بحث ذكي بالاسم، الكلمة، أو النتائج المشابهة</em>
+          </span>
+          <span class="nova-library-launch-action">فتح القائمة <b>↗</b></span>
+        </button>
+      </div>
+    </section>
+
+    <section class="nova-section" id="nova-audio-engineering">
+      <div class="nova-shell">
+        <div class="nova-section-head nova-reveal">
+          <div><small>05 / AUDIO ENGINEERING</small><h2>الهندسة<br>الصوتية</h2></div>
+          <p>نماذج من أعمال NOVA في الهندسة الصوتية، المكس والماستر ومعالجة الصوت؛ افتح القائمة وابحث بأي حرف أو كلمة.</p>
+        </div>
+        <button class="nova-library-launch nova-reveal" type="button" data-library-open="audio" aria-label="فتح قائمة أعمال الهندسة الصوتية">
+          <span class="nova-library-launch-icon audio" aria-hidden="true">◉</span>
+          <span class="nova-library-launch-copy">
+            <small>AUDIO ENGINEERING / 06 WORKS</small>
+            <strong>ادخل إلى قائمة الهندسة الصوتية</strong>
+            <em>بحث فوري مع إظهار النتائج الأقرب والمشابهة</em>
+          </span>
+          <span class="nova-library-launch-action">فتح القائمة <b>↗</b></span>
+        </button>
+      </div>
+    </section>
+
+<style>
+#triple444{padding:100px 4vw;position:relative;isolation:isolate;background:radial-gradient(ellipse at 50% 60%,#1a193d,transparent 70%);overflow:hidden}#triple444 .crew-heading{text-align:center;margin-bottom:48px}#triple444 small{letter-spacing:5px;color:#aab4cc}#triple444 h2{font-size:clamp(36px,6vw,76px);margin:12px;color:white}#triple444 .channel{display:inline-flex;gap:12px;align-items:center;color:white;border:1px solid #ffffff40;border-radius:30px;padding:13px 26px;background:#ffffff09;text-decoration:none}#triple444 svg{width:24px;height:24px;fill:currentColor}.crew-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;max-width:1320px;margin:auto;direction:ltr}.crew-card{position:relative;aspect-ratio:3/4;border-radius:18px;background:radial-gradient(ellipse at 50% 65%,color-mix(in srgb,var(--glow) 22%,transparent),#090b16 70%);border:1px solid color-mix(in srgb,var(--glow) 45%,transparent);isolation:isolate;box-shadow:0 0 35px color-mix(in srgb,var(--glow) 10%,transparent);transition:transform .4s,box-shadow .4s;opacity:1}.crew-card img{width:100%;height:100%;object-fit:contain;object-position:center bottom;position:relative;z-index:2;filter:drop-shadow(0 0 14px color-mix(in srgb,var(--glow) 45%,transparent));transition:transform .6s}.crew-card:before{content:'';position:absolute;inset:7%;border:1px solid var(--glow);border-radius:50%;transform:rotate(-25deg) scaleX(.65);box-shadow:0 0 30px var(--glow),inset 0 0 30px var(--glow);opacity:.3}.crew-card:after{content:'';position:absolute;inset:-10px;background:var(--glow);clip-path:polygon(48% 0,52% 23%,43% 38%,56% 52%,46% 70%,52% 100%,48% 72%,51% 54%,38% 39%,47% 22%);filter:drop-shadow(0 0 9px var(--glow));opacity:0;z-index:4;pointer-events:none}.crew-card.arrived{animation:crewReveal 1.1s both;animation-delay:var(--delay)}.crew-card.arrived:after{animation:crewBolt 1.2s both;animation-delay:var(--delay)}.crew-card:hover,.crew-card:focus-within{transform:translateY(-10px);box-shadow:0 15px 50px color-mix(in srgb,var(--glow) 28%,transparent)}.crew-card:hover img{transform:scale(1.035)}.crew-card h3{position:absolute;bottom:15px;right:16px;margin:0;color:white;font:800 22px Arial;z-index:5;text-shadow:0 2px 10px black}.crew-social{position:absolute;inset:0;z-index:6;display:flex;justify-content:center;align-items:center;gap:12px;background:#03061466;border-radius:18px;opacity:0;transition:opacity .25s}.crew-card:hover .crew-social,.crew-card:focus-within .crew-social{opacity:1}.crew-social a{display:grid;place-items:center;width:55px;height:55px;color:white;background:#0b1129cc;border:1px solid var(--glow);border-radius:50%;box-shadow:0 0 20px color-mix(in srgb,var(--glow) 35%,transparent)}.crew-social a:focus-visible{outline:3px solid white;outline-offset:4px}@keyframes crewReveal{from{opacity:0;clip-path:polygon(48% 0,52% 0,52% 100%,48% 100%);transform:translateY(25px)}to{opacity:1;clip-path:polygon(0 0,100% 0,100% 100%,0 100%);transform:none}}@keyframes crewBolt{0%,100%{opacity:0}25%,60%{opacity:.95}}@media(max-width:650px){.crew-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}#triple444{padding:65px 16px}.crew-social{opacity:1;inset:auto 0 50px;background:none}.crew-social a{width:42px;height:42px}.crew-card h3{font-size:18px}}@media(prefers-reduced-motion:reduce){.crew-card,.crew-card img,.crew-card:after{animation:none!important;transition:none!important}}
+</style><section id="triple444"><div class="crew-heading"><small>FOUR ARTISTS · ONE FREQUENCY</small><h2>تربل 444</h2><a class="channel" href="https://youtube.com/@444musi_c?si=3nRxV8YQBWbitTn5" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23 7s-.2-2-1-3-3-1-3-1H5S3 3 2 4 1 7 1 7v10s.2 2 1 3 3 1 3 1h14s2 0 3-1 1-3 1-3zM10 16V8l7 4z"/></svg> قناة تربل 444</a></div><div class="crew-grid"><article class="crew-card" style="--glow:#64dfff;--delay:0.0s"><img src="__KN_MEDIA:1c0707f0a5cd__" alt="nova" loading="lazy"><h3>nova</h3><div class="crew-social"><a href="https://www.instagram.com/upar.nova" target="_blank" rel="noopener noreferrer" aria-label="Instagram nova"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3zm5 3a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm6-4a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/></svg></a><a href="https://www.youtube.com/@novamusic964" target="_blank" rel="noopener noreferrer" aria-label="YouTube nova"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23 7s-.2-2-1-3-3-1-3-1H5S3 3 2 4 1 7 1 7v10s.2 2 1 3 3 1 3 1h14s2 0 3-1 1-3 1-3zM10 16V8l7 4z"/></svg></a></div></article><article class="crew-card" style="--glow:#b38bff;--delay:0.24s"><img src="__KN_MEDIA:b30234d0b195__" alt="Azad" loading="lazy"><h3>Azad</h3><div class="crew-social"><a href="https://www.instagram.com/genoaz4" target="_blank" rel="noopener noreferrer" aria-label="Instagram Azad"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3zm5 3a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm6-4a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/></svg></a><a href="https://www.youtube.com/@azadonmic" target="_blank" rel="noopener noreferrer" aria-label="YouTube Azad"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23 7s-.2-2-1-3-3-1-3-1H5S3 3 2 4 1 7 1 7v10s.2 2 1 3 3 1 3 1h14s2 0 3-1 1-3 1-3zM10 16V8l7 4z"/></svg></a></div></article><article class="crew-card" style="--glow:#5affba;--delay:0.48s"><img src="__KN_MEDIA:67def6cfd0c3__" alt="fetan" loading="lazy"><h3>fetan</h3><div class="crew-social"><a href="https://www.instagram.com/feit4n_" target="_blank" rel="noopener noreferrer" aria-label="Instagram fetan"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3zm5 3a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm6-4a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/></svg></a><a href="https://www.youtube.com/@fei4an" target="_blank" rel="noopener noreferrer" aria-label="YouTube fetan"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23 7s-.2-2-1-3-3-1-3-1H5S3 3 2 4 1 7 1 7v10s.2 2 1 3 3 1 3 1h14s2 0 3-1 1-3 1-3zM10 16V8l7 4z"/></svg></a></div></article><article class="crew-card" style="--glow:#ff9165;--delay:0.72s"><img src="__KN_MEDIA:9e83bbd00fd1__" alt="fury" loading="lazy"><h3>fury</h3><div class="crew-social"><a href="https://www.instagram.com/fu444ry" target="_blank" rel="noopener noreferrer" aria-label="Instagram fury"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3zm5 3a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm6-4a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/></svg></a><a href="https://www.youtube.com/@fu4ry" target="_blank" rel="noopener noreferrer" aria-label="YouTube fury"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23 7s-.2-2-1-3-3-1-3-1H5S3 3 2 4 1 7 1 7v10s.2 2 1 3 3 1 3 1h14s2 0 3-1 1-3 1-3zM10 16V8l7 4z"/></svg></a></div></article></div></section><script>new IntersectionObserver((es,o)=>{es.forEach(e=>{if(e.isIntersecting){e.target.querySelectorAll(".crew-card").forEach(c=>c.classList.add("arrived"));o.unobserve(e.target)}})},{threshold:.12}).observe(document.getElementById("triple444"));</script>    <section class="nova-section">
+      <div class="nova-shell">
+        <div class="nova-social-cta nova-reveal" id="nova-social">
+          <div><small class="nova-overline" style="margin-bottom:14px">FOLLOW THE SOURCE</small><h2>اسمع أكثر<br>شوف أكثر</h2><p>قناة نوفا وحسابه الرسميين موجودات هنا حتى توصل لبقية الأعمال مباشرة.</p></div>
+          <div class="nova-social-buttons">
+            <a class="nova-btn primary" href="https://youtube.com/@novamusic964?si=N3YGBzr5sd915ZKh" target="_blank" rel="noopener">YouTube ↗</a>
+            <a class="nova-btn" href="https://www.instagram.com/upar.nova?stkn=djZicG5zbmU5cWZ2" target="_blank" rel="noopener">Instagram ↗</a>
+          </div>
+        </div>
+        <footer class="nova-footer"><span class="nova-mini-logo" role="img" aria-label="NOVA"><span class="nova-logo-asset" aria-hidden="true">
+  <i class="nova-asset-blue"></i>
+  <i class="nova-asset-gold"></i>
+  <i class="nova-asset-shine"></i>
+</span></span><span>NOVA SOUND UNIVERSE / 2026</span><span>Sound • Music • Visual</span></footer>
+      </div>
+    </section>
+  </main>
+</div>
+
+
+<div class="modal" id="videoModal"><div class="modal-inner"><button class="modal-close" id="modalClose" type="button">إغلاق ✕</button><iframe id="modalFrame" src="" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div></div>
+<div class="nova-library-modal" id="novaLibraryModal" aria-hidden="true">
+  <div class="nova-library-window" role="dialog" aria-modal="true" aria-labelledby="novaLibraryTitle">
+    <header class="nova-library-head">
+      <div>
+        <small id="novaLibraryKicker">NOVA ARCHIVE</small>
+        <h2 id="novaLibraryTitle">قائمة الأعمال</h2>
+        <p id="novaLibrarySubtitle">ابحث باسم العمل أو بأي حرف أو كلمة.</p>
+      </div>
+      <button class="nova-library-close" id="novaLibraryClose" type="button" aria-label="إغلاق القائمة">✕</button>
+    </header>
+    <div class="nova-library-searchbar">
+      <span aria-hidden="true">⌕</span>
+      <input id="novaLibrarySearch" type="search" autocomplete="off" spellcheck="false" placeholder="ابحث باسم العمل، حرف أو كلمة..." aria-label="بحث داخل قائمة الأعمال">
+      <button id="novaLibraryClear" type="button">مسح</button>
+    </div>
+    <div class="nova-library-meta">
+      <span id="novaLibraryCount">0 عمل</span>
+      <span>البحث يدعم الكلمات القريبة والمتشابهة</span>
+    </div>
+    <div class="nova-media-grid nova-library-grid" id="novaLibraryGrid"></div>
+    <div class="nova-library-empty" id="novaLibraryEmpty" hidden>
+      <b>ما لقينا نتيجة مطابقة</b>
+      <span>جرّب حرفًا أقل، كلمة ثانية، أو صياغة قريبة.</span>
+    </div>
+  </div>
+</div>
+<script>
+const NOVA_TRACKS=["chaw4W9zwp0","9n1MJW6BOz0","Pao4GMf0EU0"];
+const NOVA_VISUALS=[
+  "FA8_fLF5HgY","hKrSVjpmsTs","b_FOdaWyh0E","z5h2xzKzDxA","01n2X9b0Wzs",
+  "5SvdFo6QQ2Y","LUPlw3lmrOA","UDxJLCjM5-E","OxdetASIBws","b_AbDz3fpdk",
+  "Z0v-8N4FkXE","bhROoJ-jxXI","iq63vyk1-4c","PFCwfRqEKYQ","qA8uZI4GLoE"
+];
+const NOVA_AUDIO_ENGINEERING=["FA8_fLF5HgY","b_FOdaWyh0E","b_AbDz3fpdk","01n2X9b0Wzs","0Twu8nT0Sgk","-7mYxoWMarg"];
+const novaPage=document.getElementById('novaPage');
+const modal=document.getElementById('videoModal');
+const modalFrame=document.getElementById('modalFrame');
+const novaCore=document.getElementById('novaCore');
+const novaMachine=document.getElementById('novaMachine');
+
+function playIcon(){return '<svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>'}
+function openModal(id){modalFrame.src=`youtube-player.html?v=${encodeURIComponent(id)}`;modal.classList.add('open')}
+function closeModal(){modal.classList.remove('open');modalFrame.src=''}
+document.getElementById('modalClose').addEventListener('click',closeModal);
+modal.addEventListener('click',e=>{if(e.target===modal)closeModal()});
+
+
+const NOVA_KNOWN_TITLES={
+  "LUPlw3lmrOA":"الصبار مع فساد - ضـربة | KAKTIS X FASAD (Official Lyric Video)"
+};
+
+function novaNormalizeSearch(value){
+  return String(value||'').toLowerCase().normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g,'')
+    .replace(/[\u064B-\u065F\u0670]/g,'')
+    .replace(/[إأآٱ]/g,'ا').replace(/ى/g,'ي').replace(/ؤ/g,'و').replace(/ئ/g,'ي').replace(/ة/g,'ه')
+    .replace(/[^a-z0-9\u0600-\u06ff]+/g,' ').replace(/\s+/g,' ').trim();
+}
+function novaEditDistance(a,b){
+  if(a===b)return 0;if(!a.length)return b.length;if(!b.length)return a.length;
+  const row=Array.from({length:b.length+1},(_,i)=>i);
+  for(let i=1;i<=a.length;i++){
+    let prev=row[0];row[0]=i;
+    for(let j=1;j<=b.length;j++){
+      const old=row[j],cost=a[i-1]===b[j-1]?0:1;
+      row[j]=Math.min(row[j]+1,row[j-1]+1,prev+cost);prev=old;
+    }
+  }
+  return row[b.length];
+}
+function novaBigramSimilarity(a,b){
+  if(a.length<2||b.length<2)return 0;
+  const A=[];for(let i=0;i<a.length-1;i++)A.push(a.slice(i,i+2));
+  const B=new Map();for(let i=0;i<b.length-1;i++){const g=b.slice(i,i+2);B.set(g,(B.get(g)||0)+1)}
+  let hit=0;for(const g of A){const n=B.get(g)||0;if(n){hit++;B.set(g,n-1)}}
+  return (2*hit)/(A.length+Math.max(1,b.length-1));
+}
+function novaSearchScore(query,text){
+  const q=novaNormalizeSearch(query),h=novaNormalizeSearch(text);
+  if(!q)return 1;if(!h)return 0;if(h===q)return 120;if(h.includes(q))return 100;
+  const qTokens=q.split(' ').filter(Boolean),hTokens=h.split(' ').filter(Boolean);
+  let total=0;
+  for(const qt of qTokens){
+    let best=0;
+    for(const ht of hTokens){
+      if(ht===qt){best=Math.max(best,100);continue}
+      if(ht.startsWith(qt)||qt.startsWith(ht)){best=Math.max(best,88);continue}
+      if(ht.includes(qt)||qt.includes(ht)){best=Math.max(best,82);continue}
+      if(qt.length>=3&&ht.length>=3){
+        const d=novaEditDistance(qt,ht),allowed=Math.max(1,Math.floor(Math.max(qt.length,ht.length)*.34));
+        if(d<=allowed)best=Math.max(best,72-(d-1)*9);
+        const sim=novaBigramSimilarity(qt,ht);
+        if(sim>=.46)best=Math.max(best,48+sim*28);
+      }
+    }
+    total+=best;
+  }
+  return qTokens.length?total/qTokens.length:0;
+}
+
+function buildNovaMediaCard(id,label,fallbackTitle,onMetadata){
+  const known=NOVA_KNOWN_TITLES[id]||fallbackTitle;
+  const card=document.createElement('article');
+  card.className='nova-media-card';
+  card.dataset.search=`${known} ${fallbackTitle} ${label} ${id}`;
+  card.innerHTML=`<div class="nova-media-thumb"><img src="https://i.ytimg.com/vi/${id}/hqdefault.jpg" alt="${known}" loading="lazy"><span class="nova-media-play">${playIcon()}</span></div><div class="nova-media-body"><small>${label}</small><h3>${known}</h3></div>`;
+  card.addEventListener('click',()=>openModal(id));
+  window.knDeferMetadata(card,()=>fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${id}&format=json`,{signal:AbortSignal.timeout(8000)})
+    .then(r=>r.ok?r.json():null)
+    .then(data=>{
+      if(data&&data.title){
+        card.querySelector('h3').textContent=data.title;
+        card.dataset.search=`${data.title} ${data.author_name||''} ${fallbackTitle} ${label} ${id}`;
+        if(typeof onMetadata==='function')onMetadata(card,data);
+      }
+    }).catch(()=>{}),typeof onMetadata==='function');
+  return card;
+}
+
+const novaTracksGrid=document.getElementById('novaTracksGrid');
+NOVA_TRACKS.forEach((id,i)=>{
+  const card=buildNovaMediaCard(id,`TRACK / ${String(i+1).padStart(2,'0')}`,'NOVA — Track');
+  card.classList.add('nova-reveal');
+  novaTracksGrid.appendChild(card);
+});
+
+const novaLibraryModal=document.getElementById('novaLibraryModal');
+const novaLibraryClose=document.getElementById('novaLibraryClose');
+const novaLibrarySearch=document.getElementById('novaLibrarySearch');
+const novaLibraryClear=document.getElementById('novaLibraryClear');
+const novaLibraryGrid=document.getElementById('novaLibraryGrid');
+const novaLibraryCount=document.getElementById('novaLibraryCount');
+const novaLibraryEmpty=document.getElementById('novaLibraryEmpty');
+const novaLibraryTitle=document.getElementById('novaLibraryTitle');
+const novaLibraryKicker=document.getElementById('novaLibraryKicker');
+const novaLibrarySubtitle=document.getElementById('novaLibrarySubtitle');
+let novaLibraryState={type:null,cards:[],total:0};
+
+const NOVA_LIBRARIES={
+  visuals:{
+    ids:NOVA_VISUALS,
+    kicker:'VIDEO WORKS + AFTER EFFECTS',
+    title:'أعمال الفيديو و After Effects',
+    subtitle:'كل هذه الفيديوهات نفّذها NOVA بالكامل. ابحث باسم العمل أو بأي حرف أو كلمة.',
+    label:'VIDEO + AFTER EFFECTS',
+    fallback:'NOVA — Video / After Effects'
+  },
+  audio:{
+    ids:NOVA_AUDIO_ENGINEERING,
+    kicker:'AUDIO ENGINEERING',
+    title:'الهندسة الصوتية',
+    subtitle:'نماذج المكس والماستر ومعالجة الصوت. البحث يعرض المطابق والأقرب للكلمة المكتوبة.',
+    label:'AUDIO ENGINEERING',
+    fallback:'NOVA — Audio Engineering'
+  }
+};
+
+function novaApplyLibrarySearch(){
+  const q=novaLibrarySearch.value;
+  const ranked=novaLibraryState.cards.map((card,index)=>({card,index,score:novaSearchScore(q,card.dataset.search||'')}))
+    .filter(x=>!q.trim()||x.score>=48)
+    .sort((a,b)=>q.trim()?(b.score-a.score||a.index-b.index):(a.index-b.index));
+  const visible=new Set(ranked.map(x=>x.card));
+  novaLibraryState.cards.forEach(card=>{card.hidden=!visible.has(card)});
+  ranked.forEach(x=>novaLibraryGrid.appendChild(x.card));
+  novaLibraryCount.textContent=q.trim()
+    ? `${ranked.length} نتيجة من ${novaLibraryState.total}`
+    : `${novaLibraryState.total} عمل`;
+  novaLibraryEmpty.hidden=ranked.length!==0;
+}
+
+function novaOpenLibrary(type){
+  const cfg=NOVA_LIBRARIES[type];if(!cfg)return;
+  novaLibraryState={type,cards:[],total:cfg.ids.length};
+  novaLibraryKicker.textContent=cfg.kicker;
+  novaLibraryTitle.textContent=cfg.title;
+  novaLibrarySubtitle.textContent=cfg.subtitle;
+  novaLibrarySearch.value='';
+  novaLibraryGrid.innerHTML='';
+  cfg.ids.forEach((id,i)=>{
+    const card=buildNovaMediaCard(
+      id,
+      `${cfg.label} / ${String(i+1).padStart(2,'0')}`,
+      cfg.fallback,
+      ()=>{if(novaLibraryModal.classList.contains('open'))novaApplyLibrarySearch()}
+    );
+    novaLibraryState.cards.push(card);
+    novaLibraryGrid.appendChild(card);
+  });
+  novaApplyLibrarySearch();
+  novaLibraryModal.classList.add('open');
+  novaLibraryModal.setAttribute('aria-hidden','false');
+  document.body.classList.add('nova-library-open');
+  setTimeout(()=>novaLibrarySearch.focus({preventScroll:true}),120);
+}
+function novaCloseLibrary(){
+  novaLibraryModal.classList.remove('open');
+  novaLibraryModal.setAttribute('aria-hidden','true');
+  document.body.classList.remove('nova-library-open');
+  novaLibrarySearch.value='';
+}
+document.querySelectorAll('[data-library-open]').forEach(btn=>btn.addEventListener('click',()=>novaOpenLibrary(btn.dataset.libraryOpen)));
+novaLibraryClose.addEventListener('click',novaCloseLibrary);
+novaLibraryModal.addEventListener('click',e=>{if(e.target===novaLibraryModal)novaCloseLibrary()});
+novaLibrarySearch.addEventListener('input',novaApplyLibrarySearch);
+novaLibraryClear.addEventListener('click',()=>{novaLibrarySearch.value='';novaApplyLibrarySearch();novaLibrarySearch.focus()});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'&&modal.classList.contains('open')){closeModal();return}
+  if(e.key==='Escape'&&novaLibraryModal.classList.contains('open'))novaCloseLibrary();
+});
+
+
+
+document.querySelectorAll('a[href^="#nova-"]').forEach(link=>{link.addEventListener('click',e=>{const target=document.querySelector(link.getAttribute('href'));if(target){e.preventDefault();target.scrollIntoView({behavior:window.knCanAnimate()?'smooth':'auto',block:'start'})}})});
+
+const novaLogoStage=document.getElementById('novaLogoStage');
+if(novaLogoStage){
+  const updateNovaHotspot=e=>{const r=novaLogoStage.getBoundingClientRect(),x=Math.max(0,Math.min(100,(e.clientX-r.left)/r.width*100)),y=Math.max(0,Math.min(100,(e.clientY-r.top)/r.height*100));novaLogoStage.style.setProperty('--mx',x+'%');novaLogoStage.style.setProperty('--my',y+'%')};
+  const toggleNovaFinish=()=>{novaLogoStage.classList.toggle('is-gold');if(window.knCanAnimate()&&novaLogoStage.animate)novaLogoStage.animate([{filter:'brightness(1)'},{filter:'brightness(1.8)'},{filter:'brightness(1)'}],{duration:360,easing:'cubic-bezier(.16,1,.3,1)'})};
+  novaLogoStage.addEventListener('pointermove',updateNovaHotspot);novaLogoStage.addEventListener('pointerleave',()=>{novaLogoStage.style.setProperty('--mx','50%');novaLogoStage.style.setProperty('--my','50%')});novaLogoStage.addEventListener('click',toggleNovaFinish);novaLogoStage.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggleNovaFinish()}})
+}
+
+
+</script>
+
+
+
+
+<script id="single-file-route-bridge">
+(function(){
+  document.addEventListener('click', function(e){
+    const a = e.target.closest('a[data-single-route]');
+    if(!a) return;
+    e.preventDefault();
+    parent.postMessage({type:'KIDO_SINGLE_ROUTE', page:a.dataset.singleRoute, anchor:a.dataset.singleAnchor || ''}, '*');
+  });
+})();
+</script>
+
+<script id="interactive-guide-scroll-bridge">
+(function(){
+  addEventListener('message', function(e){
+    const d = e.data || {};
+    if(d.type !== 'KIDO_ASSIST_NAV' || !d.anchor) return;
+    const el = document.getElementById(d.anchor);
+    if(!el) return;
+    try{ el.scrollIntoView({behavior:window.knCanAnimate()?'smooth':'auto', block:'start'}); } catch(_){ el.scrollIntoView(); }
+    try{ history.replaceState(null, '', '#' + encodeURIComponent(d.anchor)); }catch(_){}
+    try{ if(window.knCanAnimate())el.animate([{filter:'brightness(1)'},{filter:'brightness(1.16) drop-shadow(0 0 14px rgba(133,202,255,.16))'},{filter:'brightness(1)'}],{duration:1050,easing:'ease-out'}); }catch(_){}
+  });
+})();
+</script>
+
+<script>(()=>{const b=document.createElement('button');b.textContent='تسجيل الدخول';b.style.cssText='border:1px solid #8fcfff66;background:#14192d;color:white;border-radius:24px;padding:10px 16px;cursor:pointer;white-space:nowrap;font:inherit';b.onclick=()=>parent.postMessage({type:'ADMIN_OPEN'},'*');document.querySelector('.nova-nav-actions').prepend(b)})();</script><style>@media(max-width:700px){.nova-nav{flex-wrap:wrap!important;gap:8px!important}.nova-nav-actions{flex-wrap:wrap!important}.nova-nav-brand>span:last-child{display:none}header.nav>button{font-size:11px!important;padding:8px 10px!important}}</style><script id="kn-scroll-script">(()=>{
+const root=document.documentElement, scroller=document.scrollingElement||root;
+const rail=document.createElement('div');rail.id='kn-scroll-rail';
+const thumb=document.createElement('div');thumb.id='kn-scroll-thumb';thumb.tabIndex=0;
+thumb.setAttribute('role','scrollbar');thumb.setAttribute('aria-label','تمرير الصفحة');thumb.setAttribute('aria-orientation','vertical');thumb.setAttribute('aria-valuemin','0');thumb.setAttribute('aria-valuemax','100');
+rail.append(thumb);document.body.append(rail);
+let length=0,travel=0,startY=0,startScroll=0,drag=false,queued=false;
+function update(){queued=false;length=Math.max(0,scroller.scrollHeight-innerHeight);const h=rail.clientHeight;const size=Math.min(h,Math.max(52,h*innerHeight/scroller.scrollHeight));travel=h-size;thumb.style.height=size+'px';thumb.style.transform='translateY('+(length?scroller.scrollTop/length*travel:0)+'px)';thumb.setAttribute('aria-valuenow',String(Math.round(length?scroller.scrollTop/length*100:0)));rail.hidden=length<1;}
+function queue(){if(!queued){queued=true;requestAnimationFrame(update)}}
+function jump(y){scroller.scrollTo({top:Math.max(0,Math.min(length,y)),behavior:'instant'})}
+thumb.addEventListener('pointerdown',e=>{if(e.button!==0)return;e.preventDefault();update();drag=true;startY=e.clientY;startScroll=scroller.scrollTop;thumb.setPointerCapture(e.pointerId);rail.classList.add('dragging')});
+thumb.addEventListener('pointermove',e=>{if(drag&&travel>0)jump(startScroll+(e.clientY-startY)*length/travel)});
+function end(){drag=false;rail.classList.remove('dragging')}
+thumb.addEventListener('pointerup',end);thumb.addEventListener('pointercancel',end);thumb.addEventListener('lostpointercapture',end);
+rail.addEventListener('pointerdown',e=>{if(e.target!==rail)return;update();jump((e.clientY-rail.getBoundingClientRect().top-thumb.offsetHeight/2)/Math.max(1,travel)*length)});
+thumb.addEventListener('keydown',e=>{let y=scroller.scrollTop;switch(e.key){case 'ArrowDown':y+=60;break;case 'ArrowUp':y-=60;break;case 'PageDown':y+=innerHeight*.85;break;case 'PageUp':y-=innerHeight*.85;break;case 'Home':y=0;break;case 'End':y=length;break;default:return}e.preventDefault();jump(y)});
+addEventListener('scroll',queue,{passive:true});addEventListener('resize',queue);new ResizeObserver(queue).observe(document.body);
+root.classList.add('kn-custom-scroll');update();
+})();</script></body>
+</html>

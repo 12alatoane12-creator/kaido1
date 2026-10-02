@@ -1,95 +1,50 @@
-const fs = require('node:fs');
-const path = require('node:path');
-const zlib = require('node:zlib');
-const root = path.resolve(__dirname, '..');
-const asset = name => fs.readFileSync(path.join(root, 'motion', name), 'utf8');
-const literal = value => JSON.stringify(value).replace(/</g, '\\u003c');
-
-function patchPage(html, page) {
-  html = html.replaceAll('  if(!window.knCanAnimate())return;\n  if(!window.knCanAnimate())return;\n', '  if(!window.knCanAnimate())return;\n');
-  if (html.includes('KN_LEGACY_MOTION_PATCHED v1')) return html;
-  // Existing content and embedded imagery remain the source of each page.
-  if (page === 'kaido') {
-    html = html.replace(/\/\* ================= SCROLL REVEAL ================= \*\/[\s\S]*?(?=\/\* ================= CUSTOM MAGIC CURSOR)/,
-      '/* Scroll reveal is coordinated by the shared motion layer. */\n\n');
-    html = html.replace(/\/\/ Magnetic micro-interactions for premium controls\.[\s\S]*?(?=\/\/ Resize background)/,
-      '// Pointer motion is coordinated by the shared motion layer.\n\n');
-    html = html.replace('window.addEventListener("mousemove", e=>{\n  mx',
-      'window.addEventListener("mousemove", e=>{\n  if(!window.knCanAnimate() || !matchMedia("(hover:hover) and (pointer:fine)").matches)return;\n  mx');
-    html = html.replace('ringRAF=0;if(document.hidden)return;', 'ringRAF=0;if(document.hidden || !window.knCanAnimate())return;');
-    html = html.replace('function spawnDust(x,y){\n', 'function spawnDust(x,y){\n  if(!window.knCanAnimate())return;\n');
-    html = html.replace('function burst(x,y,n){\n', 'function burst(x,y,n){\n  if(!window.knCanAnimate())return;\n');
-    html = html.replace('function tickBg(t){\n  if(document.hidden)return;', 'function tickBg(t){\n  if(document.hidden || !window.knCanAnimate())return;');
-  } else {
-    html = html.replace(/const novaIO=new IntersectionObserver[\s\S]*?document.querySelectorAll\('\.nova-reveal'\).forEach\(el=>novaIO.observe\(el\)\);/,
-      '// Scroll reveal is coordinated by the shared motion layer.');
-    html = html.replace(/if\(novaMachine&&matchMedia\('\(hover:hover\) and \(pointer:fine\)'\).matches\)\{[^\n]+\}/,
-      '// Logo tilt is coordinated by the shared motion layer.');
-    html = html.replace('if(novaLogoStage.animate)', 'if(window.knCanAnimate()&&novaLogoStage.animate)');
-    html = html.replace('if(document.hidden||!novaWaveVisible)return;', 'if(document.hidden||!novaWaveVisible||!window.knCanAnimate())return;');
-  }
-  html = html.replaceAll("behavior:'smooth'", "behavior:window.knCanAnimate()?'smooth':'auto'");
-  return html.replace('</head>', '<!-- KN_LEGACY_MOTION_PATCHED v1 -->\n</head>');
+const fs=require('node:fs'),path=require('node:path'),zlib=require('node:zlib'),embedMedia=require('./media');
+const root=path.join(__dirname,'..'),read=name=>fs.readFileSync(path.join(root,name),'utf8');
+const inlineScript=text=>'<script>'+text.replace(/<\/script/gi,'<\\/script')+'</script>';
+const early=['engine','policy','content'].map(name=>read('motion/'+name+'.js')).join('\n');
+const end=['scene','page','accessibility'].map(name=>read('motion/'+name+'.js')).join('\n');
+const pageStyle=read('motion/experience.css');
+const packed={};
+for(const artist of ['kaido','nova']){
+  let html=embedMedia(read('source/pages/'+artist+'.html'));
+  html=html.replace(/<html([^>]*)>/i,'<html$1 data-motion-artist="'+artist+'" data-motion-navigation="__KN_NAV_ID__">');
+  html=html.replace(/<\/head>/i,'<style id="kn-experience-style">'+pageStyle+'</style>'+inlineScript(early)+'</head>');
+  html=html.replace(/<\/body>/i,inlineScript(end)+'</body>');
+  packed[artist]=zlib.gzipSync(html,{level:9}).toString('base64');
 }
-
-const pageStyle = asset('page.css');
-const pageScript = asset('page.js');
-const shellStyle = asset('shell.css');
-const shellScript = asset('shell.js');
-const loader = `<div id="boot" role="status" aria-live="polite" data-artist="kaido">
-  <div class="kn-loader-content">
-    <div class="kn-loader-brand" aria-hidden="true"><span data-loader-artist="kaido" class="kn-current">KAIDO</span><i></i><span data-loader-artist="nova" class="kn-other">NOVA</span></div>
-    <div class="kn-loader-wave" aria-hidden="true">
-      ${[14,22,32,40,32,22,14].map((height, i) => `<i style="--kn-bar-height:${height}px;--kn-bar-delay:${i * -.1}s"></i>`).join('')}
-    </div>
-    <p class="kn-loader-status">جاري تجهيز التجربة…</p>
-    <button class="kn-loader-retry" type="button" hidden>إعادة المحاولة</button>
-  </div>
-</div>`;
-const pageBlock = `/* KN_PAGE_MOTION_START */
-const KN_PAGE_STYLE = ${literal(pageStyle)};
-const KN_PAGE_SCRIPT = ${literal(pageScript)};
-/* KN_PAGE_MOTION_END */`;
-const shellBlock = `/* KN_SHELL_MOTION_START */\n${shellScript}\n/* KN_SHELL_MOTION_END */`;
-const injection = `function mgInjectBridge(html,page){
-  html=html.replace(/<html([^>]*)>/i,'<html$1 data-motion-artist="'+page+'" data-motion-navigation="__KN_NAV_ID__">');
-  const policy='<script id="kn-motion-policy">window.knCanAnimate=()=>!matchMedia("(prefers-reduced-motion: reduce)").matches;<\\/script>';
-  html=html.replace(/<\\/head>/i,'<style id="kn-page-motion">'+KN_PAGE_STYLE+'</style>'+policy+'</head>');
-  return html.replace(/<\\/body>/i,'<script id="kn-page-motion-script">'+KN_PAGE_SCRIPT+'<\\/script>'+MG_BRIDGE_SCRIPT.replace('__KIDO_PAGE__',JSON.stringify(page))+'</body>');
+const loaderMarkup=`<div id="boot" role="status" aria-live="polite" data-artist="kaido"><div class="kn-loader"><svg class="kn-loader-form" viewBox="0 0 180 180" aria-hidden="true"><circle class="kn-loader-track" cx="90" cy="90" r="67"/><circle class="kn-loader-ring" cx="90" cy="90" r="67"/><ellipse class="kn-loader-track" cx="90" cy="90" rx="57" ry="24" transform="rotate(-30 90 90)"/><ellipse class="kn-loader-ring r2" cx="90" cy="90" rx="57" ry="24"/><path class="kn-loader-signal" d="M39 90h17l7-16 10 33 9-52 11 67 10-38 9 16 9-10h20"/><circle class="kn-loader-point" cx="90" cy="23" r="2"/></svg><div class="kn-loader-brand"><b class="kaido">KAIDO</b><i></i><b class="nova">NOVA</b></div><div class="kn-loader-label">TWO ARTISTS · ONE UNIVERSE</div><div id="knBootStatus">جاري تجهيز التجربة…</div><button id="knBootRetry" type="button" hidden>إعادة المحاولة</button></div></div>`;
+for(const [template,destination] of [['source/shell-local.html','index.html'],['source/shell-hosted.html','public/index.html']]){
+  let shell=embedMedia(read(template));
+  shell=shell.replace('__KN_PAGE_KAIDO__',packed.kaido).replace('__KN_PAGE_NOVA__',packed.nova);
+  shell=shell.replace(/<div id="boot">[\s\S]*?<\/div>/,loaderMarkup);
+  shell=shell.replace(/<\/head>/i,'<style id="kn-shell-style">'+read('motion/shell.css')+'</style>'+inlineScript(read('motion/loader.js'))+'</head>');
+  shell=shell.replace(/const musicTransition = document.getElementById\('musicTransition'\);/m,match=>match+'\n'+read('motion/shell.js'));
+  // User motion preference also governs the existing assistant rig.
+  shell=shell.replace(/mgReduced\.matches/g,'knGuideReduced()');
+  shell=shell.replace("const mgReduced = matchMedia('(prefers-reduced-motion: reduce)');","const mgReduced = matchMedia('(prefers-reduced-motion: reduce)');\nfunction knGuideReduced(){return mgReduced.matches||document.body.classList.contains('kn-motion-off');}");
+  shell=shell.replace(/(function mgMotionFrame\(now\)\{[\s\S]*?)(\n mgMotionWake\(\);\n\})/,(all,prefix)=>prefix+'\n if(!knGuideReduced())mgMotionWake();\n}');
+  const fetchStart=shell.indexOf('async function mgCachedHtml('),fetchEnd=shell.indexOf('\nasync function unpackHtml',fetchStart);
+  if(fetchStart<0||fetchEnd<0)throw Error('Content loader not found');
+  const fetchFunction=`async function mgCachedHtml(page){
+ if(!mgHtmlCache.has(page))mgHtmlCache.set(page,unpackHtml(PACKED[page]).then(async html=>{
+   if(location.protocol!=='file:')try{
+     const r=await fetch('/api/content',{cache:'no-store',signal:AbortSignal.timeout(6000)});
+     if(r.ok){const data=await r.json();const names={kaido:{songs:'songs',dass:'dass',ads:'ads'},nova:{tracks:'NOVA_TRACKS',visuals:'NOVA_VISUALS',audio:'NOVA_AUDIO_ENGINEERING'}};
+       for(const [key,name] of Object.entries(names[page]))if(Array.isArray(data[page]?.[key]))html=html.replace(new RegExp('const '+name+'\\\\s*=\\\\s*\\\\[[\\\\s\\\\S]*?\\\\];'),'const '+name+'='+JSON.stringify(data[page][key]).replace(/</g,'\\\\u003c')+';');
+     }
+   }catch(_){}
+   return mgInjectBridge(html,page);
+ }).catch(error=>{mgHtmlCache.delete(page);throw error}));
+ return mgHtmlCache.get(page);
 }`;
-
-for (const relative of ['index.html', 'public/index.html']) {
-  const filename = path.join(root, relative);
-  let html = fs.readFileSync(filename, 'utf8');
-  html = html.replace(/(kaido|nova): '([A-Za-z0-9+/=]+)'/g, (full, page, data) => {
-    const original = zlib.gunzipSync(Buffer.from(data, 'base64')).toString('utf8');
-    const patched = patchPage(original, page);
-    if (patched === original) return full;
-    return `${page}: '${zlib.gzipSync(patched, {level: 9}).toString('base64')}'`;
-  });
-  if (!html.includes('id="kn-shell-motion"')) html = html.replace('</head>', `<style id="kn-shell-motion">${shellStyle}</style>\n</head>`);
-  else html = html.replace(/<style id="kn-shell-motion">[\s\S]*?<\/style>/, `<style id="kn-shell-motion">${shellStyle}</style>`);
-  if (!html.includes('class="kn-loader-content"')) html = html.replace('<div id="boot"><span>جاري فتح التجربة…</span></div>', loader);
-  if (!html.includes('KN_PAGE_MOTION_START')) {
-    html = html.replace(/function mgInjectBridge\(html,page\)\{[^\n]+\}/, () => pageBlock + '\n\n' + injection);
-  } else {
-    html = html.replace(/\/\* KN_PAGE_MOTION_START \*\/[\s\S]*?\/\* KN_PAGE_MOTION_END \*\//, () => pageBlock);
-  }
-  html = html.replace(/function mgInjectBridge\(html,page\)\{[\s\S]*?\n\}/, () => injection);
-  if (!html.includes('KN_SHELL_MOTION_START')) html = html.replace('function b64ToBytes(b64) {', () => shellBlock + '\n\nfunction b64ToBytes(b64) {');
-  else html = html.replace(/\/\* KN_SHELL_MOTION_START \*\/[\s\S]*?\/\* KN_SHELL_MOTION_END \*\//, () => shellBlock);
-  html = html.replace("boot.classList.remove('hide');", 'knShowBoot(page);');
-  html = html.replace("      boot.classList.add('hide');", '      knCompleteBoot(page,sequence);');
-  html = html.replace('      knCompleteBoot(page);', '      knCompleteBoot(page,sequence);');
-  html = html.replace('const html = await mgCachedHtml(page);', "const html = (await mgCachedHtml(page)).replaceAll('__KN_NAV_ID__',String(sequence));");
-  // Do not replace the same calls inside the embedded helper block.
-  html = html.replace('    if (switching) await new Promise(resolve => setTimeout(resolve, 360));\n', '');
-  html = html.replace("    boot.textContent=String(err.message||err);", '    knFailBoot(err);');
-  html = html.replace('  const d = e.data || {};\n  if(d.type===\'KIDO_VIEW_MOVED\')',
-    "  const d = e.data || {};\n  if(d.type==='KN_PAGE_READY'){knCompleteBoot(d.page);return;}\n  if(d.type==='KIDO_VIEW_MOVED')");
-  html = html.replace('fetch("/api/content",{cache:"no-store"})', 'fetch("/api/content",{cache:"no-store",signal:AbortSignal.timeout(6000)})');
-  html = html.replace('knCompleteBoot(d.page);', 'knCompleteBoot(d.page,d.navigation);');
-  if (!html.includes('id="kn-motion-policy"')) throw Error('Motion injection was not installed in ' + relative);
-  fs.writeFileSync(filename, html);
+  shell=shell.slice(0,fetchStart)+fetchFunction+shell.slice(fetchEnd);
+  shell=shell.replace("  const switching = beginMusicTransition(page);\n  boot.classList.remove('hide');","  const switching = false;\n  knLoader.begin(page,sequence);");
+  shell=shell.replace('    const html = await mgCachedHtml(page);','    const html = (await mgCachedHtml(page)).replace(/__KN_NAV_ID__/g,String(sequence));');
+  shell=shell.replace('    if (switching) await new Promise(resolve => setTimeout(resolve, 360));','');
+  shell=shell.replace("      boot.classList.add('hide');","      if(sequence!==loadSequence)return;");
+  shell=shell.replace('    boot.textContent=String(err.message||err);','    knLoader.fail(page,sequence,err);');
+  // A blob/srcdoc page needs an explicit base for the existing YouTube player.
+  shell=shell.replace("function mgInjectBridge(html,page){return html.replace(/<\\/body>/i,MG_BRIDGE_SCRIPT.replace('__KIDO_PAGE__',JSON.stringify(page))+'</body>')}","function mgInjectBridge(html,page){const base=new URL('./',location.href).href;html=html.replace(/<head([^>]*)>/i,'<head$1><base href=\"'+base+'\">');return html.replace(/<\\/body>/i,MG_BRIDGE_SCRIPT.replace('__KIDO_PAGE__',JSON.stringify(page))+'</body>')}");
+  fs.writeFileSync(path.join(root,destination),shell);
+  console.log(destination+': '+Buffer.byteLength(shell)+' bytes');
 }
-console.log('KAIDO and NOVA motion layers synchronized.');
